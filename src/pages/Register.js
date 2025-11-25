@@ -45,4 +45,3 @@ export default function Register({ setToken, setUser }) {
     </div>
   );
 }
-ß

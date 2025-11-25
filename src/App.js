@@ -4,6 +4,11 @@ import Register from "./pages/Register";
 import FileUploader from "./components/FileUploader";
 import MyFiles from "./pages/MyFiles";
 import AdminDashboard from "./pages/AdminDashboard";
+import React, { useState } from "react";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+
+
 
 function App() {
   const [token, setToken] = React.useState(localStorage.getItem("token") || "");
