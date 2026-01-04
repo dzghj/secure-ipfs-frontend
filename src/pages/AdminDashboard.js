@@ -5,7 +5,7 @@ function AdminDashboard() {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    fetch("http://secure-ipfs-server.onrender.com/api/admin/files", {
+    fetch("https://secure-ipfs-server.onrender.com/api/admin/files", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => res.json())

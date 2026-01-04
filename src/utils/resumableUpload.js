@@ -14,7 +14,7 @@ export async function uploadFileInChunks(file, token, userId, onProgress) {
     formData.append("uploadId", uploadId);
     formData.append("chunkIndex", i);
 
-    await fetch("http://secure-ipfs-server.onrender.com/api/upload/chunk", {
+    await fetch("https://secure-ipfs-server.onrender.com/api/upload/chunk", {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
       body: formData,
@@ -24,7 +24,7 @@ export async function uploadFileInChunks(file, token, userId, onProgress) {
     if (onProgress) onProgress(percent);
   }
 
-  const res = await fetch("http://secure-ipfs-server.onrender.com/api/upload/merge", {
+  const res = await fetch("https://secure-ipfs-server.onrender.com/api/upload/merge", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

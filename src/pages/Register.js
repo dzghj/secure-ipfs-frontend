@@ -9,7 +9,7 @@ export default function Register({ setToken, setUser }) {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://secure-ipfs-server.onrender.com/api/auth/register", { email, password });
+      const res = await axios.post("https://secure-ipfs-server.onrender.com/api/auth/register", { email, password });
       localStorage.setItem("token", res.data.token);
       setToken(res.data.token);
       setUser(res.data.user);
