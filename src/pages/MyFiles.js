@@ -5,7 +5,7 @@ function MyFiles() {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    fetch("http://localhost:4000/api/myfiles", {
+    fetch("http://secure-ipfs-server.onrender.com/api/myfiles", {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())

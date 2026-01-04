@@ -10,7 +10,7 @@ export async function uploadEncryptedPDF(file, token) {
     wrapWithDirectory: false,
   });
 
-  const res = await fetch("http://localhost:4000/api/registerCID", {
+  const res = await fetch("http://secure-ipfs-server.onrender.com/api/registerCID", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
