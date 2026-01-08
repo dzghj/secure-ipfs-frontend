@@ -7,18 +7,7 @@ export default function Main() {
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       {/* ---------- Navbar ---------- */}
-      <header className="flex items-center justify-between px-8 py-4 border-b border-gray-800">
-        <div className="text-2xl font-bold text-indigo-500">
-          CryptoApp
-        </div>
-
-        <button
-          onClick={() => navigate("/login")}
-          className="px-5 py-2 text-sm font-medium bg-indigo-600 hover:bg-indigo-700 rounded-md transition"
-        >
-          Login
-        </button>
-      </header>
+    
 
       {/* ---------- Hero Section ---------- */}
       <section className="flex flex-col items-center text-center px-6 pt-32">
@@ -80,10 +69,8 @@ export default function Main() {
         ))}
       </section>
 
-      {/* ---------- Footer ---------- */}
-      <footer className="mt-40 py-8 text-center text-gray-500 text-sm border-t border-gray-800">
-        © {new Date().getFullYear()} CryptoApp. All rights reserved.
-      </footer>
+    
+    
     </div>
   );
 }

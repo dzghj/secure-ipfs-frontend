@@ -1,7 +1,8 @@
 //import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
-import React from "react";
+import Layout from "./components/Layout";
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -19,25 +20,67 @@ function App() {
     return savedUser ? JSON.parse(savedUser) : null;
   });
 
+  const isAuthenticated = token && user;
+
   return (
     <Router>
       <Routes>
-        {/* PUBLIC */}
-        <Route path="/" element={<Main />} />
-        <Route path="/login" element={<Login setToken={setToken} setUser={setUser} />} />
-        <Route path="/register" element={<Register setToken={setToken} setUser={setUser} />} />
+        {/* All routes wrapped in Layout for shared header/footer */}
+        <Route element={<Layout />}>
+          {/* PUBLIC */}
+          <Route
+            path="/"
+            element={isAuthenticated ? <Navigate to="/admin" /> : <Main />}
+          />
 
-        {/* PROTECTED */}
-        {token && user ? (
-          <>
-            <Route path="/upload" element={<FileUploader token={token} user={user} />} />
-            <Route path="/myfiles" element={<MyFiles token={token} user={user} />} />
-          </>
-        ) : (
-          <Route path="/upload" element={<Navigate to="/login" />} />
-        )}
+          <Route
+            path="/login"
+            element={
+              isAuthenticated
+                ? <Navigate to="/admin" />
+                : <Login setToken={setToken} setUser={setUser} />
+            }
+          />
 
-        <Route path="*" element={<Main />} />
+          <Route
+            path="/register"
+            element={<Register setToken={setToken} setUser={setUser} />}
+          />
+
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
+
+          {/* PROTECTED */}
+          <Route
+            path="/admin"
+            element={
+              isAuthenticated
+                ? <AdminDashboard token={token} user={user} />
+                : <Navigate to="/login" />
+            }
+          />
+
+          <Route
+            path="/upload"
+            element={
+              isAuthenticated
+                ? <FileUploader token={token} user={user} />
+                : <Navigate to="/login" />
+            }
+          />
+
+          <Route
+            path="/myfiles"
+            element={
+              isAuthenticated
+                ? <MyFiles token={token} user={user} />
+                : <Navigate to="/login" />
+            }
+          />
+
+          {/* FALLBACK */}
+          <Route path="*" element={<Navigate to="/" />} />
+        </Route>
       </Routes>
     </Router>
   );

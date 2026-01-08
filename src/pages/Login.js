@@ -7,65 +7,93 @@ export default function Login({ setToken, setUser }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const navigate = useNavigate(); // ✅ add this
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError("");
+
     try {
       const res = await axios.post(
         "https://secure-ipfs-server.onrender.com/api/auth/login",
         { email, password }
       );
 
-      // ✅ persist auth
+      // persist auth
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
       setToken(res.data.token);
       setUser(res.data.user);
 
-      // ✅ redirect after login
-      navigate("/");
+      navigate("/"); // App.js will redirect to /admin if authenticated
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
     }
   };
 
   return (
-    <div className="flex h-screen items-center justify-center bg-gray-100">
-      <form
-        onSubmit={handleLogin}
-        className="p-6 bg-white rounded-lg shadow-lg space-y-3"
-      >
-        <h2 className="text-xl font-semibold">Login</h2>
+    <form
+      onSubmit={handleLogin}
+      className="w-full max-w-md bg-gray-800 border border-gray-700 rounded-xl p-8 shadow-lg space-y-5"
+    >
+      <h2 className="text-2xl font-bold text-center">
+        Sign in to your account
+      </h2>
 
+      <div>
+        <label className="block text-sm text-gray-400 mb-1">Email</label>
         <input
+          type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-          className="border p-2 w-full"
+          className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-md focus:outline-none focus:border-indigo-500"
           required
         />
+      </div>
 
+      <div>
+        <label className="block text-sm text-gray-400 mb-1">Password</label>
         <input
+          type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          type="password"
-          placeholder="Password"
-          className="border p-2 w-full"
+          className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-md focus:outline-none focus:border-indigo-500"
           required
         />
+      </div>
 
+      {error && (
+        <p className="text-red-500 text-sm text-center">{error}</p>
+      )}
+
+      <button
+        type="submit"
+        className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition"
+      >
+        Login
+      </button>
+
+      <div className="text-center text-sm text-gray-400">
         <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded"
+          type="button"
+          onClick={() => navigate("/forgot-password")}
+          className="hover:text-indigo-500 transition"
         >
-          Login
+          Forgot password?
         </button>
+      </div>
 
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-      </form>
-    </div>
+      <div className="text-center text-sm text-gray-400">
+        Don't have an account?{" "}
+        <button
+          type="button"
+          onClick={() => navigate("/register")}
+          className="text-indigo-400 hover:text-indigo-300 transition"
+        >
+          Register
+        </button>
+      </div>
+    </form>
   );
 }
-
