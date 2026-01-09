@@ -22,7 +22,7 @@ function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
-      <h2 className="text-2xl font-bold mb-4">🛠 Admin Dashboard</h2>
+      <h2 className="text-2xl font-bold mb-4 bg-gray-700">🛠 Admin Dashboard</h2>
       {data.length === 0 ? (
         <p>No uploaded files found.</p>
       ) : (
