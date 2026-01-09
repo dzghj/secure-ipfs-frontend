@@ -9,8 +9,8 @@ function AdminDashboard() {
     fetch("https://secure-ipfs-server.onrender.com/api/admin/files", {
       headers: { Authorization: `Bearer ${token}` },
     })
-      .then(res => res.json())
-      .then(result => {
+      .then((res) => res.json())
+      .then((result) => {
         // Ensure that the result is an array before setting it to data
         if (Array.isArray(result)) {
           setData(result);
@@ -18,7 +18,7 @@ function AdminDashboard() {
           console.error("Expected an array but got:", result);
         }
       })
-      .catch(err => console.error("Error fetching data:", err));
+      .catch((err) => console.error("Error fetching data:", err));
   }, [token]);
 
   return (
@@ -39,16 +39,18 @@ function AdminDashboard() {
                 </tr>
               </thead>
               <tbody>
-                {/* Commented out the files processing part for testing */}
-                {/* user.files.map((f, i) => (
+                {/* Loop through the files for each user and display them */}
+                {user.files.map((f, i) => (
                   <tr key={i}>
-                    <td className="p-2 border">{f.filename}</td>
+                    <td className="p-2 border">{f.fileName}</td>
                     <td className="p-2 border text-xs text-blue-600">{f.cid}</td>
                     <td className="p-2 border">
-                      {new Date(f.timestamp * 1000).toLocaleString()}
+                      {/* Since we don't have a timestamp, just display a placeholder */}
+                      {/* For a real implementation, you should store a timestamp */}
+                      {"N/A"}
                     </td>
                   </tr>
-                )) */}
+                ))}
               </tbody>
             </table>
           </div>
