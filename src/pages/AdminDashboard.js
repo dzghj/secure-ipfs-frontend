@@ -5,12 +5,20 @@ function AdminDashboard() {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
+    // Fetch files from the API
     fetch("https://secure-ipfs-server.onrender.com/api/admin/files", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => res.json())
-      .then(setData)
-      .catch(err => console.error(err));
+      .then(result => {
+        // Ensure that the result is an array before setting it to data
+        if (Array.isArray(result)) {
+          setData(result);
+        } else {
+          console.error("Expected an array but got:", result);
+        }
+      })
+      .catch(err => console.error("Error fetching data:", err));
   }, [token]);
 
   return (
@@ -31,7 +39,8 @@ function AdminDashboard() {
                 </tr>
               </thead>
               <tbody>
-                {user.files.map((f, i) => (
+                {/* Commented out the files processing part for testing */}
+                {/* user.files.map((f, i) => (
                   <tr key={i}>
                     <td className="p-2 border">{f.filename}</td>
                     <td className="p-2 border text-xs text-blue-600">{f.cid}</td>
@@ -39,7 +48,7 @@ function AdminDashboard() {
                       {new Date(f.timestamp * 1000).toLocaleString()}
                     </td>
                   </tr>
-                ))}
+                )) */}
               </tbody>
             </table>
           </div>
