@@ -29,21 +29,22 @@ function AdminDashboard() {
         data.map((user, idx) => (
           <div key={idx} className="mb-6 bg-white p-4 rounded shadow">
             <h3 className="font-semibold text-lg mb-2">User ID: {user.userId}</h3>
-            <table className="min-w-full border text-sm">
+            <table className="min-w-full border text-sm bg-black text-white">
               <thead>
-                <tr className="bg-gray-100">
+                <tr className="bg-gray-800">
                   <th className="p-2 border">Filename</th>
                   <th className="p-2 border">CID</th>
                   <th className="p-2 border">Date</th>
                 </tr>
               </thead>
               <tbody>
+                {/* Ensure you correctly access fileName and cid */}
                 {user.files && user.files.length > 0 ? (
                   user.files.map((f, i) => (
-                    <tr key={i}>
+                    <tr key={i} className="bg-gray-700">
                       <td className="p-2 border">{f.fileName}</td>
                       <td className="p-2 border text-xs text-blue-600">{f.cid}</td>
-                      <td className="p-2 border">{"N/A"}</td>
+                      <td className="p-2 border">{"N/A"}</td> {/* You can replace "N/A" with actual date if available */}
                     </tr>
                   ))
                 ) : (
