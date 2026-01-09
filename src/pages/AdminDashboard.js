@@ -5,13 +5,12 @@ function AdminDashboard() {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    // Fetch files from the API
     fetch("https://secure-ipfs-server.onrender.com/api/admin/files", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
       .then((result) => {
-        // Ensure that the result is an array before setting it to data
+        console.log(result); // Debug log to check the fetched data structure
         if (Array.isArray(result)) {
           setData(result);
         } else {
@@ -39,18 +38,21 @@ function AdminDashboard() {
                 </tr>
               </thead>
               <tbody>
-                {/* Loop through the files for each user and display them */}
-                {user.files.map((f, i) => (
-                  <tr key={i}>
-                    <td className="p-2 border">{f.fileName}</td>
-                    <td className="p-2 border text-xs text-blue-600">{f.cid}</td>
-                    <td className="p-2 border">
-                      {/* Since we don't have a timestamp, just display a placeholder */}
-                      {/* For a real implementation, you should store a timestamp */}
-                      {"N/A"}
+                {user.files && user.files.length > 0 ? (
+                  user.files.map((f, i) => (
+                    <tr key={i}>
+                      <td className="p-2 border">{f.fileName}</td>
+                      <td className="p-2 border text-xs text-blue-600">{f.cid}</td>
+                      <td className="p-2 border">{"N/A"}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="3" className="text-center p-2 border">
+                      No files found.
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
