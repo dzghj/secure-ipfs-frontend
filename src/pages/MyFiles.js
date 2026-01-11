@@ -23,7 +23,6 @@ function MyFiles() {
           throw new Error(data?.error || "Failed to load files");
         }
 
-        // ✅ ensure array
         if (Array.isArray(data)) {
           setFiles(data);
         } else if (Array.isArray(data.files)) {
@@ -43,46 +42,49 @@ function MyFiles() {
   }, [token]);
 
   if (loading) {
-    return <p className="p-6 text-gray-500">Loading files...</p>;
+    return <p className="p-6 text-gray-400">Loading files...</p>;
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-neutral-900 p-6 text-gray-100">
       <h2 className="text-2xl font-bold mb-4">📄 My Uploaded Files</h2>
 
-      <div className="bg-white shadow rounded-lg p-4">
+      <div className="bg-neutral-800 shadow-lg rounded-lg p-4">
         {error && (
-          <p className="text-red-500 mb-3">
+          <p className="text-red-400 mb-3">
             ⚠️ {error}
           </p>
         )}
 
         {files.length === 0 ? (
-          <p className="text-gray-500">No files uploaded yet.</p>
+          <p className="text-gray-400">No files uploaded yet.</p>
         ) : (
-          <table className="min-w-full border">
+          <table className="min-w-full border border-neutral-700">
             <thead>
-              <tr className="bg-gray-100 text-left">
-                <th className="p-2 border">Filename</th>
-                <th className="p-2 border">CID</th>
-                <th className="p-2 border">Actions</th>
+              <tr className="bg-neutral-700 text-left">
+                <th className="p-2 border border-neutral-600">Filename</th>
+                <th className="p-2 border border-neutral-600">CID</th>
+                <th className="p-2 border border-neutral-600">Actions</th>
               </tr>
             </thead>
             <tbody>
               {files.map((f, idx) => (
-                <tr key={idx} className="hover:bg-gray-50">
-                  <td className="p-2 border">
+                <tr
+                  key={idx}
+                  className="hover:bg-neutral-700 transition"
+                >
+                  <td className="p-2 border border-neutral-700">
                     {f.fileName || f.filename || "—"}
                   </td>
-                  <td className="p-2 border text-xs text-blue-600">
+                  <td className="p-2 border border-neutral-700 text-xs text-blue-400">
                     {f.cid}
                   </td>
-                  <td className="p-2 border">
+                  <td className="p-2 border border-neutral-700">
                     <a
                       href={`https://ipfs.io/ipfs/${f.cid}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-green-600 hover:underline"
+                      className="text-green-400 hover:underline"
                     >
                       View
                     </a>
