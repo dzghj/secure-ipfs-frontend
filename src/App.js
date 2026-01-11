@@ -1,4 +1,3 @@
-//import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
@@ -20,42 +19,49 @@ function App() {
     return savedUser ? JSON.parse(savedUser) : null;
   });
 
-  const isAuthenticated = token && user;
+  const isAuthenticated = Boolean(token && user);
 
   return (
     <Router>
       <Routes>
-        {/* All routes wrapped in Layout for shared header/footer */}
         <Route element={<Layout />}>
-          {/* PUBLIC */}
+          {/* ---------- PUBLIC ---------- */}
           <Route
             path="/"
-            element={isAuthenticated ? <Navigate to="/admin" /> : <Main />}
+            element={
+              isAuthenticated
+                ? <Navigate to="/myfiles" />
+                : <Main />
+            }
           />
 
           <Route
             path="/login"
             element={
               isAuthenticated
-                ? <Navigate to="/admin" />
+                ? <Navigate to="/myfiles" />
                 : <Login setToken={setToken} setUser={setUser} />
             }
           />
 
           <Route
             path="/register"
-            element={<Register setToken={setToken} setUser={setUser} />}
+            element={
+              isAuthenticated
+                ? <Navigate to="/myfiles" />
+                : <Register setToken={setToken} setUser={setUser} />
+            }
           />
 
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-          {/* PROTECTED */}
+          {/* ---------- PROTECTED ---------- */}
           <Route
-            path="/admin"
+            path="/myfiles"
             element={
               isAuthenticated
-                ? <AdminDashboard token={token} user={user} />
+                ? <MyFiles token={token} user={user} />
                 : <Navigate to="/login" />
             }
           />
@@ -69,16 +75,17 @@ function App() {
             }
           />
 
+          {/* Admin route kept for future */}
           <Route
-            path="/myfiles"
+            path="/admin"
             element={
               isAuthenticated
-                ? <MyFiles token={token} user={user} />
+                ? <AdminDashboard token={token} user={user} />
                 : <Navigate to="/login" />
             }
           />
 
-          {/* FALLBACK */}
+          {/* ---------- FALLBACK ---------- */}
           <Route path="*" element={<Navigate to="/" />} />
         </Route>
       </Routes>

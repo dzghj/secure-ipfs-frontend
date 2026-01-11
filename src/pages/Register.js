@@ -8,9 +8,17 @@ export default function Register({ setToken, setUser }) {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setError("");
+
     try {
-      const res = await axios.post("https://secure-ipfs-server.onrender.com/api/auth/register", { email, password });
+      const res = await axios.post(
+        "https://secure-ipfs-server.onrender.com/api/auth/register",
+        { email, password }
+      );
+
       localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+
       setToken(res.data.token);
       setUser(res.data.user);
     } catch (err) {
@@ -19,29 +27,81 @@ export default function Register({ setToken, setUser }) {
   };
 
   return (
-    <div className="flex h-screen items-center justify-center bg-gray-100">
-      <form onSubmit={handleRegister} className="p-6 bg-white rounded-lg shadow-lg space-y-3">
-        <h2 className="text-xl font-semibold">Register</h2>
+    <form
+      onSubmit={handleRegister}
+      className="
+        w-full max-w-md
+        bg-gray-800
+        border border-gray-700
+        rounded-xl
+        p-8
+        shadow-lg
+        space-y-5
+      "
+    >
+      <h2 className="text-2xl font-bold text-center">
+        Create your account
+      </h2>
+
+      <div>
+        <label className="block text-sm text-gray-400 mb-1">
+          Email
+        </label>
         <input
+          type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-          className="border p-2 w-full"
+          className="
+            w-full px-3 py-2
+            bg-gray-900
+            border border-gray-700
+            rounded-md
+            focus:outline-none
+            focus:border-indigo-500
+          "
           required
         />
+      </div>
+
+      <div>
+        <label className="block text-sm text-gray-400 mb-1">
+          Password
+        </label>
         <input
+          type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          type="password"
-          placeholder="Password"
-          className="border p-2 w-full"
+          className="
+            w-full px-3 py-2
+            bg-gray-900
+            border border-gray-700
+            rounded-md
+            focus:outline-none
+            focus:border-indigo-500
+          "
           required
         />
-        <button type="submit" className="w-full bg-green-500 text-white py-2 rounded">
-          Register
-        </button>
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-      </form>
-    </div>
+      </div>
+
+      {error && (
+        <p className="text-red-500 text-sm text-center">
+          {error}
+        </p>
+      )}
+
+      <button
+        type="submit"
+        className="
+          w-full py-3
+          bg-indigo-600
+          hover:bg-indigo-700
+          rounded-lg
+          font-semibold
+          transition
+        "
+      >
+        Register
+      </button>
+    </form>
   );
 }
