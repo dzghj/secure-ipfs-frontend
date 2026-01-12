@@ -16,7 +16,7 @@ export default function ForgotPassword() {
 
     try {
       const res = await axios.post(
-        `${process.env.REACT_APP_API_URL}/auth/forgot-password`,
+        `https://secure-ipfs-server.onrender.com/api/auth/forgot-password`,
         { email }
       );
       setMessage(res.data.message);

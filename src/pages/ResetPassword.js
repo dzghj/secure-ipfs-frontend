@@ -52,7 +52,8 @@ export default function ResetPassword() {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-md focus:outline-none focus:border-indigo-500"
+          placeholder="Enter new password"
+          className="w-full px-3 py-2 bg-gray-900 text-gray-100 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
           required
         />
       </div>
