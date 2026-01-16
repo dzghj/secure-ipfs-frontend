@@ -9,10 +9,10 @@ export default function FileUploader({ token, user }) {
   const [status, setStatus] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
-  
+
 
   const handleUpload = async () => {
-    if (!file) return alert("Select a file first!");
+    if (!file) return alert("Select a file first!");//this is testing
     setStatus("Uploading...");
     setProgress(0);
 
