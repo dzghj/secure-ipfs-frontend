@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { uploadFileInChunks } from "../utils/resumableUpload";
 
 
 export default function FileUploader({ token, user }) {
@@ -16,7 +15,7 @@ export default function FileUploader({ token, user }) {
     setStatus("Uploading...");
     setProgress(0);
 
-    const onProgress = (percent) => setProgress(percent);
+    //const onProgress = (percent) => setProgress(percent);
 
   //  const result = await uploadFileInChunks(file, token, user.id, onProgress);
     //setStatus("Encrypting and registering...");
