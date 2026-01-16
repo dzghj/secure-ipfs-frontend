@@ -20,9 +20,9 @@ export default function FileUploader({ token, user }) {
 
   //  const result = await uploadFileInChunks(file, token, user.id, onProgress);
     //setStatus("Encrypting and registering...");
-    if (onUploadComplete) {
-      onUploadComplete();
-    }
+    //if (onUploadComplete) {
+    //  onUploadComplete();
+   // }
 
     // Simulate encryption + IPFS
     await new Promise((r) => setTimeout(r, 1000));
