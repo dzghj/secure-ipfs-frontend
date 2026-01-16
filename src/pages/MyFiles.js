@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import FileUploader from "./FileUploader";
+import FileUploader from "./components/FileUploader";
 
 function MyFiles() {
   const [files, setFiles] = useState([]);
