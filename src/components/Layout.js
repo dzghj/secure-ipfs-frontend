@@ -5,7 +5,16 @@ export default function Layout() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Define which routes should have centered content
+  // ✅ Check auth state
+  const token = localStorage.getItem("token");
+  const isLoggedIn = !!token;
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
+  // Routes that should be centered
   const centeredRoutes = [
     "/login",
     "/register",
@@ -14,7 +23,6 @@ export default function Layout() {
     "/",
   ];
 
-  // If path matches any centered route, vertically center the content
   const centerContent = centeredRoutes.some((path) =>
     location.pathname.startsWith(path)
   );
@@ -30,15 +38,25 @@ export default function Layout() {
           CryptoApp
         </div>
 
-        <button
-          onClick={() => navigate("/login")}
-          className="px-5 py-2 text-sm font-medium border border-gray-600 hover:border-indigo-500 rounded-md transition"
-        >
-          Login
-        </button>
+        {/* ✅ Auth-aware button */}
+        {isLoggedIn ? (
+          <button
+            onClick={handleLogout}
+            className="px-5 py-2 text-sm font-medium border border-red-500 text-red-400 hover:bg-red-500 hover:text-white rounded-md transition"
+          >
+            Logout
+          </button>
+        ) : (
+          <button
+            onClick={() => navigate("/login")}
+            className="px-5 py-2 text-sm font-medium border border-gray-600 hover:border-indigo-500 rounded-md transition"
+          >
+            Login
+          </button>
+        )}
       </header>
 
-      {/* ---------- Main Content ---------- */}
+      {/* ---------- Main ---------- */}
       <main
         className={`flex flex-1 px-6 ${
           centerContent ? "items-center justify-center" : ""
