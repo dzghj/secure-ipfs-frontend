@@ -2,30 +2,54 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { uploadFileInChunks } from "../utils/resumableUpload";
 
-export default function FileUploader({ token, user }) {
+export default function FileUploader({ token, user, onUploadComplete }) {
   const [file, setFile] = useState(null);
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleUpload = async () => {
-    if (!file) return alert("Select a file first!");
+    if (!file) {
+      alert("Select a file first!");
+      return;
+    }
+
+    if (!user?.id) {
+      alert("User not loaded yet");
+      return;
+    }
+
+    setIsUploading(true);
     setStatus("Uploading...");
     setProgress(0);
 
     const onProgress = (percent) => setProgress(percent);
 
-    const result = await uploadFileInChunks(file, token, user.id, onProgress);
-    setStatus("Encrypting and registering...");
+    try {
+      await uploadFileInChunks(file, token, user.id, onProgress);
 
-    // Simulate encryption + IPFS
-    await new Promise((r) => setTimeout(r, 1000));
-    const cid = "bafy" + Math.random().toString(36).substring(2, 10);
+      setStatus("Encrypting and registering...");
+      await new Promise((r) => setTimeout(r, 1000));
 
-    setStatus("✅ Upload complete");
-    setProgress(100);
+      const cid = "bafy" + Math.random().toString(36).substring(2, 10);
 
-    setUploadedFiles((prev) => [...prev, { filename: file.name, cid }]);
+      setUploadedFiles((prev) => [...prev, { filename: file.name, cid }]);
+
+      setProgress(100);
+      setStatus("✅ Upload complete");
+
+      // Notify parent safely
+      if (typeof onUploadComplete === "function") {
+        onUploadComplete();
+      }
+    } catch (err) {
+      console.error("Upload failed:", err);
+      setStatus("❌ Upload failed");
+      setProgress(0);
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (
@@ -43,12 +67,12 @@ export default function FileUploader({ token, user }) {
 
       <button
         onClick={handleUpload}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition"
+        disabled={!file || isUploading}
+        className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white py-2 px-4 rounded-lg transition"
       >
         Upload
       </button>
 
-      {/* Progress Bar */}
       {progress > 0 && (
         <div className="mt-4">
           <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
@@ -63,11 +87,10 @@ export default function FileUploader({ token, user }) {
         </div>
       )}
 
-      {/* Uploaded Files */}
       {uploadedFiles.length > 0 && (
         <div className="mt-6">
           <h3 className="text-md font-semibold mb-2 text-gray-700">
-            Uploaded Files
+            Uploaded (this session)
           </h3>
           <ul className="space-y-2">
             {uploadedFiles.map((f, i) => (
@@ -76,14 +99,9 @@ export default function FileUploader({ token, user }) {
                 className="p-2 bg-gray-100 rounded-lg text-sm flex justify-between items-center"
               >
                 <span>{f.filename}</span>
-                <a
-                  href={`https://ipfs.io/ipfs/${f.cid}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline"
-                >
+                <span className="text-gray-500 text-xs">
                   {f.cid.slice(0, 8)}...
-                </a>
+                </span>
               </li>
             ))}
           </ul>
