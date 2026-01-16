@@ -2,11 +2,14 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { uploadFileInChunks } from "../utils/resumableUpload";
 
+
 export default function FileUploader({ token, user }) {
   const [file, setFile] = useState(null);
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState([]);
+
+  
 
   const handleUpload = async () => {
     if (!file) return alert("Select a file first!");
