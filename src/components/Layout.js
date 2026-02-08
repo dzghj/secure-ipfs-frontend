@@ -11,7 +11,8 @@ export default function Layout() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/login");
+    // force UI refresh + redirect
+    navigate("/", { replace: true });
   };
 
   // Routes that should be centered

@@ -8,6 +8,12 @@ export default function Login({ setToken, setUser }) {
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
+ const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+  //const API_BASE_URL =
+ 
+
+  console.log("API_BASE_URL:", API_BASE_URL);
+
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -15,7 +21,7 @@ export default function Login({ setToken, setUser }) {
 
     try {
       const res = await axios.post(
-        "https://secure-ipfs-server.onrender.com/api/auth/login",
+        "${API_BASE_URL}/api/auth/login",
         { email, password }
       );
 
