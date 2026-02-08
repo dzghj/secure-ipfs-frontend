@@ -5,6 +5,8 @@ import { useParams, useNavigate } from "react-router-dom";
 export default function ResetPassword() {
   const { token } = useParams();
   const navigate = useNavigate();
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -17,7 +19,7 @@ export default function ResetPassword() {
 
     try {
       const res = await axios.post(
-        "https://secure-ipfs-server.onrender.com/api/auth/reset-password",
+        `${API_BASE_URL}/api/auth/reset-password`,
         {
           token,
           newPassword: password,

@@ -5,6 +5,7 @@ export default function Register({ setToken, setUser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -12,7 +13,7 @@ export default function Register({ setToken, setUser }) {
 
     try {
       const res = await axios.post(
-        "https://secure-ipfs-server.onrender.com/api/auth/register",
+        `${API_BASE_URL}/api/auth/register`,
         { email, password }
       );
 
