@@ -1,19 +1,18 @@
 import React from "react";
 import { useNavigate, Outlet, useLocation } from "react-router-dom";
 
-export default function Layout() {
+export default function Layout({ onLogout }) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // ✅ Check auth state
   const token = localStorage.getItem("token");
   const isLoggedIn = !!token;
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    // force UI refresh + redirect
-    navigate("/", { replace: true });
+    onLogout(); // ✅ now defined
+    navigate("/login", { replace: true });
   };
+
 
   // Routes that should be centered
   const centeredRoutes = [
