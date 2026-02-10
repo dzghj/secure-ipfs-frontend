@@ -15,7 +15,7 @@ function MyFiles() {
     setLoading(true);
     setError("");
 
-    fetch("https://secure-ipfs-server.onrender.com/api/myfiles", {
+    fetch("https://ipfs-data-server.onrender.com/api/myfiles", {
       headers: {
         Authorization: `Bearer ${token}`,
       },

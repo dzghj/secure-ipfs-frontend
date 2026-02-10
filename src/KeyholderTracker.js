@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 
-const socket = io("https://secure-ipfs-server.onrender.com:5000");
+const socket = io("https://ipfs-data-server.onrender.com:5000");
 
 export default function KeyholderTracker() {
   const [logs, setLogs] = useState([]);
