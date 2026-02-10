@@ -20,7 +20,7 @@ export default function FileUploader({ token, user }) {
       const formData = new FormData();
       formData.append("file", file);
 
-      const res = await fetch("hhttps://ipfs-data-server.onrender.com/api/upload", {
+      const res = await fetch("https://ipfs-data-server.onrender.com/api/upload", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
