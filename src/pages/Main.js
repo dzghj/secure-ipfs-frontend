@@ -6,19 +6,20 @@ export default function Main() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      {/* ---------- Navbar ---------- */}
-    
 
       {/* ---------- Hero Section ---------- */}
       <section className="flex flex-col items-center text-center px-6 pt-32">
         <h1 className="text-4xl md:text-6xl font-extrabold leading-tight max-w-4xl">
-          Manage Your Digital Assets <br />
-          <span className="text-indigo-500">Securely & Easily</span>
+          Sovereign Digital Vault <br />
+          <span className="text-indigo-500">
+            Encrypted. Decentralized. Unstoppable.
+          </span>
         </h1>
 
-        <p className="mt-6 text-gray-400 max-w-2xl">
-          A modern platform to upload, manage, and control your files with
-          enterprise-grade security and seamless performance.
+        <p className="mt-6 text-gray-400 max-w-2xl text-lg">
+          Secure your wills, legal documents, ownership records, and
+          high-value assets on a decentralized IPFS network.
+          End-to-end encrypted. No central authority.
         </p>
 
         {/* CTA Buttons */}
@@ -27,14 +28,14 @@ export default function Main() {
             onClick={() => navigate("/register")}
             className="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition"
           >
-            Get Started
+            Create Your Vault
           </button>
 
           <button
             onClick={() => navigate("/login")}
             className="px-8 py-3 border border-gray-600 hover:border-indigo-500 rounded-lg font-semibold transition"
           >
-            Sign In
+            Access Vault
           </button>
         </div>
       </section>
@@ -43,16 +44,16 @@ export default function Main() {
       <section className="mt-40 px-8 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
         {[
           {
-            title: "Secure Storage",
-            desc: "Your files are protected with industry-standard encryption.",
+            title: "End-to-End Encryption",
+            desc: "Files are encrypted before leaving your device. Only you control the decryption keys.",
           },
           {
-            title: "Fast Uploads",
-            desc: "Optimized for performance and large file handling.",
+            title: "Decentralized Storage (IPFS)",
+            desc: "Stored across distributed nodes — no single server can delete or censor your documents.",
           },
           {
-            title: "Admin Control",
-            desc: "Full control and visibility for administrators.",
+            title: "Immutable & Tamper-Resistant",
+            desc: "Cryptographic hashing ensures your documents cannot be altered without detection.",
           },
         ].map((item, idx) => (
           <div
@@ -62,15 +63,13 @@ export default function Main() {
             <h3 className="text-xl font-semibold mb-3">
               {item.title}
             </h3>
-            <p className="text-gray-400 text-sm">
+            <p className="text-gray-400 text-sm leading-relaxed">
               {item.desc}
             </p>
           </div>
         ))}
       </section>
 
-    
-    
     </div>
   );
 }
