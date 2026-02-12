@@ -10,10 +10,11 @@ export default function Main() {
       {/* ---------- Hero Section ---------- */}
       <section className="flex flex-col items-center text-center px-6 pt-32">
         <h1 className="text-4xl md:text-6xl font-extrabold leading-tight max-w-4xl">
-          Sovereign Digital Vault <br />
-          <span className="text-indigo-500">
+         Digital Chain Vault<br />
+          <span className="text-indigo-500 text-xl md:text-2xl font-semibold">
             Encrypted. Decentralized. Unstoppable.
           </span>
+
         </h1>
 
         <p className="mt-6 text-gray-400 max-w-2xl text-lg">
