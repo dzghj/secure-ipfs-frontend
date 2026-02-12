@@ -59,12 +59,12 @@ export default function FileUploader({ token, user }) {
   return (
     <div className="p-6 max-w-lg mx-auto bg-white rounded-2xl shadow-md">
       <h2 className="text-xl font-semibold mb-4 text-gray-800 text-center">
-        Secure PDF Upload
+        Secure File Upload
       </h2>
 
       <input
         type="file"
-        accept="application/pdf"
+        accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.txt"
         onChange={(e) => setFile(e.target.files[0])}
         className="block w-full mb-3 text-sm text-gray-700"
       />
