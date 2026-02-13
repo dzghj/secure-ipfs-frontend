@@ -49,6 +49,31 @@ function MyFiles() {
     fetchFiles();
   }, [fetchFiles]);
 
+  const handleView = async (fileId) => {
+  try {
+    const res = await fetch(
+      `https://ipfs-data-server.onrender.com/api/readfile/${fileId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error("Failed to read file");
+    }
+
+    const blob = await res.blob();
+
+    const url = window.URL.createObjectURL(blob);
+    window.open(url, "_blank");
+  } catch (err) {
+    console.error(err);
+    alert("Error viewing file");
+  }
+};
+
   return (
     <div className="min-h-screen bg-neutral-900 p-6 text-gray-100">
       <h2 className="text-2xl font-bold mb-6">📄 My Files</h2>
@@ -94,16 +119,15 @@ function MyFiles() {
                   <td className="p-2 border border-neutral-700 text-xs text-blue-400">
                     {f.cid}
                   </td>
-                  <td className="p-2 border border-neutral-700">
-                    <a
-                      href={`https://ipfs.io/ipfs/${f.cid}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-green-400 hover:underline"
+                 <td className="p-2 border border-neutral-700">
+                    <button
+                        onClick={() => handleView(f.id)}
+                        className="text-green-400 hover:underline"
                     >
-                      View
-                    </a>
-                  </td>
+                        View
+                    </button>
+                   </td>
+
                 </tr>
               ))}
             </tbody>
