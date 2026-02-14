@@ -77,7 +77,14 @@ function MyFiles() {
  
     {/* Upload Section */}
     <div className="mb-8">
-     <FileUploader token={token} user={user} onUploadComplete={fetchFiles} />
+    <FileUploader 
+          token={token} 
+          user={user} 
+          onUploadComplete={(newFile) => {
+            setFiles(prev => [...prev, newFile]);
+          }} 
+     />
+
     </div>
  
     {/* Files List */}
