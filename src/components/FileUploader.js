@@ -40,7 +40,12 @@
       setFile(null);
    
       // Refresh file list
-      if (onUploadComplete) onUploadComplete(data.file);
+     // if (onUploadComplete) onUploadComplete(data.file);
+     if (onUploadComplete) {
+      setTimeout(() => {
+        onUploadComplete();
+      }, 0);
+    }
      } catch (err) {
       console.error(err);
       alert("Upload error: " + err.message);
