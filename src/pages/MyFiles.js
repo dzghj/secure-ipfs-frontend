@@ -52,6 +52,13 @@ function MyFiles() {
     );
  
     if (!res.ok) throw new Error("Failed to fetch file");
+
+      // 🔹 Check integrity header
+      const integrityVerified = res.headers.get("X-Integrity-Verified") === "true";
+      if (!integrityVerified) {
+        alert("⚠️ Warning: File integrity could not be verified!");
+      }
+      
  
     const blob = await res.blob();
     const url = window.URL.createObjectURL(blob);
