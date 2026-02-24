@@ -16,7 +16,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Main from "./pages/Main";
-import setPassword from "./pages/setPassword";
+import SetPassword from "./pages/setPassword";
 
   function App() {
     const [token, setToken] = React.useState(localStorage.getItem("token"));
