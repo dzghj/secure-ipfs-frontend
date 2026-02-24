@@ -35,8 +35,7 @@ export default function SetPassword() {
     setLoading(true);
 
     try {
-      const res = await axios.post(`${API_BASE_URL}/api/auth/set-password`, {
-        token,
+      const res = await axios.post(`${API_BASE_URL}/api/auth/set-password/${token}`, {
         password,
       });
 
@@ -45,7 +44,7 @@ export default function SetPassword() {
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
       // Redirect to dashboard after short delay
-      setTimeout(() => navigate("/dashboard"), 1500);
+      setTimeout(() => navigate("/myfiles"), 1500);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to set password");
     } finally {
