@@ -1,29 +1,28 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-export default function Register({ setToken, setUser }) {
+export default function Register() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   const handleRegister = async (e) => {
     e.preventDefault();
     setError("");
+    setMessage("");
 
     try {
       const res = await axios.post(
         `${API_BASE_URL}/api/auth/register`,
-        { email, password }
+        { email }
       );
 
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+      setMessage(res.data.message || "Check your email to continue.");
+      setEmail("");
 
-      setToken(res.data.token);
-      setUser(res.data.user);
     } catch (err) {
-      setError(err.response?.data?.message || "Register failed");
+      setError(err.response?.data?.message || "Registration failed");
     }
   };
 
@@ -43,6 +42,10 @@ export default function Register({ setToken, setUser }) {
       <h2 className="text-2xl font-bold text-center">
         Create your account
       </h2>
+
+      <p className="text-sm text-gray-400 text-center">
+        Enter your email to get started.
+      </p>
 
       <div>
         <label className="block text-sm text-gray-400 mb-1">
@@ -64,29 +67,15 @@ export default function Register({ setToken, setUser }) {
         />
       </div>
 
-      <div>
-        <label className="block text-sm text-gray-400 mb-1">
-          Password
-        </label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="
-            w-full px-3 py-2
-            bg-gray-900
-            border border-gray-700
-            rounded-md
-            focus:outline-none
-            focus:border-indigo-500
-          "
-          required
-        />
-      </div>
-
       {error && (
         <p className="text-red-500 text-sm text-center">
           {error}
+        </p>
+      )}
+
+      {message && (
+        <p className="text-green-500 text-sm text-center">
+          {message}
         </p>
       )}
 
@@ -101,7 +90,7 @@ export default function Register({ setToken, setUser }) {
           transition
         "
       >
-        Register
+        Continue
       </button>
     </form>
   );
