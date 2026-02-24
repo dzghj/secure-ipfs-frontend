@@ -3,7 +3,7 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 
 export default function SetPassword() {
-  const { token } = useParams(); // token from email link
+  const { token } = useParams();
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -20,7 +20,7 @@ export default function SetPassword() {
     const verifyToken = async () => {
       try {
         const res = await axios.get(`${API_BASE_URL}/api/auth/verify-token/${token}`);
-        setEmail(res.data.email); // capture email for resend
+        setEmail(res.data.email);
       } catch (err) {
         setError(err.response?.data?.message || "Invalid or expired token");
       }
@@ -28,10 +28,26 @@ export default function SetPassword() {
     verifyToken();
   }, [token, API_BASE_URL]);
 
+  // Password strength checker
+  const isStrongPassword = (pwd) => {
+    const regex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#_])[A-Za-z\d@$!%*?&^#_]{8,}$/;
+    return regex.test(pwd);
+  };
+
   const handleSetPassword = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
+
+    // Check password strength
+    if (!isStrongPassword(password)) {
+      setError(
+        "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character."
+      );
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -39,11 +55,10 @@ export default function SetPassword() {
         password,
       });
 
-      setSuccess("Password set successfully! Logging you in...");
+      setSuccess("Password set successfully! Redirecting to My Files...");
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      // Redirect to dashboard after short delay
       setTimeout(() => navigate("/myfiles"), 1500);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to set password");
@@ -88,6 +103,9 @@ export default function SetPassword() {
             className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-md focus:outline-none focus:border-indigo-500"
             required
           />
+          <p className="text-xs text-gray-400 mt-1">
+            Minimum 8 chars, include uppercase, lowercase, number & special char
+          </p>
         </div>
 
         <button
