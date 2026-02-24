@@ -1,28 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+  const navigate = useNavigate();
+
+  // Automatically redirect after 3 seconds when emailSent
+  useEffect(() => {
+    if (emailSent) {
+      const timer = setTimeout(() => navigate("/login"), 3000);
+      return () => clearTimeout(timer); // cleanup
+    }
+  }, [emailSent, navigate]);
 
   const handleRegister = async (e) => {
     e.preventDefault();
     setError("");
     setMessage("");
+    setLoading(true);
 
     try {
-      const res = await axios.post(
-        `${API_BASE_URL}/api/auth/register`,
-        { email }
-      );
+      const res = await axios.post(`${API_BASE_URL}/api/auth/register`, { email });
 
       setMessage(res.data.message || "Check your email to continue.");
       setEmail("");
+      setEmailSent(true);
 
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -47,51 +60,59 @@ export default function Register() {
         Enter your email to get started.
       </p>
 
-      <div>
-        <label className="block text-sm text-gray-400 mb-1">
-          Email
-        </label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+      {!emailSent && (
+        <div>
+          <label className="block text-sm text-gray-400 mb-1">Email</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="
+              w-full px-3 py-2
+              bg-gray-900
+              border border-gray-700
+              rounded-md
+              focus:outline-none
+              focus:border-indigo-500
+            "
+            required
+          />
+        </div>
+      )}
+
+      {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+      {message && <p className="text-green-500 text-sm text-center">{message}</p>}
+
+      {!emailSent ? (
+        <button
+          type="submit"
+          disabled={loading}
+          className={`
+            w-full py-3
+            rounded-lg
+            font-semibold
+            transition
+            ${loading ? "bg-gray-600 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700"}
+          `}
+        >
+          {loading ? "Sending..." : "Continue"}
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={() => navigate("/login")}
           className="
-            w-full px-3 py-2
-            bg-gray-900
-            border border-gray-700
-            rounded-md
-            focus:outline-none
-            focus:border-indigo-500
+            w-full py-3
+            bg-indigo-600
+            hover:bg-indigo-700
+            rounded-lg
+            font-semibold
+            transition
           "
-          required
-        />
-      </div>
-
-      {error && (
-        <p className="text-red-500 text-sm text-center">
-          {error}
-        </p>
+        >
+          Go to Login
+        </button>
       )}
-
-      {message && (
-        <p className="text-green-500 text-sm text-center">
-          {message}
-        </p>
-      )}
-
-      <button
-        type="submit"
-        className="
-          w-full py-3
-          bg-indigo-600
-          hover:bg-indigo-700
-          rounded-lg
-          font-semibold
-          transition
-        "
-      >
-        Continue
-      </button>
     </form>
   );
 }
