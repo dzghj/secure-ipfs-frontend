@@ -18,9 +18,8 @@ export default function Main() {
         </h1>
 
         <p className="mt-6 text-gray-400 max-w-2xl text-lg">
-          Secure your wills, legal documents, ownership records, and
-          high-value assets on a decentralized IPFS network.
-          End-to-end encrypted. No central authority.
+        Protect your wills, legal documents, ownership records, and high-value assets inside a private 
+        digital vault built for permanence and privacy. Locked with advanced security. Controlled only by you.
         </p>
 
         {/* CTA Buttons */}

@@ -35,7 +35,7 @@ export default function Layout({ onLogout }) {
           onClick={() => navigate("/")}
           className="text-2xl font-bold text-indigo-500 cursor-pointer"
         >
-          CryptoApp
+          Secure Vault
         </div>
 
         {/* ✅ Auth-aware button */}
@@ -67,7 +67,9 @@ export default function Layout({ onLogout }) {
 
       {/* ---------- Footer ---------- */}
       <footer className="py-6 text-center text-gray-500 text-sm border-t border-gray-800">
-        © {new Date().getFullYear()} CryptoApp. All rights reserved.
+        © {new Date().getFullYear()} Your Secure Vault.
+        <br/>
+        Store Your Important Files Safely and Privately.
       </footer>
     </div>
   );
