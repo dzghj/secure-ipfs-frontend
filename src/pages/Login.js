@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -6,34 +6,34 @@ export default function Login({ setToken, setUser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const loginCalledRef = useRef(false); // prevent double call in StrictMode
 
   const navigate = useNavigate();
- const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-
-  console.log("API_BASE_URL:", API_BASE_URL);
-
-//`${API_BASE_URL}/api/auth/login`
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (loading || loginCalledRef.current) return; // prevent multiple calls
     setError("");
+    setLoading(true);
+    loginCalledRef.current = true;
 
     try {
-      const res = await axios.post(
-        `${API_BASE_URL}/api/auth/login`,
-        { email, password }
-      );
+      const res = await axios.post(`${API_BASE_URL}/api/auth/login`, { email, password });
 
-      // persist auth
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
       setToken(res.data.token);
       setUser(res.data.user);
 
-      navigate("/"); // App.js will redirect to /admin if authenticated
+      navigate("/"); // redirect to main/dashboard
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
+      loginCalledRef.current = false;
     }
   };
 
@@ -42,8 +42,8 @@ export default function Login({ setToken, setUser }) {
       onSubmit={handleLogin}
       className="w-full max-w-md bg-gray-800 border border-gray-700 rounded-xl p-8 shadow-lg space-y-5"
     >
-      <h2 className="text-2xl font-bold text-center">
-        Sign in to your account
+      <h2 className="text-2xl font-bold text-center text-white">
+        Sign in to your vault
       </h2>
 
       <div>
@@ -68,15 +68,16 @@ export default function Login({ setToken, setUser }) {
         />
       </div>
 
-      {error && (
-        <p className="text-red-500 text-sm text-center">{error}</p>
-      )}
+      {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
       <button
         type="submit"
-        className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition"
+        disabled={loading}
+        className={`w-full py-3 rounded-lg font-semibold transition ${
+          loading ? "bg-gray-600 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700"
+        }`}
       >
-        Login
+        {loading ? "Logging in..." : "Login"}
       </button>
 
       <div className="text-center text-sm text-gray-400">
