@@ -35,7 +35,7 @@ export default function Layout({ onLogout }) {
           onClick={() => navigate("/")}
           className="text-2xl font-bold text-indigo-500 cursor-pointer"
         >
-          Secure Vault
+          Shadow Vault
         </div>
 
         {/* ✅ Auth-aware button */}
@@ -67,7 +67,7 @@ export default function Layout({ onLogout }) {
 
       {/* ---------- Footer ---------- */}
       <footer className="py-6 text-center text-gray-500 text-sm border-t border-gray-800">
-        © {new Date().getFullYear()} Secure Vault.
+        © {new Date().getFullYear()} Shadow Vault.
         <br/>
         Store Important Files Safely and Privately.
       </footer>
