@@ -10,7 +10,7 @@ export default function Main() {
       {/* ---------- Hero Section ---------- */}
       <section className="flex flex-col items-center text-center px-6 pt-32">
         <h1 className="text-4xl md:text-6xl font-extrabold leading-tight max-w-4xl">
-         Digital Chain Vault<br />
+         Shadow Chain Vault<br />
           <span className="text-indigo-500 text-xl md:text-2xl font-semibold">
             Encrypted. Decentralized. Unstoppable.
           </span>
