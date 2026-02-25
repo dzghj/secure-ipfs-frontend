@@ -67,9 +67,9 @@ export default function Layout({ onLogout }) {
 
       {/* ---------- Footer ---------- */}
       <footer className="py-6 text-center text-gray-500 text-sm border-t border-gray-800">
-        © {new Date().getFullYear()} Your Secure Vault.
+        © {new Date().getFullYear()} Secure Vault.
         <br/>
-        Store Your Important Files Safely and Privately.
+        Store Important Files Safely and Privately.
       </footer>
     </div>
   );

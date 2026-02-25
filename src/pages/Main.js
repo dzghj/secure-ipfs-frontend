@@ -19,7 +19,7 @@ export default function Main() {
 
         <p className="mt-6 text-gray-400 max-w-2xl text-lg">
         Protect your wills, legal documents, ownership records, and high-value assets inside a private 
-        digital vault built for permanence and privacy. Locked with advanced security. Controlled only by you.
+        digital vault.  Locked and  Controlled only by you.
         </p>
 
         {/* CTA Buttons */}
@@ -48,7 +48,7 @@ export default function Main() {
             desc: "Files are encrypted before leaving your device. Only you control the decryption keys.",
           },
           {
-            title: "Decentralized Storage (IPFS)",
+            title: "Decentralized Storage",
             desc: "Stored across distributed nodes — no single server can delete or censor your documents.",
           },
           {
