@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import FileUploader from "../components/FileUploader";
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 
 function MyFiles() {
   const [files, setFiles] = useState([]);
@@ -8,8 +10,7 @@ function MyFiles() {
 
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-
+ 
   const fetchFiles = useCallback(() => {
     if (!token) return;
 
