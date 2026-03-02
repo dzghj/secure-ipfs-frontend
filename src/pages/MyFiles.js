@@ -82,19 +82,19 @@ function MyFiles() {
       {/* Header Section */}
       <div className="max-w-5xl mb-10">
         <h2 className="text-3xl font-bold mb-3">
-          🏛 ShadowVault — Primary Legal Asset Vault
-        </h2>
+          🏛 ShadowVault — Your Most Important Document. Protected.
+          </h2>
 
-        <p className="text-gray-400 leading-relaxed text-sm max-w-3xl">
-          ShadowVault is engineered to safeguard a single mission-critical legal document.
-          This vault is purpose-built for high-value records such as:
-          Legal Wills, Estate Directives, Power of Attorney, Foundational Corporate Agreements,
-          or other legally binding instruments.
-          <br /><br />
-          All assets are encrypted at rest, access-controlled via secure token authentication,
-          and cryptographically integrity-verified upon retrieval.
-          This architecture aligns with modern digital security and compliance standards.
-        </p>
+          <p className="text-gray-400 leading-relaxed text-sm max-w-3xl">
+            ShadowVault is built to protect one mission-critical legal document —
+            the document that matters most.
+
+            Whether it’s a Will, Estate Directive, Power of Attorney,
+            or a foundational corporate agreement, 
+
+            Your document is encrypted, access-controlled, and integrity-checked
+            every time it is retrieved.
+          </p>
       </div>
 
       {/* Upload Section */}
@@ -141,77 +141,83 @@ function MyFiles() {
         {!loading && files.length > 0 && (
           <div className="space-y-8">
 
-            <div className="border border-neutral-700 rounded-lg p-6 bg-neutral-900">
+<div className="border border-neutral-700 rounded-xl p-6 bg-neutral-900 shadow-lg">
 
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="text-xl font-semibold">
-                    {files[0].filename}
-                  </h3>
-                  <p className="text-xs text-gray-400 mt-1">
-                    Classified: Confidential Legal Instrument
-                  </p>
-                </div>
+{/* Header */}
+<div className="flex justify-between items-center mb-6">
+  <div>
+    <h3 className="text-xl font-semibold text-white">
+      {files[0].filename}
+    </h3>
+    <p className="text-xs text-gray-500 mt-1">
+      Secure Document Vault
+    </p>
+  </div>
 
-                <button
-                  className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-md text-sm font-medium transition"
-                  onClick={() =>
-                    viewFile(files[0].id, files[0].filename)
-                  }
-                >
-                  Secure Access
-                </button>
-              </div>
+  <button
+    className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-md text-sm font-medium transition"
+    onClick={() => viewFile(files[0].id, files[0].filename)}
+  >
+    Secure Access
+  </button>
+</div>
 
-              <div className="grid grid-cols-2 gap-8 mt-8 text-sm">
+{/* Metadata Table */}
+<div className="overflow-hidden rounded-lg border border-neutral-800">
+  <table className="w-full text-sm text-left text-gray-300">
+    <tbody className="divide-y divide-neutral-800">
 
-                <div>
-                  <p className="text-gray-500">Document Classification</p>
-                  <p className="text-white font-medium">
-                    Legal / Estate / High Sensitivity
-                  </p>
-                </div>
+      <tr>
+        <td className="px-4 py-3 text-gray-500 w-1/3">
+          Uploaded
+        </td>
+        <td className="px-4 py-3 font-medium text-white">
+          {files[0].createdAt
+            ? new Date(files[0].createdAt).toLocaleDateString()
+            : "—"}
+        </td>
+      </tr>
 
-                <div>
-                  <p className="text-gray-500">Uploaded Date</p>
-                  <p className="text-white font-medium">
-                    {files[0].createdAt
-                      ? new Date(files[0].createdAt).toLocaleDateString()
-                      : "—"}
-                  </p>
-                </div>
+      <tr>
+        <td className="px-4 py-3 text-gray-500">
+          Encryption
+        </td>
+        <td className="px-4 py-3 text-green-400 font-medium">
+          AES-256
+        </td>
+      </tr>
 
-                <div>
-                  <p className="text-gray-500">Encryption Standard</p>
-                  <p className="text-green-400 font-medium">
-                    AES-256 Encryption (At Rest)
-                  </p>
-                </div>
+      <tr>
+        <td className="px-4 py-3 text-gray-500">
+          Integrity Status
+        </td>
+        <td className="px-4 py-3 text-blue-400 font-medium">
+          Cryptographically Verified
+        </td>
+      </tr>
 
-                <div>
-                  <p className="text-gray-500">Integrity Verification</p>
-                  <p className="text-blue-400 font-medium">
-                    Cryptographically Verified
-                  </p>
-                </div>
+      <tr>
+        <td className="px-4 py-3 text-gray-500 align-top">
+          CID Reference
+        </td>
+        <td className="px-4 py-3 text-xs text-blue-400 break-all">
+          {files[0].cid}
+        </td>
+      </tr>
 
-                <div>
-                  <p className="text-gray-500">Integrity Reference (CID)</p>
-                  <p className="text-xs text-blue-400 break-all">
-                    {files[0].cid}
-                  </p>
-                </div>
+      <tr>
+        <td className="px-4 py-3 text-gray-500">
+          Access Model
+        </td>
+        <td className="px-4 py-3 font-medium text-white">
+          Token-Based Authorization
+        </td>
+      </tr>
 
-                <div>
-                  <p className="text-gray-500">Access Control Model</p>
-                  <p className="text-white font-medium">
-                    Token-Based Zero-Trust Authorization
-                  </p>
-                </div>
-
-              </div>
-            </div>
-
+    </tbody>
+  </table>
+</div>
+</div>
             <p className="text-xs text-gray-500 leading-relaxed">
               This vault is designed for the preservation of a single legally binding document.
               All retrieval attempts are authenticated and integrity-validated.
