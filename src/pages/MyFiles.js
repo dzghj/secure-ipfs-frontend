@@ -8,6 +8,7 @@ function MyFiles() {
 
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   const fetchFiles = useCallback(() => {
     if (!token) return;
@@ -15,7 +16,7 @@ function MyFiles() {
     setLoading(true);
     setError("");
 
-    fetch("https://ipfs-data-server.onrender.com/api/myfiles", {
+    fetch(`${API_BASE_URL}/api/myfiles`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -44,7 +45,7 @@ function MyFiles() {
 
     try {
       const res = await fetch(
-        `https://ipfs-data-server.onrender.com/api/file/${fileId}/view`,
+        `${API_BASE_URL}/api/file/${fileId}/view`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -144,32 +145,22 @@ function MyFiles() {
 <div className="border border-neutral-700 rounded-xl p-6 bg-neutral-900 shadow-lg">
 
 {/* Header */}
-<div className="flex justify-between items-center mb-6">
-  <div>
-    <h3 className="text-xl font-semibold text-white">
-      {files[0].filename}
-    </h3>
-    <p className="text-xs text-gray-500 mt-1">
-      Secure Document Vault
-    </p>
-  </div>
-
-  <button
-    className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-md text-sm font-medium transition"
-    onClick={() => viewFile(files[0].id, files[0].filename)}
-  >
-    Secure Access
-  </button>
-</div>
 
 {/* Metadata Table */}
 <div className="overflow-hidden rounded-lg border border-neutral-800">
   <table className="w-full text-sm text-left text-gray-300">
     <tbody className="divide-y divide-neutral-800">
-
+    <tr>
+        <td className="px-4 py-3 text-gray-500">
+        File Name
+        </td>
+        <td className="px-4 py-3 font-medium text-white">
+        {files[0].filename}
+        </td>
+      </tr>
       <tr>
         <td className="px-4 py-3 text-gray-500 w-1/3">
-          Uploaded
+          Created
         </td>
         <td className="px-4 py-3 font-medium text-white">
           {files[0].createdAt
@@ -179,11 +170,13 @@ function MyFiles() {
       </tr>
 
       <tr>
-        <td className="px-4 py-3 text-gray-500">
-          Encryption
+        <td className="px-4 py-3 text-gray-500 w-1/3">
+          Updated
         </td>
-        <td className="px-4 py-3 text-green-400 font-medium">
-          AES-256
+        <td className="px-4 py-3 font-medium text-white">
+          {files[0].createdAt
+            ? new Date(files[0].updatedAt).toLocaleDateString()
+            : "—"}
         </td>
       </tr>
 
@@ -207,10 +200,15 @@ function MyFiles() {
 
       <tr>
         <td className="px-4 py-3 text-gray-500">
-          Access Model
+        Secure Access
         </td>
         <td className="px-4 py-3 font-medium text-white">
-          Token-Based Authorization
+        <button
+        className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-md text-sm font-medium transition"
+        onClick={() => viewFile(files[0].id, files[0].filename)}
+      >
+        View
+      </button>
         </td>
       </tr>
 
