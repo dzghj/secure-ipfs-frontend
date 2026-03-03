@@ -43,7 +43,7 @@ function MyFiles() {
 
   const viewFile = async (fileId, filename) => {
     if (!token) return;
-
+  
     try {
       const res = await fetch(
         `${API_BASE_URL}/api/file/${fileId}/view`,
@@ -51,27 +51,44 @@ function MyFiles() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-
-      if (!res.ok) throw new Error("Secure retrieval failed");
-
-      const integrityVerified =
-        res.headers.get("X-Integrity-Verified") === "true";
-
-      if (!integrityVerified) {
-        alert("⚠️ Integrity verification failed. Please contact support.");
+  
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.message || "Secure retrieval failed");
       }
-
-      const blob = await res.blob();
+  
+      const data = await res.json();
+  
+      // 🔐 Integrity check (now from JSON body)
+      if (!data.integrityVerified) {
+        alert("⚠️ Integrity verification failed. Please contact support.");
+        return;
+      }
+  
+      // 🔁 Convert base64 back to binary
+      const byteCharacters = atob(data.data);
+      const byteNumbers = new Array(byteCharacters.length);
+  
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+  
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: data.mimeType });
+  
       const url = window.URL.createObjectURL(blob);
-
+  
+      // Open in new tab
       const a = document.createElement("a");
       a.href = url;
       a.target = "_blank";
-      a.download = filename;
+      a.download = data.filename || filename;
       document.body.appendChild(a);
       a.click();
       a.remove();
+  
       window.URL.revokeObjectURL(url);
+  
     } catch (err) {
       console.error(err);
       alert("Secure document access failed: " + err.message);
