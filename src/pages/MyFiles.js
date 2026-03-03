@@ -182,8 +182,8 @@ function MyFiles() {
           Created
         </td>
         <td className="px-4 py-3 font-medium text-white">
-          {files[0].createdAt
-            ? new Date(files[0].createdAt).toLocaleDateString()
+          {files[0].uploadedAt
+            ? new Date(files[0].uploadedAt).toLocaleDateString()
             : "—"}
         </td>
       </tr>
