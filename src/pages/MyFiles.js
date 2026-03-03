@@ -25,6 +25,7 @@ function MyFiles() {
       .then(async (res) => {
         const data = await res.json();
         if (!res.ok) throw new Error(data?.error || "Failed to load vault asset");
+        console.log("FILES:", data.files);
 
         if (Array.isArray(data.files)) setFiles(data.files);
         else setFiles([]);
@@ -183,17 +184,6 @@ function MyFiles() {
         <td className="px-4 py-3 font-medium text-white">
           {files[0].createdAt
             ? new Date(files[0].createdAt).toLocaleDateString()
-            : "—"}
-        </td>
-      </tr>
-
-      <tr>
-        <td className="px-4 py-3 text-gray-500 w-1/3">
-          Updated
-        </td>
-        <td className="px-4 py-3 font-medium text-white">
-          {files[0].createdAt
-            ? new Date(files[0].updatedAt).toLocaleDateString()
             : "—"}
         </td>
       </tr>
