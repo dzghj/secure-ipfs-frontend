@@ -10,10 +10,22 @@ function MyFiles() {
   const [loading, setLoading] = useState(true);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
+  /* NEW KEYHOLDER STATES */
+  const [keyHolderOn, setKeyHolderOn] = useState(false);
+  const [keyHolderEmails, setKeyHolderEmails] = useState([]);
+  const [isKeyHolderMode, setIsKeyHolderMode] = useState(false);
+
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
 
   const hasReachedLimit = files.length >= MAX_FILES;
+
+  /* Detect keyholder login */
+  useEffect(() => {
+    if (user?.role === "keyholder") {
+      setIsKeyHolderMode(true);
+    }
+  }, [user]);
 
   const fetchFiles = useCallback(() => {
     if (!token) return;
@@ -32,6 +44,16 @@ function MyFiles() {
 
         if (Array.isArray(data.files)) setFiles(data.files);
         else setFiles([]);
+
+        /* Load keyholder settings if backend provides them */
+        if (data.keyHolderOn !== undefined) {
+          setKeyHolderOn(data.keyHolderOn);
+        }
+
+        if (Array.isArray(data.keyHolderEmails)) {
+          setKeyHolderEmails(data.keyHolderEmails);
+        }
+
       })
       .catch((err) => {
         console.error(err);
@@ -106,9 +128,53 @@ function MyFiles() {
 
         <p className="text-gray-400 max-w-3xl leading-relaxed">
           Secure, encrypted, and blockchain-verified storage for your most critical
-          legal and ownership documents. Each record is cryptographically sealed
-          and permanently anchored for evidentiary integrity.
+          legal and ownership documents.
         </p>
+      </div>
+
+      {/* KEYHOLDER EXECUTOR BANNER */}
+      {isKeyHolderMode && (
+        <div className="mb-8 p-4 bg-purple-900 border border-purple-700 rounded-lg">
+          <p className="text-sm text-purple-200">
+            Executor access mode enabled. You may download vault records but cannot modify data.
+          </p>
+        </div>
+      )}
+
+      {/* KEYHOLDER SETTINGS PANEL */}
+      <div className="mb-12 bg-neutral-900 rounded-2xl p-8 border border-neutral-800">
+
+        <h3 className="text-xl font-semibold mb-4">
+          🔐 Dead-Man Switch Protection
+        </h3>
+
+        <p className="text-gray-400 text-sm mb-6">
+          If enabled, ShadowVault monitors account inactivity.
+          After 30 days a reminder email is sent.
+          After 40 days your designated KeyHolder(s) receive recovery access.
+        </p>
+
+        <div className="space-y-2 mb-4">
+          {keyHolderEmails.length === 0 && (
+            <p className="text-gray-500 text-sm">No keyholders configured</p>
+          )}
+
+          {keyHolderEmails.map((email, i) => (
+            <div key={i} className="text-sm text-gray-300">
+              KeyHolder {i + 1}: {email}
+            </div>
+          ))}
+        </div>
+
+        <button
+          onClick={() => setKeyHolderOn(!keyHolderOn)}
+          className={`px-4 py-2 rounded-md ${
+            keyHolderOn ? "bg-green-600" : "bg-neutral-700"
+          }`}
+        >
+          {keyHolderOn ? "Enabled" : "Disabled"}
+        </button>
+
       </div>
 
       {/* Vault Capacity Section */}
@@ -128,40 +194,14 @@ function MyFiles() {
           </div>
         </div>
 
-        {hasReachedLimit ? (
-          <div className="bg-neutral-950 border border-yellow-700 rounded-xl p-6 text-sm text-gray-300">
-            <p className="text-yellow-400 font-medium mb-3">
-              Vault storage limit reached.
-            </p>
-
-            <p className="mb-6 text-gray-400">
-              To upload additional protected records, request extended access
-              or upgrade your enterprise capacity plan.
-            </p>
-
-            <div className="flex gap-4">
-              <button
-                onClick={() => setShowUpgradeModal(true)}
-                className="bg-yellow-600 hover:bg-yellow-700 px-5 py-2 rounded-lg font-medium text-black transition"
-              >
-                Request Access
-              </button>
-
-              <button
-                className="border border-neutral-600 hover:border-white px-5 py-2 rounded-lg font-medium transition"
-                onClick={() => window.location.href = "/upgrade"}
-              >
-                Upgrade Plan
-              </button>
-            </div>
-          </div>
-        ) : (
+        {!hasReachedLimit && !isKeyHolderMode && (
           <FileUploader
             token={token}
             user={user}
             onUploadComplete={fetchFiles}
           />
         )}
+
       </div>
 
       {/* Vault Records */}
@@ -173,12 +213,6 @@ function MyFiles() {
 
         {error && (
           <p className="text-red-400 mb-4">⚠ {error}</p>
-        )}
-
-        {!loading && files.length === 0 && (
-          <p className="text-gray-500 text-sm">
-            No protected records secured yet.
-          </p>
         )}
 
         {!loading && files.length > 0 && (
@@ -230,16 +264,45 @@ function MyFiles() {
                         </td>
                       </tr>
 
+                      {/* KEYHOLDER ACCESS ROW */}
+                      <tr>
+                        <td className="px-4 py-3 text-gray-500">
+                          Dead Man Protection Active
+                        </td>
+                        <td className="px-4 py-3 text-purple-400 text-sm">
+                          {file.keyHolderOn ? "Enabled" : "Disabled"}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="px-4 py-3 text-gray-500">
+                          KeyHolder Unlock Remaining
+                        </td>
+                        <td className="px-4 py-3 text-purple-400 text-sm">
+                          18 days remaining
+                        </td>
+                      </tr>
+                       <tr>
+                        <td className="px-4 py-3 text-gray-500">
+                          Last  Login
+                        </td>
+                        <td className="px-4 py-3 text-blue-400 font-medium">
+                          
+                        </td>
+                      </tr>
                       <tr>
                         <td className="px-4 py-3 text-gray-500">
                           Secure Access
                         </td>
                         <td className="px-4 py-3">
                           <button
-                            className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-md text-sm font-medium transition"
+                            className={`px-5 py-2 rounded-md text-sm font-medium ${
+                              isKeyHolderMode
+                                ? "bg-purple-600 hover:bg-purple-700"
+                                : "bg-green-600 hover:bg-green-700"
+                            }`}
                             onClick={() => viewFile(file.id, file.filename)}
                           >
-                            View
+                            {isKeyHolderMode ? "KeyHolder View" : "View"}
                           </button>
                         </td>
                       </tr>
@@ -249,8 +312,7 @@ function MyFiles() {
                 </div>
               </div>
             ))}
-
-            <p className="text-xs text-gray-500 leading-relaxed border-t border-neutral-800 pt-6">
+             <p className="text-xs text-gray-500 leading-relaxed border-t border-neutral-800 pt-6">
               ⚠ Once a record is stored and cryptographically anchored to the blockchain,
               it cannot be removed, altered, or overwritten. ShadowVault preserves
               the original immutable reference to maintain evidentiary integrity
@@ -259,8 +321,7 @@ function MyFiles() {
           </div>
         )}
       </div>
-
-      {/* Request Access Modal */}
+       {/* Request Access Modal */}
       {showUpgradeModal && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-neutral-900 border border-neutral-700 rounded-2xl p-8 w-full max-w-md shadow-2xl">
@@ -294,6 +355,7 @@ function MyFiles() {
           </div>
         </div>
       )}
+
 
     </div>
   );
