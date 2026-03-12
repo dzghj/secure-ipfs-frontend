@@ -134,9 +134,10 @@ function MyFiles() {
 
     <div className="min-h-screen bg-neutral-950 p-10 text-gray-100">
 
+     <div className="W-[80%] p-10">
       {/* HEADER */}
 
-      <div className="max-w-6xl mb-12">
+      <div className="w-full mb-12">
 
         <h2 className="text-4xl font-bold mb-4">
           🏛 ShadowVault
@@ -150,7 +151,7 @@ function MyFiles() {
 
       {/* SECURITY SCORE */}
 
-      <div className="mb-12 bg-neutral-900 rounded-2xl p-8 border border-neutral-800 max-w-6xl">
+      <div className="mb-12 bg-neutral-900 rounded-2xl p-8 border border-neutral-800 w-full">
 
         <h3 className="text-xl font-semibold mb-4">
           🛡 Vault Security Score
@@ -172,7 +173,7 @@ function MyFiles() {
 
       {/* THREAT MONITOR */}
 
-      <div className="mb-12 bg-neutral-900 rounded-2xl p-8 border border-neutral-800 max-w-6xl">
+      <div className="mb-12 bg-neutral-900 rounded-2xl p-8 border border-neutral-800 w-full">
 
         <h3 className="text-xl font-semibold mb-4">
           🚨 Threat Monitoring
@@ -258,7 +259,7 @@ function MyFiles() {
 
       {/* FILES */}
 
-      <div className="bg-neutral-900 shadow rounded-2xl p-10 border border-neutral-800 max-w-6xl">
+      <div className="bg-neutral-900 shadow rounded-2xl p-10 border border-neutral-800 w-full">
 
         {loading && <p>Loading vault records...</p>}
 
@@ -356,6 +357,7 @@ function MyFiles() {
 
       </div>
 
+    </div>
     </div>
 
   );
