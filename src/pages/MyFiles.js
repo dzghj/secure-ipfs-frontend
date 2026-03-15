@@ -131,7 +131,7 @@ function MyFiles() {
 
     <div className="min-h-screen bg-neutral-950 text-gray-100">
 
-      <div className="max-w-7xl mx-auto px-8 py-12">
+      <div className="w-[80%] max-w-[1600px] mx-auto px-8 py-12">
 
         {/* HEADER */}
 
