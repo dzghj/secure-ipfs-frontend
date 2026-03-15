@@ -9,11 +9,9 @@ function MyFiles() {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  /* KEYHOLDER */
   const [keyHolderOn, setKeyHolderOn] = useState(false);
   const [isKeyHolderMode, setIsKeyHolderMode] = useState(false);
 
-  /* SECURITY */
   const [securityAlerts, setSecurityAlerts] = useState([]);
   const [lastLogin, setLastLogin] = useState(null);
 
@@ -22,7 +20,6 @@ function MyFiles() {
 
   const hasReachedLimit = files.length >= MAX_FILES;
 
-  /* Detect keyholder login */
   useEffect(() => {
     if (user?.role === "keyholder") {
       setIsKeyHolderMode(true);
@@ -132,232 +129,238 @@ function MyFiles() {
 
   return (
 
-    <div className="min-h-screen bg-neutral-950 p-10 text-gray-100">
+    <div className="min-h-screen bg-neutral-950 text-gray-100">
 
-     <div className="W-[80%] p-10">
-      {/* HEADER */}
+      <div className="max-w-7xl mx-auto px-8 py-12">
 
-      <div className="w-full mb-12">
+        {/* HEADER */}
 
-        <h2 className="text-4xl font-bold mb-4">
-          🏛 ShadowVault
-        </h2>
+        <div className="mb-12">
 
-        <p className="text-gray-400">
-          Secure encrypted digital asset vault
-        </p>
+          <h1 className="text-4xl font-bold tracking-tight">
+            ShadowVault
+          </h1>
 
-      </div>
+          <p className="text-neutral-400 mt-2">
+            Secure encrypted digital asset vault
+          </p>
 
-      {/* SECURITY SCORE */}
-
-      <div className="mb-12 bg-neutral-900 rounded-2xl p-8 border border-neutral-800 w-full">
-
-        <h3 className="text-xl font-semibold mb-4">
-          🛡 Vault Security Score
-        </h3>
-
-        <div className="text-4xl font-bold text-green-400">
-          {securityScore()} / 100
         </div>
 
-        {lastLogin && (
+        {/* DASHBOARD GRID */}
 
-          <p className="text-xs text-gray-500 mt-2">
-            Last Login: {new Date(lastLogin).toLocaleString()}
-          </p>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
 
-        )}
+          {/* SECURITY SCORE */}
 
-      </div>
+          <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6">
 
-      {/* THREAT MONITOR */}
+            <h3 className="text-sm text-neutral-400 mb-3">
+              Vault Security Score
+            </h3>
 
-      <div className="mb-12 bg-neutral-900 rounded-2xl p-8 border border-neutral-800 w-full">
+            <div className="text-4xl font-bold text-green-400">
+              {securityScore()} / 100
+            </div>
 
-        <h3 className="text-xl font-semibold mb-4">
-          🚨 Threat Monitoring
-        </h3>
+            {lastLogin && (
+              <p className="text-xs text-neutral-500 mt-2">
+                Last login: {new Date(lastLogin).toLocaleString()}
+              </p>
+            )}
 
-        {securityAlerts.length === 0 ? (
+          </div>
 
-          <p className="text-green-400 text-sm">
-            ✔ No threats detected
-          </p>
+          {/* KEYHOLDER */}
 
-        ) : (
+          <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6">
 
-          securityAlerts.map((alert, i) => (
+            <h3 className="text-sm text-neutral-400 mb-4">
+              Keyholder Protection
+            </h3>
 
-            <div
-              key={i}
-              className="border border-red-800 p-4 rounded-lg mb-3 bg-neutral-950 flex justify-between"
+            <button
+              onClick={() => setKeyHolderOn(!keyHolderOn)}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition ${
+                keyHolderOn
+                  ? "bg-green-600 hover:bg-green-500"
+                  : "bg-neutral-700 hover:bg-neutral-600"
+              }`}
             >
+              {keyHolderOn ? "Enabled" : "Disabled"}
+            </button>
 
-              <span className="text-red-400 text-sm">
-                {alert.type}
-              </span>
+          </div>
 
-              <span className="text-gray-500 text-xs">
-                {new Date(alert.date).toLocaleString()}
+          {/* VAULT CAPACITY */}
+
+          <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6">
+
+            <div className="flex justify-between items-center mb-4">
+
+              <h3 className="text-sm text-neutral-400">
+                Vault Capacity
+              </h3>
+
+              <span className="text-sm text-neutral-500">
+                {files.length} / {MAX_FILES}
               </span>
 
             </div>
 
-          ))
-
-        )}
-
-      </div>
-
-      {/* KEYHOLDER */}
-
-      <div className="mb-12 bg-neutral-900 rounded-2xl p-8 border border-neutral-800">
-
-        <h3 className="text-xl font-semibold mb-4">
-          🔐 Keyholder Protection
-        </h3>
-
-        <button
-          onClick={() => setKeyHolderOn(!keyHolderOn)}
-          className={`px-4 py-2 rounded-md ${
-            keyHolderOn ? "bg-green-600" : "bg-neutral-700"
-          }`}
-        >
-          {keyHolderOn ? "Enabled" : "Disabled"}
-        </button>
-
-      </div>
-
-      {/* VAULT CAPACITY */}
-
-      <div className="mb-12 bg-neutral-900 rounded-2xl p-8 border border-neutral-800">
-
-        <div className="flex justify-between mb-4">
-
-          <h3 className="text-xl font-semibold">
-            Vault Capacity
-          </h3>
-
-          <span className="text-gray-400">
-            {files.length} / {MAX_FILES}
-          </span>
-
-        </div>
-
-        {!hasReachedLimit && !isKeyHolderMode && (
-
-          <FileUploader
-            token={token}
-            user={user}
-            onUploadComplete={fetchFiles}
-          />
-
-        )}
-
-      </div>
-
-      {/* FILES */}
-
-      <div className="bg-neutral-900 shadow rounded-2xl p-10 border border-neutral-800 w-full">
-
-        {loading && <p>Loading vault records...</p>}
-
-        {!loading && files.length > 0 && (
-
-          <div className="space-y-8">
-
-            {files.map((file) => (
-
-              <div
-                key={file.id}
-                className="border border-neutral-800 p-6 rounded-xl bg-neutral-950"
-              >
-
-                <table className="w-full text-sm text-gray-300">
-
-                  <tbody>
-
-                    <tr>
-
-                      <td className="py-2 text-gray-500 w-1/3">
-                        File Name
-                      </td>
-
-                      <td className="text-white">
-                        {file.filename}
-                      </td>
-
-                    </tr>
-
-                    <tr>
-
-                      <td className="py-2 text-gray-500">
-                        Created
-                      </td>
-
-                      <td>
-                        {file.uploadedAt
-                          ? new Date(file.uploadedAt).toLocaleDateString()
-                          : "—"}
-                      </td>
-
-                    </tr>
-
-                    <tr>
-
-                      <td className="py-2 text-gray-500">
-                        CID
-                      </td>
-
-                      <td className="text-blue-400 break-all">
-                        {file.cid}
-                      </td>
-
-                    </tr>
-
-                    <tr>
-
-                      <td className="py-2 text-gray-500">
-                        Access
-                      </td>
-
-                      <td>
-
-                        <button
-                          className={`px-5 py-2 rounded-md text-sm font-medium ${
-                            isKeyHolderMode
-                              ? "bg-purple-600"
-                              : "bg-green-600"
-                          }`}
-                          onClick={() =>
-                            viewFile(file.id, file.filename)
-                          }
-                        >
-                          {isKeyHolderMode
-                            ? "KeyHolder View"
-                            : "View"}
-                        </button>
-
-                      </td>
-
-                    </tr>
-
-                  </tbody>
-
-                </table>
-
-              </div>
-
-            ))}
+            {!hasReachedLimit && !isKeyHolderMode && (
+              <FileUploader
+                token={token}
+                user={user}
+                onUploadComplete={fetchFiles}
+              />
+            )}
 
           </div>
 
-        )}
+        </div>
+
+        {/* THREAT MONITOR */}
+
+        <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-8 mb-12">
+
+          <h3 className="text-lg font-semibold mb-6">
+            Threat Monitoring
+          </h3>
+
+          {securityAlerts.length === 0 ? (
+
+            <p className="text-green-400 text-sm">
+              No threats detected
+            </p>
+
+          ) : (
+
+            <div className="space-y-3">
+
+              {securityAlerts.map((alert, i) => (
+
+                <div
+                  key={i}
+                  className="flex justify-between items-center bg-neutral-950 border border-red-900 rounded-lg p-4"
+                >
+
+                  <span className="text-red-400 text-sm">
+                    {alert.type}
+                  </span>
+
+                  <span className="text-xs text-neutral-500">
+                    {new Date(alert.date).toLocaleString()}
+                  </span>
+
+                </div>
+
+              ))}
+
+            </div>
+
+          )}
+
+        </div>
+
+        {/* FILES */}
+
+        <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-8">
+
+          <h3 className="text-lg font-semibold mb-6">
+            Vault Records
+          </h3>
+
+          {loading && (
+            <p className="text-neutral-400">
+              Loading vault records...
+            </p>
+          )}
+
+          {!loading && files.length > 0 && (
+
+            <div className="space-y-6">
+
+              {files.map((file) => (
+
+                <div
+                  key={file.id}
+                  className="bg-neutral-950 border border-neutral-800 rounded-lg p-6"
+                >
+
+                  <table className="w-full text-sm">
+
+                    <tbody className="divide-y divide-neutral-800">
+
+                      <tr>
+                        <td className="py-3 text-neutral-500 w-1/3">
+                          File Name
+                        </td>
+                        <td className="text-white">
+                          {file.filename}
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td className="py-3 text-neutral-500">
+                          Created
+                        </td>
+                        <td>
+                          {file.uploadedAt
+                            ? new Date(file.uploadedAt).toLocaleDateString()
+                            : "—"}
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td className="py-3 text-neutral-500">
+                          CID
+                        </td>
+                        <td className="text-blue-400 break-all">
+                          {file.cid}
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td className="py-3 text-neutral-500">
+                          Access
+                        </td>
+                        <td>
+
+                          <button
+                            className={`px-5 py-2 rounded-md text-sm font-medium transition ${
+                              isKeyHolderMode
+                                ? "bg-purple-600 hover:bg-purple-500"
+                                : "bg-green-600 hover:bg-green-500"
+                            }`}
+                            onClick={() =>
+                              viewFile(file.id, file.filename)
+                            }
+                          >
+                            {isKeyHolderMode
+                              ? "KeyHolder View"
+                              : "View"}
+                          </button>
+
+                        </td>
+                      </tr>
+
+                    </tbody>
+
+                  </table>
+
+                </div>
+
+              ))}
+
+            </div>
+
+          )}
+
+        </div>
 
       </div>
 
-    </div>
     </div>
 
   );
