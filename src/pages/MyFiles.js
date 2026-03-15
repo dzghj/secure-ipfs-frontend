@@ -129,9 +129,9 @@ function MyFiles() {
 
   return (
 
-    <div className="min-h-screen bg-neutral-950 text-gray-100">
+    <div className="min-h-screen text-gray-100 bg-gradient-to-b from-neutral-950 via-neutral-950 to-black">
 
-      <div className="w-[80%] max-w-[1600px] mx-auto px-8 py-12">
+      <div className="w-[80%] max-w-[1600px] mx-auto px-12 py-16">
 
         {/* HEADER */}
 
@@ -153,7 +153,7 @@ function MyFiles() {
 
           {/* SECURITY SCORE */}
 
-          <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6">
+          <div className="bg-neutral-900/60 backdrop-blur-md border border-neutral-800 rounded-xl p-6 hover:border-neutral-700 transition">
 
             <h3 className="text-sm text-neutral-400 mb-3">
               Vault Security Score
@@ -163,8 +163,17 @@ function MyFiles() {
               {securityScore()} / 100
             </div>
 
+            {/* Progress Bar */}
+
+            <div className="mt-4 w-full h-2 bg-neutral-800 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-green-500 transition-all"
+                style={{ width: `${securityScore()}%` }}
+              />
+            </div>
+
             {lastLogin && (
-              <p className="text-xs text-neutral-500 mt-2">
+              <p className="text-xs text-neutral-500 mt-3">
                 Last login: {new Date(lastLogin).toLocaleString()}
               </p>
             )}
@@ -173,7 +182,7 @@ function MyFiles() {
 
           {/* KEYHOLDER */}
 
-          <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6">
+          <div className="bg-neutral-900/60 backdrop-blur-md border border-neutral-800 rounded-xl p-6 hover:border-neutral-700 transition">
 
             <h3 className="text-sm text-neutral-400 mb-4">
               Keyholder Protection
@@ -181,9 +190,9 @@ function MyFiles() {
 
             <button
               onClick={() => setKeyHolderOn(!keyHolderOn)}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition ${
+              className={`px-4 py-2 rounded-md text-sm font-medium transition shadow-lg ${
                 keyHolderOn
-                  ? "bg-green-600 hover:bg-green-500"
+                  ? "bg-green-600 hover:bg-green-500 shadow-green-600/20"
                   : "bg-neutral-700 hover:bg-neutral-600"
               }`}
             >
@@ -194,7 +203,7 @@ function MyFiles() {
 
           {/* VAULT CAPACITY */}
 
-          <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6">
+          <div className="bg-neutral-900/60 backdrop-blur-md border border-neutral-800 rounded-xl p-6 hover:border-neutral-700 transition">
 
             <div className="flex justify-between items-center mb-4">
 
@@ -209,11 +218,13 @@ function MyFiles() {
             </div>
 
             {!hasReachedLimit && !isKeyHolderMode && (
+
               <FileUploader
                 token={token}
                 user={user}
                 onUploadComplete={fetchFiles}
               />
+
             )}
 
           </div>
@@ -222,7 +233,7 @@ function MyFiles() {
 
         {/* THREAT MONITOR */}
 
-        <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-8 mb-12">
+        <div className="bg-neutral-900/60 backdrop-blur-md border border-neutral-800 rounded-xl p-8 mb-12 hover:border-neutral-700 transition">
 
           <h3 className="text-lg font-semibold mb-6">
             Threat Monitoring
@@ -231,7 +242,7 @@ function MyFiles() {
           {securityAlerts.length === 0 ? (
 
             <p className="text-green-400 text-sm">
-              No threats detected
+              ✔ No threats detected
             </p>
 
           ) : (
@@ -265,7 +276,7 @@ function MyFiles() {
 
         {/* FILES */}
 
-        <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-8">
+        <div className="bg-neutral-900/60 backdrop-blur-md border border-neutral-800 rounded-xl p-8 hover:border-neutral-700 transition">
 
           <h3 className="text-lg font-semibold mb-6">
             Vault Records
@@ -328,10 +339,10 @@ function MyFiles() {
                         <td>
 
                           <button
-                            className={`px-5 py-2 rounded-md text-sm font-medium transition ${
+                            className={`px-5 py-2 rounded-md text-sm font-medium transition shadow-lg ${
                               isKeyHolderMode
-                                ? "bg-purple-600 hover:bg-purple-500"
-                                : "bg-green-600 hover:bg-green-500"
+                                ? "bg-purple-600 hover:bg-purple-500 shadow-purple-600/20"
+                                : "bg-green-600 hover:bg-green-500 shadow-green-600/20"
                             }`}
                             onClick={() =>
                               viewFile(file.id, file.filename)
