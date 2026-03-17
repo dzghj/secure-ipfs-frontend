@@ -15,6 +15,8 @@ function MyFiles() {
   const [securityAlerts, setSecurityAlerts] = useState([]);
   const [lastLogin, setLastLogin] = useState(null);
 
+  const [aiMessage,setAiMessage] = useState("");
+
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -129,244 +131,207 @@ function MyFiles() {
 
   return (
 
-    <div className="min-h-screen text-gray-100 bg-gradient-to-b from-neutral-950 via-neutral-950 to-black">
+    <div className="min-h-screen text-gray-100 bg-neutral-950">
 
-      <div className="w-[80%] max-w-[1600px] mx-auto px-12 py-16">
+      <div className="w-[90%] mx-auto py-16">
 
         {/* HEADER */}
 
-        <div className="mb-12">
-
-          <h1 className="text-4xl font-bold tracking-tight">
-            ShadowVault
-          </h1>
-
+        <div className="mb-10">
+          <h1 className="text-4xl font-bold">ShadowVault</h1>
           <p className="text-neutral-400 mt-2">
             Secure encrypted digital asset vault
           </p>
-
         </div>
 
-        {/* DASHBOARD GRID */}
+        {/* MAIN GRID */}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
 
-          {/* SECURITY SCORE */}
+          {/* LEFT SIDE — FILES */}
 
-          <div className="bg-neutral-900/60 backdrop-blur-md border border-neutral-800 rounded-xl p-6 hover:border-neutral-700 transition">
+          <div className="space-y-6">
 
-            <h3 className="text-sm text-neutral-400 mb-3">
-              Vault Security Score
-            </h3>
-
-            <div className="text-4xl font-bold text-green-400">
-              {securityScore()} / 100
-            </div>
-
-            {/* Progress Bar */}
-
-            <div className="mt-4 w-full h-2 bg-neutral-800 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-green-500 transition-all"
-                style={{ width: `${securityScore()}%` }}
-              />
-            </div>
-
-            {lastLogin && (
-              <p className="text-xs text-neutral-500 mt-3">
-                Last login: {new Date(lastLogin).toLocaleString()}
-              </p>
-            )}
-
-          </div>
-
-          {/* KEYHOLDER */}
-
-          <div className="bg-neutral-900/60 backdrop-blur-md border border-neutral-800 rounded-xl p-6 hover:border-neutral-700 transition">
-
-            <h3 className="text-sm text-neutral-400 mb-4">
-              Keyholder Protection
-            </h3>
-
-            <button
-              onClick={() => setKeyHolderOn(!keyHolderOn)}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition shadow-lg ${
-                keyHolderOn
-                  ? "bg-green-600 hover:bg-green-500 shadow-green-600/20"
-                  : "bg-neutral-700 hover:bg-neutral-600"
-              }`}
-            >
-              {keyHolderOn ? "Enabled" : "Disabled"}
-            </button>
-
-          </div>
-
-          {/* VAULT CAPACITY */}
-
-          <div className="bg-neutral-900/60 backdrop-blur-md border border-neutral-800 rounded-xl p-6 hover:border-neutral-700 transition">
-
-            <div className="flex justify-between items-center mb-4">
-
-              <h3 className="text-sm text-neutral-400">
-                Vault Capacity
-              </h3>
-
-              <span className="text-sm text-neutral-500">
-                {files.length} / {MAX_FILES}
-              </span>
-
-            </div>
+            <h2 className="text-xl font-semibold">Vault Files</h2>
 
             {!hasReachedLimit && !isKeyHolderMode && (
-
               <FileUploader
                 token={token}
                 user={user}
                 onUploadComplete={fetchFiles}
               />
-
             )}
+
+            {loading && (
+              <p className="text-neutral-400">Loading vault records...</p>
+            )}
+
+            {!loading && files.map((file) => (
+
+              <div
+                key={file.id}
+                className="bg-neutral-900 border border-neutral-800 rounded-xl p-6 flex justify-between"
+              >
+
+                {/* LEFT FILE INFO */}
+
+                <div>
+
+                  <div className="text-lg font-medium">
+                    {file.filename}
+                  </div>
+
+                  <div className="text-sm text-neutral-400 mt-2">
+                    {file.uploadedAt
+                      ? new Date(file.uploadedAt).toLocaleDateString()
+                      : "—"}
+                  </div>
+
+                  <div className="text-blue-400 text-xs mt-2 break-all">
+                    {file.cid}
+                  </div>
+
+                </div>
+
+                {/* RIGHT META DATA */}
+
+                <div className="flex flex-col items-end justify-between">
+
+                  <button
+                    className={`px-5 py-2 rounded-md text-sm font-medium ${
+                      isKeyHolderMode
+                        ? "bg-purple-600"
+                        : "bg-green-600"
+                    }`}
+                    onClick={() =>
+                      viewFile(file.id, file.filename)
+                    }
+                  >
+                    {isKeyHolderMode ? "KeyHolder View" : "View"}
+                  </button>
+
+                </div>
+
+              </div>
+
+            ))}
 
           </div>
 
-        </div>
+          {/* RIGHT SIDE DASHBOARD */}
 
-        {/* THREAT MONITOR */}
+          <div className="space-y-6">
 
-        <div className="bg-neutral-900/60 backdrop-blur-md border border-neutral-800 rounded-xl p-8 mb-12 hover:border-neutral-700 transition">
+            {/* AI ASSISTANT */}
 
-          <h3 className="text-lg font-semibold mb-6">
-            Threat Monitoring
-          </h3>
+            <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6">
 
-          {securityAlerts.length === 0 ? (
+              <h3 className="text-lg font-semibold mb-4">
+                AI Assistant
+              </h3>
 
-            <p className="text-green-400 text-sm">
-              ✔ No threats detected
-            </p>
+              <div className="bg-neutral-950 border border-neutral-800 rounded-lg p-4 mb-4 h-40 overflow-y-auto text-sm text-neutral-400">
+                Ask about your vault security, files, or risks.
+              </div>
 
-          ) : (
-
-            <div className="space-y-3">
-
-              {securityAlerts.map((alert, i) => (
-
-                <div
-                  key={i}
-                  className="flex justify-between items-center bg-neutral-950 border border-red-900 rounded-lg p-4"
-                >
-
-                  <span className="text-red-400 text-sm">
-                    {alert.type}
-                  </span>
-
-                  <span className="text-xs text-neutral-500">
-                    {new Date(alert.date).toLocaleString()}
-                  </span>
-
-                </div>
-
-              ))}
+              <input
+                type="text"
+                value={aiMessage}
+                onChange={(e)=>setAiMessage(e.target.value)}
+                placeholder="Ask the AI assistant..."
+                className="w-full bg-neutral-950 border border-neutral-800 rounded-lg px-4 py-3 outline-none focus:border-neutral-600"
+              />
 
             </div>
 
-          )}
+            {/* SECURITY SCORE */}
 
-        </div>
+            <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6">
 
-        {/* FILES */}
+              <h3 className="text-sm text-neutral-400 mb-3">
+                Vault Security Score
+              </h3>
 
-        <div className="bg-neutral-900/60 backdrop-blur-md border border-neutral-800 rounded-xl p-8 hover:border-neutral-700 transition">
+              <div className="text-4xl font-bold text-green-400">
+                {securityScore()} / 100
+              </div>
 
-          <h3 className="text-lg font-semibold mb-6">
-            Vault Records
-          </h3>
-
-          {loading && (
-            <p className="text-neutral-400">
-              Loading vault records...
-            </p>
-          )}
-
-          {!loading && files.length > 0 && (
-
-            <div className="space-y-6">
-
-              {files.map((file) => (
-
+              <div className="mt-4 w-full h-2 bg-neutral-800 rounded-full overflow-hidden">
                 <div
-                  key={file.id}
-                  className="bg-neutral-950 border border-neutral-800 rounded-lg p-6"
-                >
+                  className="h-full bg-green-500"
+                  style={{ width: `${securityScore()}%` }}
+                />
+              </div>
 
-                  <table className="w-full text-sm">
-
-                    <tbody className="divide-y divide-neutral-800">
-
-                      <tr>
-                        <td className="py-3 text-neutral-500 w-1/3">
-                          File Name
-                        </td>
-                        <td className="text-white">
-                          {file.filename}
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td className="py-3 text-neutral-500">
-                          Created
-                        </td>
-                        <td>
-                          {file.uploadedAt
-                            ? new Date(file.uploadedAt).toLocaleDateString()
-                            : "—"}
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td className="py-3 text-neutral-500">
-                          CID
-                        </td>
-                        <td className="text-blue-400 break-all">
-                          {file.cid}
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td className="py-3 text-neutral-500">
-                          Access
-                        </td>
-                        <td>
-
-                          <button
-                            className={`px-5 py-2 rounded-md text-sm font-medium transition shadow-lg ${
-                              isKeyHolderMode
-                                ? "bg-purple-600 hover:bg-purple-500 shadow-purple-600/20"
-                                : "bg-green-600 hover:bg-green-500 shadow-green-600/20"
-                            }`}
-                            onClick={() =>
-                              viewFile(file.id, file.filename)
-                            }
-                          >
-                            {isKeyHolderMode
-                              ? "KeyHolder View"
-                              : "View"}
-                          </button>
-
-                        </td>
-                      </tr>
-
-                    </tbody>
-
-                  </table>
-
-                </div>
-
-              ))}
+              {lastLogin && (
+                <p className="text-xs text-neutral-500 mt-3">
+                  Last login: {new Date(lastLogin).toLocaleString()}
+                </p>
+              )}
 
             </div>
 
-          )}
+            {/* KEYHOLDER */}
+
+            <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6">
+
+              <h3 className="text-sm text-neutral-400 mb-4">
+                Keyholder Protection
+              </h3>
+
+              <button
+                onClick={() => setKeyHolderOn(!keyHolderOn)}
+                className={`px-4 py-2 rounded-md text-sm font-medium ${
+                  keyHolderOn
+                    ? "bg-green-600"
+                    : "bg-neutral-700"
+                }`}
+              >
+                {keyHolderOn ? "Enabled" : "Disabled"}
+              </button>
+
+            </div>
+
+            {/* THREAT MONITOR */}
+
+            <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6">
+
+              <h3 className="text-lg font-semibold mb-4">
+                Threat Monitoring
+              </h3>
+
+              {securityAlerts.length === 0 ? (
+
+                <p className="text-green-400 text-sm">
+                  ✔ No threats detected
+                </p>
+
+              ) : (
+
+                securityAlerts.map((alert, i) => (
+
+                  <div
+                    key={i}
+                    className="flex justify-between bg-neutral-950 border border-red-900 rounded-lg p-3 mb-3"
+                  >
+
+                    <span className="text-red-400 text-sm">
+                      {alert.type}
+                    </span>
+
+                    <span className="text-xs text-neutral-500">
+                      {new Date(alert.date).toLocaleString()}
+                    </span>
+
+                  </div>
+
+                ))
+
+              )}
+
+            </div>
+
+          </div>
 
         </div>
 
