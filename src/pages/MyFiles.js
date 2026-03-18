@@ -123,7 +123,7 @@ function MyFiles() {
     <div className="min-h-screen bg-neutral-950 p-10 text-gray-100">
 
       {/* Header */}
-      <div className="max-w-6xl mb-12">
+      <div className="max-w-6xl mb-12 text-center">
         <h2 className="text-4xl font-bold mb-4 tracking-tight">
           🏛 ShadowVault — Enterprise Digital Asset Vault
         </h2>
@@ -136,7 +136,7 @@ function MyFiles() {
 
       {/* KEYHOLDER EXECUTOR BANNER */}
       {isKeyHolderMode && (
-        <div className="mb-8 p-4 bg-purple-900 border border-purple-700 rounded-lg">
+        <div className="mb-8 p-4 bg-purple-900 border border-purple-700 rounded-lg text-center">
           <p className="text-sm text-purple-200">
             Executor access mode enabled. You may download vault records but cannot modify data.
           </p>
@@ -144,7 +144,7 @@ function MyFiles() {
       )}
 
       {/* KEYHOLDER SETTINGS PANEL */}
-      <div className="mb-12 bg-neutral-900 rounded-2xl p-8 border border-neutral-800">
+      <div className="mb-12 bg-neutral-900 rounded-2xl p-8 border border-neutral-800 text-center">
 
         <h3 className="text-xl font-semibold mb-4">
           🔐 Dead-Man Switch Protection
@@ -180,7 +180,7 @@ function MyFiles() {
       </div>
 
       {/* Vault Capacity Section */}
-      <div className="mb-12 bg-gradient-to-br from-neutral-900 to-neutral-800 rounded-2xl p-8 shadow-2xl border border-neutral-800">
+      <div className="mb-12 text-center bg-gradient-to-br from-neutral-900 to-neutral-800 rounded-2xl p-8 shadow-2xl border border-neutral-800">
 
         <div className="flex justify-between items-center mb-4">
           <div>
@@ -225,7 +225,7 @@ function MyFiles() {
                 className="border border-neutral-800 rounded-xl p-6 bg-neutral-950"
               >
                 <div className="overflow-hidden rounded-lg border border-neutral-800">
-                  <table className="w-full text-sm text-left text-gray-300">
+                  <table className="w-1/2 text-sm text-left text-gray-300">
                     <tbody className="divide-y divide-neutral-800">
 
                       <tr>
@@ -263,32 +263,6 @@ function MyFiles() {
                         </td>
                         <td className="px-4 py-3 text-xs text-blue-400 break-all">
                           {file.cid}
-                        </td>
-                      </tr>
-
-                      {/* KEYHOLDER ACCESS ROW */}
-                      <tr>
-                        <td className="px-4 py-3 text-gray-500">
-                          Dead Man Protection Active
-                        </td>
-                        <td className="px-4 py-3 text-purple-400 text-sm">
-                          {file.keyHolderOn ? "Enabled" : "Disabled"}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="px-4 py-3 text-gray-500">
-                          KeyHolder Unlock Remaining
-                        </td>
-                        <td className="px-4 py-3 text-purple-400 text-sm">
-                          18 days remaining
-                        </td>
-                      </tr>
-                       <tr>
-                        <td className="px-4 py-3 text-gray-500">
-                          Last  Login
-                        </td>
-                        <td className="px-4 py-3 text-blue-400 font-medium">
-                          
                         </td>
                       </tr>
                       <tr>
