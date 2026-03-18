@@ -195,7 +195,7 @@ function MyFiles() {
           </div>
         </div>
 
-        {true && (
+        {!isKeyHolderMode && (
           <FileUploader
             token={token}
             user={user}
