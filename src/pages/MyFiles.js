@@ -233,32 +233,44 @@ function MyFiles() {
       {/* Vault Capacity Section */}
       <div className="w-1/2 mb-12 text-center bg-gradient-to-br from-neutral-900 to-neutral-800 rounded-2xl p-8 shadow-2xl border border-neutral-800">
 
-       <div className="bg-neutral-950 border border-yellow-700 rounded-xl p-6 text-sm text-gray-300">
-            <p className="text-yellow-400 font-medium mb-3">
-              Vault storage limit reached.
-            </p>
+       <div className="flex justify-between items-center mb-4">
+  <div>
+    <h3 className="text-xl font-semibold text-white">
+      🔐 Vault Capacity
+    </h3>
 
-            <p className="mb-6 text-gray-400">
-              To upload additional protected records, request extended access
-              or upgrade your enterprise capacity plan.
-            </p>
+    <p className="text-sm text-gray-400 mt-1">
+      Enterprise tier supports up to {MAX_FILES} immutable records.
+    </p>
 
-            <div className="flex gap-4">
-              <button
-                onClick={() => setShowUpgradeModal(true)}
-                className="bg-yellow-600 hover:bg-yellow-700 px-5 py-2 rounded-lg font-medium text-black transition"
-              >
-                Request Access
-              </button>
+    {/* ONLY show when limit reached */}
+    {hasReachedLimit && (
+      <div className="mt-4 bg-neutral-950 border border-yellow-700 rounded-xl p-6 text-sm text-gray-300">
+       
+        <p className="text-yellow-400 font-medium mb-3">
+          Vault storage limit reached.
+        </p>
 
-              <button
-                className="border border-neutral-600 hover:border-white px-5 py-2 rounded-lg font-medium transition"
-                onClick={() => window.location.href = "/upgrade"}
-              >
-                Upgrade Plan
-              </button>
-            </div>
-          </div>
+        <p className="mb-4 text-gray-400">
+          Upgrade your plan to add more protected records.
+        </p>
+
+        <button
+          className="bg-yellow-600 hover:bg-yellow-700 px-5 py-2 rounded-lg font-medium text-black transition"
+         onClick={() => setShowUpgradeModal(true)}
+        >
+          Upgrade Plan
+        </button>
+
+      </div>
+    )}
+
+  </div>
+
+  <div className="text-sm text-gray-300">
+    {files.length} / {MAX_FILES}
+  </div>
+</div>
 
       </div>
        </div>
