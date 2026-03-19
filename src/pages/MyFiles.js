@@ -217,8 +217,9 @@ function MyFiles() {
 
       {/* KEYHOLDER SETTINGS PANEL */}
       <div className="w-1/2 mb-12 bg-neutral-900 rounded-2xl p-8 border border-neutral-800 text-center">
-
-         <h3 className="text-xs text-neutral-400 mb-2">Risk Score</h3>
+       <h3 className="text-xl font-semibold mb-4">
+          🔐 Risk Score
+        </h3>
 
       <div className="text-3xl font-bold text-green-400">
         {100 - securityScore()}
@@ -236,9 +237,10 @@ function MyFiles() {
 
         <div className="flex justify-between items-center mb-4">
           <div>
-            <h3 className="text-sm text-neutral-400 mb-3">
-      Active Signals
-    </h3>
+    <h3 className="text-xl font-semibold mb-4">
+          🔐 Active Alerts
+        </h3>
+     
 
     {securityAlerts.length === 0 ? (
       <p className="text-green-400 text-sm">
@@ -263,7 +265,7 @@ function MyFiles() {
 
           </div>
           <div className="text-sm text-gray-300">
-            {files.length} / {MAX_FILES}
+            {files.length} / Alerts
           </div>
         </div>
 
