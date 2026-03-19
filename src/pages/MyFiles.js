@@ -199,16 +199,65 @@ function MyFiles() {
 
       </div>
        </div>
-         {!isKeyHolderMode && hasReachedLimit &&(
-           <div className="mb-10 text-center bg-gradient-to-br from-neutral-900 to-neutral-800 rounded-2xl p-8 shadow-2xl border border-neutral-800">
 
-          <FileUploader
-            token={token}
-            user={user}
-            onUploadComplete={fetchFiles}
-          />
+        <div className=" mb-12 flex gap-6">
+
+      {/* KEYHOLDER SETTINGS PANEL */}
+      <div className="w-1/2 mb-12 bg-neutral-900 rounded-2xl p-8 border border-neutral-800 text-center">
+
+        <h3 className="text-xl font-semibold mb-4">
+          🔐 Dead-Man Switch Protection
+        </h3>
+
+        <p className="text-gray-400 text-sm mb-6">
+          If enabled, ShadowVault monitors account inactivity.
+          After 30 days a reminder email is sent.
+          After 40 days your designated KeyHolder(s) receive recovery access.
+        </p>
+
+        <div className="space-y-2 mb-4">
+          {keyHolderEmails.length === 0 && (
+            <p className="text-gray-500 text-sm">No keyholders configured</p>
+          )}
+
+          {keyHolderEmails.map((email, i) => (
+            <div key={i} className="text-sm text-gray-300">
+              KeyHolder {i + 1}: {email}
+            </div>
+          ))}
+        </div>
+
+        <button
+          onClick={() => setKeyHolderOn(!keyHolderOn)}
+          className={`px-4 py-2 rounded-md ${
+            keyHolderOn ? "bg-green-600" : "bg-neutral-700"
+          }`}
+        >
+          {keyHolderOn ? "Enabled" : "Disabled"}
+        </button>
+
+      </div>
+
+      {/* Vault Capacity Section */}
+      <div className="w-1/2 mb-12 text-center bg-gradient-to-br from-neutral-900 to-neutral-800 rounded-2xl p-8 shadow-2xl border border-neutral-800">
+
+        <div className="flex justify-between items-center mb-4">
+          <div>
+            <h3 className="text-xl font-semibold text-white">
+              Vault Capacity
+            </h3>
+            <p className="text-sm text-gray-400 mt-1">
+              Enterprise tier supports up to {MAX_FILES} immutable records.
+            </p>
           </div>
-        )}
+          <div className="text-sm text-gray-300">
+            {files.length} / {MAX_FILES}
+          </div>
+        </div>
+
+      </div>
+       </div>
+        
 
          <div className=" mb-12 flex gap-6">
 
@@ -267,7 +316,24 @@ function MyFiles() {
 
       </div>
        </div>
-        
+             {!isKeyHolderMode && hasReachedLimit &&(
+           <div className="mb-10 text-center bg-gradient-to-br from-neutral-900 to-neutral-800 rounded-2xl p-8 shadow-2xl border border-neutral-800">
+               <h3 className="text-lg font-semibold mb-2">
+            Upload Your Primary Legal Document
+          </h3>
+
+          <p className="text-sm text-gray-400 mb-4">
+            Only one protected document is permitted per vault.
+            Please upload your most critical legal or estate record.
+          </p>
+          
+          <FileUploader
+            token={token}
+            user={user}
+            onUploadComplete={fetchFiles}
+          />
+          </div>
+        )} 
       {/* Vault Records */}
       <div className="bg-neutral-900 shadow-2xl rounded-2xl p-10 max-w-6xl border border-neutral-800">
 
@@ -327,6 +393,31 @@ function MyFiles() {
                           {file.cid}
                         </td>
                       </tr>
+                      <tr>
+                        <td className="px-4 py-3 text-gray-500">
+                          Dead Man Protection Active
+                        </td>
+                        <td className="px-4 py-3 text-purple-400 text-sm">
+                          {file.keyHolderOn ? "Enabled" : "Disabled"}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="px-4 py-3 text-gray-500">
+                          KeyHolder Unlock Remaining
+                        </td>
+                        <td className="px-4 py-3 text-purple-400 text-sm">
+                          18 days remaining
+                        </td>
+                      </tr>
+                       <tr>
+                        <td className="px-4 py-3 text-gray-500">
+                          Last  Login
+                        </td>
+                        <td className="px-4 py-3 text-blue-400 font-medium">
+                          
+                        </td>
+                      </tr>
+
                       <tr>
                         <td className="px-4 py-3 text-gray-500">
                           Secure Access
