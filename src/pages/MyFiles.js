@@ -132,6 +132,20 @@ function MyFiles() {
 
         return Math.min(score, 100);
       };
+
+      const toggleFileProtection = (fileId) => {
+          setFiles((prev) =>
+            prev.map((f) =>
+              f.id === fileId
+                ? { ...f, keyHolderOn: !f.keyHolderOn }
+                : f
+            )
+          );
+
+          // OPTIONAL: call backend later
+          // fetch(`/api/file/${fileId}/toggle-protection`, { method: "POST" })
+        };
+
   return (
     <div className="w-1/2 min-h-screen bg-neutral-950 p-10 text-gray-100">
 
@@ -181,16 +195,6 @@ function MyFiles() {
             </div>
           ))}
         </div>
-
-        <button
-          onClick={() => setKeyHolderOn(!keyHolderOn)}
-          className={`px-4 py-2 rounded-md ${
-            keyHolderOn ? "bg-green-600" : "bg-neutral-700"
-          }`}
-        >
-          {keyHolderOn ? "Enabled" : "Disabled"}
-        </button>
-
       </div>
 
       {/* Vault Capacity Section */}
@@ -350,13 +354,22 @@ function MyFiles() {
                         </td>
                       </tr>
                       <tr>
-                        <td className="px-4 py-3 text-gray-500">
-                          Dead Man Protection Active
-                        </td>
-                        <td className="px-4 py-3 text-purple-400 text-sm">
+                      <td className="px-4 py-3 text-gray-500">
+                        Dead Man Protection
+                      </td>
+                      <td className="px-4 py-3">
+                        <button
+                          onClick={() => toggleFileProtection(file.id)}
+                          className={`px-4 py-1 rounded-md text-xs font-medium transition ${
+                            file.keyHolderOn
+                              ? "bg-green-600 hover:bg-green-500"
+                              : "bg-neutral-700 hover:bg-neutral-600"
+                          }`}
+                        >
                           {file.keyHolderOn ? "Enabled" : "Disabled"}
-                        </td>
-                      </tr>
+                        </button>
+                      </td>
+                    </tr>
                       <tr>
                         <td className="px-4 py-3 text-gray-500">
                           KeyHolder Unlock Remaining
@@ -367,7 +380,15 @@ function MyFiles() {
                       </tr>
                        <tr>
                         <td className="px-4 py-3 text-gray-500">
-                          Last  Login
+                          keyHolderEmails
+                        </td>
+                        <td className="px-4 py-3 text-purple-400 text-sm">
+                          No Emails 
+                        </td>
+                      </tr>
+                       <tr>
+                        <td className="px-4 py-3 text-gray-500">
+                          Audit Log
                         </td>
                         <td className="px-4 py-3 text-blue-400 font-medium">
                           
