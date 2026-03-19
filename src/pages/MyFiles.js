@@ -233,15 +233,7 @@ function MyFiles() {
       {/* Vault Capacity Section */}
       <div className="w-1/2 mb-12 text-center bg-gradient-to-br from-neutral-900 to-neutral-800 rounded-2xl p-8 shadow-2xl border border-neutral-800">
 
-        <div className="flex justify-between items-center mb-4">
-          <div>
-            <h3 className="text-xl font-semibold text-white">
-               🔐  Vault Capacity
-            </h3>
-            <p className="text-sm text-gray-400 mt-1">
-              Enterprise tier supports up to {MAX_FILES} immutable records.
-            </p>
-             <div className="bg-neutral-950 border border-yellow-700 rounded-xl p-6 text-sm text-gray-300">
+       <div className="bg-neutral-950 border border-yellow-700 rounded-xl p-6 text-sm text-gray-300">
             <p className="text-yellow-400 font-medium mb-3">
               Vault storage limit reached.
             </p>
@@ -267,12 +259,6 @@ function MyFiles() {
               </button>
             </div>
           </div>
-            
-          </div>
-          <div className="text-sm text-gray-300">
-            {files.length} / {MAX_FILES}
-          </div>
-        </div>
 
       </div>
        </div>
