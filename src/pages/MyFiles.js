@@ -146,6 +146,39 @@ function MyFiles() {
           // fetch(`/api/file/${fileId}/toggle-protection`, { method: "POST" })
         };
 
+       /* const toggleFileProtection = async (fileId, currentState) => {
+  try {
+    const res = await fetch(
+      `${API_BASE_URL}/api/file/${fileId}/toggle-protection`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          enabled: !currentState,
+        }),
+      }
+    );
+
+    if (!res.ok) throw new Error("Failed to update protection");
+
+    // update UI after success
+    setFiles((prev) =>
+      prev.map((f) =>
+        f.id === fileId
+          ? { ...f, keyHolderOn: !currentState }
+          : f
+      )
+    );
+
+  } catch (err) {
+    console.error(err);
+    alert("Update failed");
+  }
+};*/
+
   return (
     <div className="w-1/2 min-h-screen bg-neutral-950 p-10 text-gray-100">
 
@@ -203,7 +236,7 @@ function MyFiles() {
         <div className="flex justify-between items-center mb-4">
           <div>
             <h3 className="text-xl font-semibold text-white">
-              Vault Capacity
+               🔐  Vault Capacity
             </h3>
             <p className="text-sm text-gray-400 mt-1">
               Enterprise tier supports up to {MAX_FILES} immutable records.
