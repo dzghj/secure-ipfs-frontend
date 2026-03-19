@@ -11,6 +11,8 @@ function MyFiles() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  /* Alert */
+  const [securityAlerts, setSecurityAlerts] = useState([]);
 
   /* NEW KEYHOLDER STATES */
   const [keyHolderOn, setKeyHolderOn] = useState(false);
@@ -55,6 +57,9 @@ function MyFiles() {
         if (Array.isArray(data.keyHolderEmails)) {
           setKeyHolderEmails(data.keyHolderEmails);
         }
+
+        if (Array.isArray(data.securityAlerts))
+           setSecurityAlerts(data.securityAlerts);
 
       })
       .catch((err) => {
