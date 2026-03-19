@@ -128,7 +128,7 @@ function MyFiles() {
           🏛 ShadowVault — Enterprise Digital Asset Vault
         </h2>
 
-        <p className="text-gray-400 max-w-3xl leading-relaxed">
+        <p className="text-gray-400 max-w-3xl leading-relaxed text-center">
           Secure, encrypted, and blockchain-verified storage for your most critical
           legal and ownership documents.
         </p>
@@ -142,9 +142,10 @@ function MyFiles() {
           </p>
         </div>
       )}
+   <div className=" mb-12 flex gap-6">
 
       {/* KEYHOLDER SETTINGS PANEL */}
-      <div className="mb-12 bg-neutral-900 rounded-2xl p-8 border border-neutral-800 text-center">
+      <div className="w-1/2 mb-12 bg-neutral-900 rounded-2xl p-8 border border-neutral-800 text-center">
 
         <h3 className="text-xl font-semibold mb-4">
           🔐 Dead-Man Switch Protection
@@ -180,7 +181,7 @@ function MyFiles() {
       </div>
 
       {/* Vault Capacity Section */}
-      <div className="mb-12 text-center bg-gradient-to-br from-neutral-900 to-neutral-800 rounded-2xl p-8 shadow-2xl border border-neutral-800">
+      <div className="w-1/2 mb-12 text-center bg-gradient-to-br from-neutral-900 to-neutral-800 rounded-2xl p-8 shadow-2xl border border-neutral-800">
 
         <div className="flex justify-between items-center mb-4">
           <div>
@@ -205,6 +206,7 @@ function MyFiles() {
         )}
 
       </div>
+       </div>
 
       {/* Vault Records */}
       <div className="bg-neutral-900 shadow-2xl rounded-2xl p-10 max-w-6xl border border-neutral-800">
