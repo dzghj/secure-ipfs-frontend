@@ -118,7 +118,15 @@ function MyFiles() {
       alert("Secure document access failed: " + err.message);
     }
   };
+      const securityScore = () => {
+        let score = 50;
 
+        if (keyHolderOn) score += 20;
+        if (files.length > 0) score += 15;
+        if (securityAlerts.length === 0) score += 15;
+
+        return Math.min(score, 100);
+      };
   return (
     <div className="w-1/2 min-h-screen bg-neutral-950 p-10 text-gray-100">
 
@@ -205,50 +213,49 @@ function MyFiles() {
       {/* KEYHOLDER SETTINGS PANEL */}
       <div className="w-1/2 mb-12 bg-neutral-900 rounded-2xl p-8 border border-neutral-800 text-center">
 
-        <h3 className="text-xl font-semibold mb-4">
-          🔐 Dead-Man Switch Protection
-        </h3>
+         <h3 className="text-xs text-neutral-400 mb-2">Risk Score</h3>
 
-        <p className="text-gray-400 text-sm mb-6">
-          If enabled, ShadowVault monitors account inactivity.
-          After 30 days a reminder email is sent.
-          After 40 days your designated KeyHolder(s) receive recovery access.
-        </p>
+      <div className="text-3xl font-bold text-green-400">
+        {100 - securityScore()}
+      </div>
 
-        <div className="space-y-2 mb-4">
-          {keyHolderEmails.length === 0 && (
-            <p className="text-gray-500 text-sm">No keyholders configured</p>
-          )}
-
-          {keyHolderEmails.map((email, i) => (
-            <div key={i} className="text-sm text-gray-300">
-              KeyHolder {i + 1}: {email}
-            </div>
-          ))}
-        </div>
-
-        <button
-          onClick={() => setKeyHolderOn(!keyHolderOn)}
-          className={`px-4 py-2 rounded-md ${
-            keyHolderOn ? "bg-green-600" : "bg-neutral-700"
-          }`}
-        >
-          {keyHolderOn ? "Enabled" : "Disabled"}
-        </button>
+      <p className="text-xs text-neutral-500 mt-2">
+        Lower is better
+      </p>
 
       </div>
 
-      {/* Vault Capacity Section */}
+      
+       {/* ALERTS */}
       <div className="w-1/2 mb-12 text-center bg-gradient-to-br from-neutral-900 to-neutral-800 rounded-2xl p-8 shadow-2xl border border-neutral-800">
 
         <div className="flex justify-between items-center mb-4">
           <div>
-            <h3 className="text-xl font-semibold text-white">
-              Vault Capacity
-            </h3>
-            <p className="text-sm text-gray-400 mt-1">
-              Enterprise tier supports up to {MAX_FILES} immutable records.
-            </p>
+            <h3 className="text-sm text-neutral-400 mb-3">
+      Active Signals
+    </h3>
+
+    {securityAlerts.length === 0 ? (
+      <p className="text-green-400 text-sm">
+        ✔ No risks detected
+      </p>
+    ) : (
+      securityAlerts.map((alert, i) => (
+        <div
+          key={i}
+          className="flex justify-between items-center bg-neutral-950 border border-red-900 rounded-lg px-4 py-3 mb-2"
+        >
+          <span className="text-red-400 text-sm">
+            {alert.type}
+          </span>
+
+          <span className="text-xs text-neutral-500">
+            {new Date(alert.date).toLocaleString()}
+          </span>
+        </div>
+      ))
+    )}
+
           </div>
           <div className="text-sm text-gray-300">
             {files.length} / {MAX_FILES}
@@ -257,65 +264,7 @@ function MyFiles() {
 
       </div>
        </div>
-        
 
-         <div className=" mb-12 flex gap-6">
-
-      {/* KEYHOLDER SETTINGS PANEL */}
-      <div className="w-1/2 mb-12 bg-neutral-900 rounded-2xl p-8 border border-neutral-800 text-center">
-
-        <h3 className="text-xl font-semibold mb-4">
-          🔐 Dead-Man Switch Protection 22
-        </h3>
-
-        <p className="text-gray-400 text-sm mb-6">
-          If enabled, ShadowVault monitors account inactivity.
-          After 30 days a reminder email is sent.
-          After 40 days your designated KeyHolder(s) receive recovery access.
-        </p>
-
-        <div className="space-y-2 mb-4">
-          {keyHolderEmails.length === 0 && (
-            <p className="text-gray-500 text-sm">No keyholders configured</p>
-          )}
-
-          {keyHolderEmails.map((email, i) => (
-            <div key={i} className="text-sm text-gray-300">
-              KeyHolder {i + 1}: {email}
-            </div>
-          ))}
-        </div>
-
-        <button
-          onClick={() => setKeyHolderOn(!keyHolderOn)}
-          className={`px-4 py-2 rounded-md ${
-            keyHolderOn ? "bg-green-600" : "bg-neutral-700"
-          }`}
-        >
-          {keyHolderOn ? "Enabled" : "Disabled"}
-        </button>
-
-      </div>
-
-      {/* Vault Capacity Section */}
-      <div className="w-1/2 mb-12 text-center bg-gradient-to-br from-neutral-900 to-neutral-800 rounded-2xl p-8 shadow-2xl border border-neutral-800">
-
-        <div className="flex justify-between items-center mb-4">
-          <div>
-            <h3 className="text-xl font-semibold text-white">
-              Vault Capacity 22
-            </h3>
-            <p className="text-sm text-gray-400 mt-1">
-              Enterprise tier supports up to {MAX_FILES} immutable records.
-            </p>
-          </div>
-          <div className="text-sm text-gray-300">
-            {files.length} / {MAX_FILES}
-          </div>
-        </div>
-
-      </div>
-       </div>
              {!isKeyHolderMode && hasReachedLimit &&(
            <div className="mb-10 text-center bg-gradient-to-br from-neutral-900 to-neutral-800 rounded-2xl p-8 shadow-2xl border border-neutral-800">
                <h3 className="text-lg font-semibold mb-2">
