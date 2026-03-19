@@ -120,7 +120,7 @@ function MyFiles() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950 p-10 text-gray-100">
+    <div className="w-1/2 min-h-screen bg-neutral-950 p-10 text-gray-100">
 
       {/* Header */}
       <div className="max-w-6xl mb-12 text-center">
