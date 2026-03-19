@@ -241,6 +241,33 @@ function MyFiles() {
             <p className="text-sm text-gray-400 mt-1">
               Enterprise tier supports up to {MAX_FILES} immutable records.
             </p>
+             <div className="bg-neutral-950 border border-yellow-700 rounded-xl p-6 text-sm text-gray-300">
+            <p className="text-yellow-400 font-medium mb-3">
+              Vault storage limit reached.
+            </p>
+
+            <p className="mb-6 text-gray-400">
+              To upload additional protected records, request extended access
+              or upgrade your enterprise capacity plan.
+            </p>
+
+            <div className="flex gap-4">
+              <button
+                onClick={() => setShowUpgradeModal(true)}
+                className="bg-yellow-600 hover:bg-yellow-700 px-5 py-2 rounded-lg font-medium text-black transition"
+              >
+                Request Access
+              </button>
+
+              <button
+                className="border border-neutral-600 hover:border-white px-5 py-2 rounded-lg font-medium transition"
+                onClick={() => window.location.href = "/upgrade"}
+              >
+                Upgrade Plan
+              </button>
+            </div>
+          </div>
+            
           </div>
           <div className="text-sm text-gray-300">
             {files.length} / {MAX_FILES}
