@@ -352,20 +352,64 @@ const [aiLoading, setAiLoading] = useState(false);
         <div className=" mb-12 flex gap-6">
 
       {/* KEYHOLDER SETTINGS PANEL */}
-      <div className="w-1/2 mb-12 bg-neutral-900 rounded-2xl p-8 border border-neutral-800 text-center">
-       <h3 className="text-xl font-semibold mb-4">
-          🔐  AI Risk Score
-        </h3>
+      <div className="w-1/2 mb-12 bg-neutral-900 rounded-2xl p-8 border border-neutral-800">
+  
+  <h3 className="text-xl font-semibold mb-6 text-center">
+    🔐 AI Risk Assessment
+  </h3>
 
-      <div className="text-3xl font-bold text-green-400">
-        {100 - securityScore()}
-      </div>
+  {/* Risk Score */}
+  <div className="text-center mb-6">
+    <div className="text-5xl font-bold text-green-400">
+      {100 - securityScore()}
+    </div>
+    <p className="text-xs text-neutral-500 mt-2">
+      Overall Vault Security Score
+    </p>
+  </div>
 
-      <p className="text-xs text-neutral-500 mt-2">
-        Lower is better
-      </p>
+  {/* Progress Bar */}
+  <div className="w-full bg-neutral-800 rounded-full h-3 mb-6">
+    <div
+      className="bg-green-500 h-3 rounded-full transition-all"
+      style={{ width: `${100 - securityScore()}%` }}
+    />
+  </div>
 
-      </div>
+  {/* Risk Level */}
+  <div className="text-center mb-6">
+    {(100 - securityScore()) > 80 && (
+      <span className="bg-green-900 text-green-400 px-3 py-1 rounded-full text-xs">
+        Low Risk
+      </span>
+    )}
+
+    {(100 - securityScore()) <= 80 && (100 - securityScore()) > 50 && (
+      <span className="bg-yellow-900 text-yellow-400 px-3 py-1 rounded-full text-xs">
+        Medium Risk
+      </span>
+    )}
+
+    {(100 - securityScore()) <= 50 && (
+      <span className="bg-red-900 text-red-400 px-3 py-1 rounded-full text-xs">
+        High Risk
+      </span>
+    )}
+  </div>
+
+  {/* AI Recommendations */}
+  <div className="bg-neutral-950 border border-neutral-800 rounded-xl p-4 text-sm text-gray-400">
+    <p className="mb-2 text-gray-300 font-medium">AI Recommendations</p>
+    <ul className="space-y-1 text-xs">
+      {!keyHolderOn && <li>• Enable Dead-Man Switch protection</li>}
+      {files.length === 0 && <li>• Upload a primary legal document</li>}
+      {securityAlerts.length > 0 && <li>• Review active security alerts</li>}
+      <li>• Login at least once every 30 days</li>
+      <li>• Add a secondary keyholder</li>
+    </ul>
+  </div>
+
+</div>
 
       
        {/* ALERTS */}
