@@ -306,6 +306,15 @@ const [aiLoading, setAiLoading] = useState(false);
                     </div>
                   )}
                 </div>
+                {/* Ask AI Button */}
+                  <div className="mt-4">
+                    <button
+                      onClick={() => askAIRiskAnalysis()}
+                      className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg text-sm font-medium"
+                    >
+                      Ask AI for Risk Analysis
+                    </button>
+                  </div>
       </div>
 
       {/* KEYHOLDER EXECUTOR BANNER */}
@@ -438,15 +447,7 @@ const [aiLoading, setAiLoading] = useState(false);
         High Risk
       </span>
     )}
-    {/* Ask AI Button */}
-  <div className="mt-4">
-    <button
-      onClick={() => askAIRiskAnalysis()}
-      className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg text-sm font-medium"
-    >
-      Ask AI for Risk Analysis
-    </button>
-  </div>
+    
   </div>
 
 </div>
