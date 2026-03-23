@@ -144,7 +144,7 @@ const [aiLoading, setAiLoading] = useState(false);
           keyholders: keyHolderEmails.length,
           deadManSwitchEnabled: keyHolderOn,
           securityAlerts: securityAlerts.length,
-          lastLogin: lastLoginDate,
+          //lastLogin: lastLoginDate,
           localSecurityScore: 100 - securityScore(),
         };
       };
