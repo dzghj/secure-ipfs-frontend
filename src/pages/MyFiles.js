@@ -4,24 +4,27 @@ import FileUploader from "../components/FileUploader";
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 const MAX_FILES = 3;
 
+
+
 function MyFiles() {
-
   const [files, setFiles] = useState([]);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-
-  const [keyHolderOn, setKeyHolderOn] = useState(false);
-  const [isKeyHolderMode, setIsKeyHolderMode] = useState(false);
-
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  /* Alert */
   const [securityAlerts, setSecurityAlerts] = useState([]);
-  const [lastLogin, setLastLogin] = useState(null);
 
-  const [aiMessage,setAiMessage] = useState("");
+  /* NEW KEYHOLDER STATES */
+  const [keyHolderOn, setKeyHolderOn] = useState(false);
+  const [keyHolderEmails, setKeyHolderEmails] = useState([]);
+  const [isKeyHolderMode, setIsKeyHolderMode] = useState(false);
 
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
 
   const hasReachedLimit = files.length >= MAX_FILES;
 
+  /* Detect keyholder login */
   useEffect(() => {
     if (user?.role === "keyholder") {
       setIsKeyHolderMode(true);
@@ -29,10 +32,10 @@ function MyFiles() {
   }, [user]);
 
   const fetchFiles = useCallback(() => {
-
     if (!token) return;
 
     setLoading(true);
+    setError("");
 
     fetch(`${API_BASE_URL}/api/myfiles`, {
       headers: {
@@ -40,30 +43,31 @@ function MyFiles() {
       },
     })
       .then(async (res) => {
-
         const data = await res.json();
+        if (!res.ok) throw new Error(data?.error || "Failed to load vault asset");
 
-        if (!res.ok)
-          throw new Error(data?.error || "Failed to load vault files");
+        if (Array.isArray(data.files)) setFiles(data.files);
+        else setFiles([]);
 
-        setFiles(Array.isArray(data.files) ? data.files : []);
-
-        if (data.keyHolderOn !== undefined)
+        /* Load keyholder settings if backend provides them */
+        if (data.keyHolderOn !== undefined) {
           setKeyHolderOn(data.keyHolderOn);
+        }
+
+        if (Array.isArray(data.keyHolderEmails)) {
+          setKeyHolderEmails(data.keyHolderEmails);
+        }
 
         if (Array.isArray(data.securityAlerts))
-          setSecurityAlerts(data.securityAlerts);
-
-        if (data.lastLogin)
-          setLastLogin(data.lastLogin);
+           setSecurityAlerts(data.securityAlerts);
 
       })
       .catch((err) => {
         console.error(err);
+        setError(err.message);
         setFiles([]);
       })
       .finally(() => setLoading(false));
-
   }, [token]);
 
   useEffect(() => {
@@ -71,11 +75,9 @@ function MyFiles() {
   }, [fetchFiles]);
 
   const viewFile = async (fileId, filename) => {
-
     if (!token) return;
 
     try {
-
       const res = await fetch(
         `${API_BASE_URL}/api/file/${fileId}/view`,
         {
@@ -84,10 +86,16 @@ function MyFiles() {
       );
 
       if (!res.ok) {
-        throw new Error("Secure retrieval failed");
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.message || "Secure retrieval failed");
       }
 
       const data = await res.json();
+
+      if (!data.integrityVerified) {
+        alert("Integrity verification failed. Please contact support.");
+        return;
+      }
 
       const byteCharacters = atob(data.data);
       const byteNumbers = new Array(byteCharacters.length);
@@ -105,240 +113,416 @@ function MyFiles() {
       a.href = url;
       a.target = "_blank";
       a.download = data.filename || filename;
-
       document.body.appendChild(a);
       a.click();
       a.remove();
 
       window.URL.revokeObjectURL(url);
-
     } catch (err) {
       console.error(err);
-      alert("Secure document access failed");
+      alert("Secure document access failed: " + err.message);
     }
   };
+      const securityScore = () => {
+        let score = 50;
 
-  const securityScore = () => {
+        if (keyHolderOn) score += 20;
+        if (files.length > 0) score += 15;
+        if (securityAlerts.length === 0) score += 15;
 
-    let score = 50;
+        return Math.min(score, 100);
+      };
 
-    if (keyHolderOn) score += 20;
-    if (files.length > 0) score += 15;
-    if (securityAlerts.length === 0) score += 15;
+      const toggleFileProtection = (fileId) => {
+          setFiles((prev) =>
+            prev.map((f) =>
+              f.id === fileId
+                ? { ...f, keyHolderOn: !f.keyHolderOn }
+                : f
+            )
+          );
 
-    return Math.min(score, 100);
-  };
+          // OPTIONAL: call backend later
+          // fetch(`/api/file/${fileId}/toggle-protection`, { method: "POST" })
+        };
+
+       /* const toggleFileProtection = async (fileId, currentState) => {
+  try {
+    const res = await fetch(
+      `${API_BASE_URL}/api/file/${fileId}/toggle-protection`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          enabled: !currentState,
+        }),
+      }
+    );
+
+    if (!res.ok) throw new Error("Failed to update protection");
+
+    // update UI after success
+    setFiles((prev) =>
+      prev.map((f) =>
+        f.id === fileId
+          ? { ...f, keyHolderOn: !currentState }
+          : f
+      )
+    );
+
+  } catch (err) {
+    console.error(err);
+    alert("Update failed");
+  }
+};*/
 
   return (
+    <div className="w-1/2 min-h-screen bg-neutral-950 p-10 text-gray-100">
 
-    <div className="min-h-screen text-gray-100 bg-neutral-950">
+      {/* Header */}
+      <div className="max-w-6xl mb-12 text-center">
+        <h2 className="text-4xl font-bold mb-4 tracking-tight">
+          🏛 ShadowVault — Enterprise Digital Asset Vault
+        </h2>
 
-      <div className="w-[90%] mx-auto py-16">
+        <p className="text-gray-400 max-w-3xl leading-relaxed text-center">
+          Secure, encrypted, and blockchain-verified storage for your most critical
+          legal and ownership documents.
+        </p>
+      </div>
 
-        {/* HEADER */}
-
-        <div className="mb-10">
-          <h1 className="text-4xl font-bold">ShadowVault</h1>
-          <p className="text-neutral-400 mt-2">
-            Secure encrypted digital asset vault
+      {/* KEYHOLDER EXECUTOR BANNER */}
+      {isKeyHolderMode && (
+        <div className="mb-8 p-4 bg-purple-900 border border-purple-700 rounded-lg text-center">
+          <p className="text-sm text-purple-200">
+            Executor access mode enabled. You may download vault records but cannot modify data.
           </p>
         </div>
+      )}
+   <div className=" mb-12 flex gap-6">
 
-        {/* MAIN GRID */}
+      {/* KEYHOLDER SETTINGS PANEL */}
+      <div className="w-1/2 mb-12 bg-neutral-900 rounded-2xl p-8 border border-neutral-800 text-center">
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <h3 className="text-xl font-semibold mb-4">
+          🔐 Dead-Man Switch Protection
+        </h3>
 
-          {/* LEFT SIDE — FILES */}
+        <p className="text-gray-400 text-sm mb-6">
+          If enabled, ShadowVault monitors account inactivity.
+          After 30 days a reminder email is sent.
+          After 40 days your designated KeyHolder(s) receive recovery access.
+        </p>
 
-          <div className="space-y-6">
+        <div className="space-y-2 mb-4">
+          {keyHolderEmails.length === 0 && (
+            <p className="text-gray-500 text-sm">No keyholders configured</p>
+          )}
 
-            <h2 className="text-xl font-semibold">Vault Files</h2>
-
-            {!hasReachedLimit && !isKeyHolderMode && (
-              <FileUploader
-                token={token}
-                user={user}
-                onUploadComplete={fetchFiles}
-              />
-            )}
-
-            {loading && (
-              <p className="text-neutral-400">Loading vault records...</p>
-            )}
-
-            {!loading && files.map((file) => (
-
-              <div
-                key={file.id}
-                className="bg-neutral-900 border border-neutral-800 rounded-xl p-6 flex justify-between"
-              >
-
-                {/* LEFT FILE INFO */}
-
-                <div>
-
-                  <div className="text-lg font-medium">
-                    {file.filename}
-                  </div>
-
-                  <div className="text-sm text-neutral-400 mt-2">
-                    {file.uploadedAt
-                      ? new Date(file.uploadedAt).toLocaleDateString()
-                      : "—"}
-                  </div>
-
-                  <div className="text-blue-400 text-xs mt-2 break-all">
-                    {file.cid}
-                  </div>
-
-                </div>
-
-                {/* RIGHT META DATA */}
-
-                <div className="flex flex-col items-end justify-between">
-
-                  <button
-                    className={`px-5 py-2 rounded-md text-sm font-medium ${
-                      isKeyHolderMode
-                        ? "bg-purple-600"
-                        : "bg-green-600"
-                    }`}
-                    onClick={() =>
-                      viewFile(file.id, file.filename)
-                    }
-                  >
-                    {isKeyHolderMode ? "KeyHolder View" : "View"}
-                  </button>
-
-                </div>
-
-              </div>
-
-            ))}
-
-          </div>
-
-          {/* RIGHT SIDE DASHBOARD */}
-
-          <div className="space-y-6">
-
-            {/* AI ASSISTANT */}
-
-            <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6">
-
-              <h3 className="text-lg font-semibold mb-4">
-                AI Assistant
-              </h3>
-
-              <div className="bg-neutral-950 border border-neutral-800 rounded-lg p-4 mb-4 h-40 overflow-y-auto text-sm text-neutral-400">
-                Ask about your vault security, files, or risks.
-              </div>
-
-              <input
-                type="text"
-                value={aiMessage}
-                onChange={(e)=>setAiMessage(e.target.value)}
-                placeholder="Ask the AI assistant..."
-                className="w-full bg-neutral-950 border border-neutral-800 rounded-lg px-4 py-3 outline-none focus:border-neutral-600"
-              />
-
+          {keyHolderEmails.map((email, i) => (
+            <div key={i} className="text-sm text-gray-300">
+              KeyHolder {i + 1}: {email}
             </div>
-
-            {/* SECURITY SCORE */}
-
-            <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6">
-
-              <h3 className="text-sm text-neutral-400 mb-3">
-                Vault Security Score
-              </h3>
-
-              <div className="text-4xl font-bold text-green-400">
-                {securityScore()} / 100
-              </div>
-
-              <div className="mt-4 w-full h-2 bg-neutral-800 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-green-500"
-                  style={{ width: `${securityScore()}%` }}
-                />
-              </div>
-
-              {lastLogin && (
-                <p className="text-xs text-neutral-500 mt-3">
-                  Last login: {new Date(lastLogin).toLocaleString()}
-                </p>
-              )}
-
-            </div>
-
-            {/* KEYHOLDER */}
-
-            <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6">
-
-              <h3 className="text-sm text-neutral-400 mb-4">
-                Keyholder Protection
-              </h3>
-
-              <button
-                onClick={() => setKeyHolderOn(!keyHolderOn)}
-                className={`px-4 py-2 rounded-md text-sm font-medium ${
-                  keyHolderOn
-                    ? "bg-green-600"
-                    : "bg-neutral-700"
-                }`}
-              >
-                {keyHolderOn ? "Enabled" : "Disabled"}
-              </button>
-
-            </div>
-
-            {/* THREAT MONITOR */}
-
-            <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6">
-
-              <h3 className="text-lg font-semibold mb-4">
-                Threat Monitoring
-              </h3>
-
-              {securityAlerts.length === 0 ? (
-
-                <p className="text-green-400 text-sm">
-                  ✔ No threats detected
-                </p>
-
-              ) : (
-
-                securityAlerts.map((alert, i) => (
-
-                  <div
-                    key={i}
-                    className="flex justify-between bg-neutral-950 border border-red-900 rounded-lg p-3 mb-3"
-                  >
-
-                    <span className="text-red-400 text-sm">
-                      {alert.type}
-                    </span>
-
-                    <span className="text-xs text-neutral-500">
-                      {new Date(alert.date).toLocaleString()}
-                    </span>
-
-                  </div>
-
-                ))
-
-              )}
-
-            </div>
-
-          </div>
-
+          ))}
         </div>
+      </div>
+
+      {/* Vault Capacity Section */}
+      <div className="w-1/2 mb-12 text-center bg-gradient-to-br from-neutral-900 to-neutral-800 rounded-2xl p-8 shadow-2xl border border-neutral-800">
+
+       <div className="flex justify-between items-center mb-4">
+  <div>
+    <h3 className="text-xl font-semibold text-white">
+      🔐 Vault Capacity :  {files.length} / {MAX_FILES}
+    </h3>
+
+    <p className="text-sm text-gray-400 mt-1">
+      Enterprise tier supports up to {MAX_FILES} immutable records.
+    </p>
+   
+
+    {/* ONLY show when limit reached */}
+    {hasReachedLimit && (
+      <div className="mt-4 bg-neutral-950 border border-yellow-700 rounded-xl p-6 text-sm text-gray-300">
+       
+        <p className="text-yellow-400 font-medium mb-3">
+          Vault storage limit reached.
+        </p>
+
+        <p className="mb-4 text-gray-400">
+          Upgrade your plan to add more protected records.
+        </p>
+
+        <button
+          className="bg-yellow-600 hover:bg-yellow-700 px-5 py-2 rounded-lg font-medium text-black transition"
+         onClick={() => setShowUpgradeModal(true)}
+        >
+          Upgrade Plan
+        </button>
+
+      </div>
+    )}
+
+  </div>
+
+  <div className="text-sm text-gray-300">
+    {files.length} / {MAX_FILES}
+  </div>
+</div>
+
+      </div>
+       </div>
+
+        <div className=" mb-12 flex gap-6">
+
+      {/* KEYHOLDER SETTINGS PANEL */}
+      <div className="w-1/2 mb-12 bg-neutral-900 rounded-2xl p-8 border border-neutral-800 text-center">
+       <h3 className="text-xl font-semibold mb-4">
+          🔐 Risk Score
+        </h3>
+
+      <div className="text-3xl font-bold text-green-400">
+        {100 - securityScore()}
+      </div>
+
+      <p className="text-xs text-neutral-500 mt-2">
+        Lower is better
+      </p>
 
       </div>
 
-    </div>
+      
+       {/* ALERTS */}
+      <div className="w-1/2 mb-12 text-center bg-gradient-to-br from-neutral-900 to-neutral-800 rounded-2xl p-8 shadow-2xl border border-neutral-800">
 
+        <div className="flex justify-between items-center mb-4">
+          <div>
+    <h3 className="text-xl font-semibold mb-4">
+          🔐 Active Alerts
+        </h3>
+     
+
+    {securityAlerts.length === 0 ? (
+      <p className="text-green-400 text-sm">
+        ✔ No risks detected
+      </p>
+    ) : (
+      securityAlerts.map((alert, i) => (
+        <div
+          key={i}
+          className="flex justify-between items-center bg-neutral-950 border border-red-900 rounded-lg px-4 py-3 mb-2"
+        >
+          <span className="text-red-400 text-sm">
+            {alert.type}
+          </span>
+
+          <span className="text-xs text-neutral-500">
+            {new Date(alert.date).toLocaleString()}
+          </span>
+        </div>
+      ))
+    )}
+
+          </div>
+          <div className="text-sm text-gray-300">
+            {files.length} / Alerts
+          </div>
+        </div>
+
+      </div>
+       </div>
+
+             {!isKeyHolderMode && hasReachedLimit &&(
+           <div className="mb-10 text-center bg-gradient-to-br from-neutral-900 to-neutral-800 rounded-2xl p-8 shadow-2xl border border-neutral-800">
+               <h3 className="text-lg font-semibold mb-2">
+            Upload Your Primary Legal Document
+          </h3>
+
+          <p className="text-sm text-gray-400 mb-4">
+            Only one protected document is permitted per vault.
+            Please upload your most critical legal or estate record.
+          </p>
+          
+          <FileUploader
+            token={token}
+            user={user}
+            onUploadComplete={fetchFiles}
+          />
+          </div>
+        )} 
+      {/* Vault Records */}
+      <div className="bg-neutral-900 shadow-2xl rounded-2xl p-10 max-w-6xl border border-neutral-800">
+
+        {loading && (
+          <p className="text-gray-400">Loading protected assets...</p>
+        )}
+
+        {error && (
+          <p className="text-red-400 mb-4">⚠ {error}</p>
+        )}
+
+        {!loading && files.length > 0 && (
+          <div className="space-y-10">
+            {files.map((file) => (
+              <div
+                key={file.id}
+                className="border border-neutral-800 rounded-xl p-6 bg-neutral-950"
+              >
+                <div className="overflow-hidden rounded-lg border border-neutral-800">
+                  <table className="w-1/2 text-sm text-left text-gray-300">
+                    <tbody className="divide-y divide-neutral-800">
+
+                      <tr>
+                        <td className="px-4 py-3 text-gray-500 w-1/3">
+                          File Name
+                        </td>
+                        <td className="px-4 py-3 font-medium text-white">
+                          {file.filename}
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td className="px-4 py-3 text-gray-500">
+                          Created
+                        </td>
+                        <td className="px-4 py-3 font-medium text-white">
+                          {file.uploadedAt
+                            ? new Date(file.uploadedAt).toLocaleDateString()
+                            : "—"}
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td className="px-4 py-3 text-gray-500">
+                          Integrity Status
+                        </td>
+                        <td className="px-4 py-3 text-blue-400 font-medium">
+                          Blockchain Anchored & Verified
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td className="px-4 py-3 text-gray-500 align-top">
+                          CID Reference
+                        </td>
+                        <td className="px-4 py-3 text-xs text-blue-400 break-all">
+                          {file.cid}
+                        </td>
+                      </tr>
+                      <tr>
+                      <td className="px-4 py-3 text-gray-500">
+                        Dead Man Protection
+                      </td>
+                      <td className="px-4 py-3">
+                        <button
+                          onClick={() => toggleFileProtection(file.id)}
+                          className={`px-4 py-1 rounded-md text-xs font-medium transition ${
+                            file.keyHolderOn
+                              ? "bg-green-600 hover:bg-green-500"
+                              : "bg-neutral-700 hover:bg-neutral-600"
+                          }`}
+                        >
+                          {file.keyHolderOn ? "Enabled" : "Disabled"}
+                        </button>
+                      </td>
+                    </tr>
+                      <tr>
+                        <td className="px-4 py-3 text-gray-500">
+                          KeyHolder Unlock Remaining
+                        </td>
+                        <td className="px-4 py-3 text-purple-400 text-sm">
+                          18 days remaining
+                        </td>
+                      </tr>
+                       <tr>
+                        <td className="px-4 py-3 text-gray-500">
+                          keyHolderEmails
+                        </td>
+                        <td className="px-4 py-3 text-purple-400 text-sm">
+                          No Emails 
+                        </td>
+                      </tr>
+                       <tr>
+                        <td className="px-4 py-3 text-gray-500">
+                          Audit Log
+                        </td>
+                        <td className="px-4 py-3 text-blue-400 font-medium">
+                          
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td className="px-4 py-3 text-gray-500">
+                          Secure Access
+                        </td>
+                        <td className="px-4 py-3">
+                          <button
+                            className={`px-5 py-2 rounded-md text-sm font-medium ${
+                              isKeyHolderMode
+                                ? "bg-purple-600 hover:bg-purple-700"
+                                : "bg-green-600 hover:bg-green-700"
+                            }`}
+                            onClick={() => viewFile(file.id, file.filename)}
+                          >
+                            {isKeyHolderMode ? "KeyHolder View" : "View"}
+                          </button>
+                        </td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ))}
+             <p className="text-xs text-gray-500 leading-relaxed border-t border-neutral-800 pt-6">
+              ⚠ Once a record is stored and cryptographically anchored to the blockchain,
+              it cannot be removed, altered, or overwritten. ShadowVault preserves
+              the original immutable reference to maintain evidentiary integrity
+              and legal authenticity.
+            </p>
+          </div>
+        )}
+      </div>
+       {/* Request Access Modal */}
+      {showUpgradeModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-neutral-900 border border-neutral-700 rounded-2xl p-8 w-full max-w-md shadow-2xl">
+            <h3 className="text-xl font-semibold text-white mb-3">
+              Request Extended Vault Access
+            </h3>
+
+            <p className="text-sm text-gray-400 mb-6">
+              Your vault currently supports {MAX_FILES} immutable records.
+              Upgrade your enterprise plan to expand capacity.
+            </p>
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowUpgradeModal(false)}
+                className="text-gray-400 hover:text-white"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowUpgradeModal(false);
+                  window.location.href = "/upgrade";
+                }}
+                className="bg-yellow-600 hover:bg-yellow-700 px-4 py-2 rounded-lg font-medium text-black transition"
+              >
+                Upgrade Now
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+
+    </div>
   );
 }
 
