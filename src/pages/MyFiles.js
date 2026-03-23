@@ -228,6 +228,44 @@ const [aiLoading, setAiLoading] = useState(false);
           Secure, encrypted, and blockchain-verified storage for your most critical
           legal and ownership documents.
         </p>
+
+          {/* AI ASSISTANT */}
+                <div className="mb-12 bg-neutral-900 rounded-2xl p-8 border border-neutral-800">
+                  <h3 className="text-xl font-semibold mb-4">
+                    🤖 Vault AI Assistant
+                  </h3>
+
+                  <p className="text-gray-400 text-sm mb-4">
+                    Ask questions about your vault, legal documents, or security.
+                  </p>
+
+                  <div className="flex gap-3">
+                    <input
+                      type="text"
+                      value={aiInput}
+                      onChange={(e) => setAiInput(e.target.value)}
+                      placeholder="Ask AI something..."
+                      className="flex-1 bg-neutral-800 border border-neutral-700 rounded-lg px-4 py-2 text-sm"
+                    />
+
+                    <button
+                      onClick={askAI}
+                      className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm font-medium"
+                    >
+                      Ask
+                    </button>
+                  </div>
+
+                  {aiLoading && (
+                    <p className="text-gray-400 text-sm mt-3">Thinking...</p>
+                  )}
+
+                  {aiResponse && (
+                    <div className="mt-4 bg-neutral-950 border border-neutral-800 rounded-lg p-4 text-sm text-gray-300 whitespace-pre-wrap">
+                      {aiResponse}
+                    </div>
+                  )}
+                </div>
       </div>
 
       {/* KEYHOLDER EXECUTOR BANNER */}
@@ -241,43 +279,7 @@ const [aiLoading, setAiLoading] = useState(false);
    <div className=" mb-12 flex gap-6">
 
       {/* KEYHOLDER SETTINGS PANEL */}
-      {/* AI ASSISTANT */}
-<div className="mb-12 bg-neutral-900 rounded-2xl p-8 border border-neutral-800">
-  <h3 className="text-xl font-semibold mb-4">
-    🤖 Vault AI Assistant
-  </h3>
-
-  <p className="text-gray-400 text-sm mb-4">
-    Ask questions about your vault, legal documents, or security.
-  </p>
-
-  <div className="flex gap-3">
-    <input
-      type="text"
-      value={aiInput}
-      onChange={(e) => setAiInput(e.target.value)}
-      placeholder="Ask AI something..."
-      className="flex-1 bg-neutral-800 border border-neutral-700 rounded-lg px-4 py-2 text-sm"
-    />
-
-    <button
-      onClick={askAI}
-      className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm font-medium"
-    >
-      Ask
-    </button>
-  </div>
-
-  {aiLoading && (
-    <p className="text-gray-400 text-sm mt-3">Thinking...</p>
-  )}
-
-  {aiResponse && (
-    <div className="mt-4 bg-neutral-950 border border-neutral-800 rounded-lg p-4 text-sm text-gray-300 whitespace-pre-wrap">
-      {aiResponse}
-    </div>
-  )}
-</div>
+    
       <div className="w-1/2 mb-12 bg-neutral-900 rounded-2xl p-8 border border-neutral-800 text-center">
 
         <h3 className="text-xl font-semibold mb-4">
