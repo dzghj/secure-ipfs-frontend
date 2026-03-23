@@ -321,7 +321,7 @@ const [aiLoading, setAiLoading] = useState(false);
 
     {/* ONLY show when limit reached */}
     {hasReachedLimit && (
-      <div className="mt-4 bg-neutral-950 border border-yellow-700 rounded-xl p-6 text-sm text-gray-300">
+      <div className="mt-4 bg-neutral-950 border rounded-xl  text-sm text-gray-300">
        
         <p className="text-yellow-400 font-medium mb-3">
           Vault storage limit reached.
@@ -400,13 +400,6 @@ const [aiLoading, setAiLoading] = useState(false);
   {/* AI Recommendations */}
   <div className="bg-neutral-950 border border-neutral-800 rounded-xl p-4 text-sm text-gray-400">
     <p className="mb-2 text-gray-300 font-medium">AI Recommendations</p>
-    <ul className="space-y-1 text-xs">
-      {!keyHolderOn && <li>• Enable Dead-Man Switch protection</li>}
-      {files.length === 0 && <li>• Upload a primary legal document</li>}
-      {securityAlerts.length > 0 && <li>• Review active security alerts</li>}
-      <li>• Login at least once every 30 days</li>
-      <li>• Add a secondary keyholder</li>
-    </ul>
   </div>
 
 </div>
