@@ -268,6 +268,7 @@ const [aiLoading, setAiLoading] = useState(false);
           Secure, encrypted, and blockchain-verified storage for your most critical
           legal and ownership documents.
         </p>
+        
 
           {/* AI ASSISTANT */}
                 <div className="mb-12 bg-neutral-900 rounded-2xl p-8 border border-neutral-800">
