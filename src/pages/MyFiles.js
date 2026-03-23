@@ -171,9 +171,15 @@ const [aiLoading, setAiLoading] = useState(false);
         await askAI(prompt);
       };
 
-      const askAI = async (customPrompt) => {
-        const message = customPrompt || aiInput;
-        if (!message) return;
+      const askAI = async (input) => {
+        let message;
+      
+        // If called from button click, input is event
+        if (typeof input === "object") {
+          message = aiInput;
+        } else {
+          message = input;
+        }
       
      // const askAI = async () => {
        // if (!aiInput) return;
@@ -188,9 +194,7 @@ const [aiLoading, setAiLoading] = useState(false);
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({
-              message: message,
-            }),
+            body: JSON.stringify({ message }),
           });
       
           const data = await res.json();
@@ -437,7 +441,7 @@ const [aiLoading, setAiLoading] = useState(false);
     {/* Ask AI Button */}
   <div className="mt-4">
     <button
-      onClick={askAIRiskAnalysis}
+      onClick={() => askAIRiskAnalysis()}
       className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg text-sm font-medium"
     >
       Ask AI for Risk Analysis
