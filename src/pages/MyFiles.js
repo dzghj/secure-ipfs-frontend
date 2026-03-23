@@ -19,6 +19,11 @@ function MyFiles() {
   const [keyHolderEmails, setKeyHolderEmails] = useState([]);
   const [isKeyHolderMode, setIsKeyHolderMode] = useState(false);
 
+  /* AI CHAT */
+const [aiInput, setAiInput] = useState("");
+const [aiResponse, setAiResponse] = useState("");
+const [aiLoading, setAiLoading] = useState(false);
+
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -133,6 +138,37 @@ function MyFiles() {
         return Math.min(score, 100);
       };
 
+
+      const askAI = async () => {
+        if (!aiInput) return;
+      
+        setAiLoading(true);
+        setAiResponse("");
+      
+        try {
+          const res = await fetch(`${API_BASE_URL}/api/ai/chat`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              message: aiInput,
+            }),
+          });
+      
+          const data = await res.json();
+      
+          if (!res.ok) throw new Error(data.error || "AI request failed");
+      
+          setAiResponse(data.response);
+        } catch (err) {
+          console.error(err);
+          setAiResponse("AI request failed");
+        } finally {
+          setAiLoading(false);
+        }
+      };
       const toggleFileProtection = (fileId) => {
           setFiles((prev) =>
             prev.map((f) =>
@@ -205,6 +241,43 @@ function MyFiles() {
    <div className=" mb-12 flex gap-6">
 
       {/* KEYHOLDER SETTINGS PANEL */}
+      {/* AI ASSISTANT */}
+<div className="mb-12 bg-neutral-900 rounded-2xl p-8 border border-neutral-800">
+  <h3 className="text-xl font-semibold mb-4">
+    🤖 Vault AI Assistant
+  </h3>
+
+  <p className="text-gray-400 text-sm mb-4">
+    Ask questions about your vault, legal documents, or security.
+  </p>
+
+  <div className="flex gap-3">
+    <input
+      type="text"
+      value={aiInput}
+      onChange={(e) => setAiInput(e.target.value)}
+      placeholder="Ask AI something..."
+      className="flex-1 bg-neutral-800 border border-neutral-700 rounded-lg px-4 py-2 text-sm"
+    />
+
+    <button
+      onClick={askAI}
+      className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm font-medium"
+    >
+      Ask
+    </button>
+  </div>
+
+  {aiLoading && (
+    <p className="text-gray-400 text-sm mt-3">Thinking...</p>
+  )}
+
+  {aiResponse && (
+    <div className="mt-4 bg-neutral-950 border border-neutral-800 rounded-lg p-4 text-sm text-gray-300 whitespace-pre-wrap">
+      {aiResponse}
+    </div>
+  )}
+</div>
       <div className="w-1/2 mb-12 bg-neutral-900 rounded-2xl p-8 border border-neutral-800 text-center">
 
         <h3 className="text-xl font-semibold mb-4">
@@ -268,9 +341,7 @@ function MyFiles() {
 
   </div>
 
-  <div className="text-sm text-gray-300">
-    {files.length} / {MAX_FILES}
-  </div>
+ 
 </div>
 
       </div>
@@ -281,7 +352,7 @@ function MyFiles() {
       {/* KEYHOLDER SETTINGS PANEL */}
       <div className="w-1/2 mb-12 bg-neutral-900 rounded-2xl p-8 border border-neutral-800 text-center">
        <h3 className="text-xl font-semibold mb-4">
-          🔐 Risk Score
+          🔐  AI Risk Score
         </h3>
 
       <div className="text-3xl font-bold text-green-400">
@@ -301,7 +372,7 @@ function MyFiles() {
         <div className="flex justify-between items-center mb-4">
           <div>
     <h3 className="text-xl font-semibold mb-4">
-          🔐 Active Alerts
+          🔐 AI  Alerts Analysis
         </h3>
      
 
