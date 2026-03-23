@@ -291,18 +291,14 @@ const [aiLoading, setAiLoading] = useState(false);
           After 30 days a reminder email is sent.
           After 40 days your designated KeyHolder(s) receive recovery access.
         </p>
-
-        <div className="space-y-2 mb-4">
-          {keyHolderEmails.length === 0 && (
-            <p className="text-gray-500 text-sm">No keyholders configured</p>
-          )}
-
-          {keyHolderEmails.map((email, i) => (
+      {/* Vault Capacity Section
+      
+      {keyHolderEmails.map((email, i) => (
             <div key={i} className="text-sm text-gray-300">
               KeyHolder {i + 1}: {email}
             </div>
           ))}
-        </div>
+      */}
       </div>
 
       {/* Vault Capacity Section */}
@@ -321,7 +317,7 @@ const [aiLoading, setAiLoading] = useState(false);
 
     {/* ONLY show when limit reached */}
     {hasReachedLimit && (
-      <div className="mt-4 bg-neutral-950 border rounded-xl  text-sm text-gray-300">
+      <div className="mt-4 bg-neutral-950 rounded-xl  text-sm text-gray-300">
        
         <p className="text-yellow-400 font-medium mb-3">
           Vault storage limit reached.
@@ -395,11 +391,6 @@ const [aiLoading, setAiLoading] = useState(false);
         High Risk
       </span>
     )}
-  </div>
-
-  {/* AI Recommendations */}
-  <div className="bg-neutral-950 border border-neutral-800 rounded-xl p-4 text-sm text-gray-400">
-    <p className="mb-2 text-gray-300 font-medium">AI Recommendations</p>
   </div>
 
 </div>
