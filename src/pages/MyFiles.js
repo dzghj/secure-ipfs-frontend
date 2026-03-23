@@ -137,10 +137,46 @@ const [aiLoading, setAiLoading] = useState(false);
 
         return Math.min(score, 100);
       };
+      
+      const buildVaultData = () => {
+        return {
+          totalFiles: files.length,
+          keyholders: keyHolderEmails.length,
+          deadManSwitchEnabled: keyHolderOn,
+          securityAlerts: securityAlerts.length,
+          lastLogin: lastLoginDate,
+          localSecurityScore: 100 - securityScore(),
+        };
+      };
 
+      const askAIRiskAnalysis = async () => {
+        const vaultData = buildVaultData();
+      
+        const prompt = `
+      You are a digital vault security analyst.
+      
+      Analyze the vault security risk based on the data below.
+      
+      Return:
+      - Risk Score (0-100)
+      - Risk Level (Low / Medium / High)
+      - Issues Found
+      - Recommendations
+      
+      Vault Data:
+      ${JSON.stringify(vaultData, null, 2)}
+      `;
+      
+        setAiInput(prompt);
+        await askAI(prompt);
+      };
 
-      const askAI = async () => {
-        if (!aiInput) return;
+      const askAI = async (customPrompt) => {
+        const message = customPrompt || aiInput;
+        if (!message) return;
+      
+     // const askAI = async () => {
+       // if (!aiInput) return;
       
         setAiLoading(true);
         setAiResponse("");
@@ -153,7 +189,7 @@ const [aiLoading, setAiLoading] = useState(false);
               Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
-              message: aiInput,
+              message: message,
             }),
           });
       
@@ -398,6 +434,15 @@ const [aiLoading, setAiLoading] = useState(false);
         High Risk
       </span>
     )}
+    {/* Ask AI Button */}
+  <div className="mt-4">
+    <button
+      onClick={askAIRiskAnalysis}
+      className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg text-sm font-medium"
+    >
+      Ask AI for Risk Analysis
+    </button>
+  </div>
   </div>
 
 </div>
