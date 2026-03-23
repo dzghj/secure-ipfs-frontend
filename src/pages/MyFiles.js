@@ -299,6 +299,13 @@ const [aiLoading, setAiLoading] = useState(false);
             </div>
           ))}
       */}
+        <div className="space-y-2 mb-4">
+          {keyHolderEmails.map((email, i) => (
+            <div key={i} className="text-sm text-gray-300">
+              KeyHolder {i + 1}: {email}
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Vault Capacity Section */}
@@ -543,7 +550,15 @@ const [aiLoading, setAiLoading] = useState(false);
                           keyHolderEmails
                         </td>
                         <td className="px-4 py-3 text-purple-400 text-sm">
-                          No Emails 
+                          {file.emails && file.emails.length > 0 ? (
+                            file.emails.map((email, i) => (
+                              <div key={i}>
+                                {email}
+                              </div>
+                            ))
+                          ) : (
+                            "No Emails"
+                          )}
                         </td>
                       </tr>
                        <tr>
