@@ -30,6 +30,13 @@ const [aiLoading, setAiLoading] = useState(false);
   const storedUser = localStorage.getItem("user");
 const user = storedUser ? JSON.parse(storedUser) : null;
 
+ /* Detect keyholder login */
+ useEffect(() => {
+  if (user?.role === "keyholder") {
+    setIsKeyHolderMode(true);
+  }
+}, [user]);
+
 const maxFiles = user?.maxFileNumber ?? 5;
 const hasReachedLimit = files.length >= maxFiles;
 
