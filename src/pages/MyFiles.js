@@ -219,18 +219,7 @@ const riskAnalysis = user?.riskAnalysis;
           setAiLoading(false);
         }
       };
-      const toggleFileProtection22 = (fileId) => {
-          setFiles((prev) =>
-            prev.map((f) =>
-              f.id === fileId
-                ? { ...f, keyHolderOn: !f.keyHolderOn }
-                : f
-            )
-          );
-
-          // OPTIONAL: call backend later
-          //fetch(`/api/file/${fileId}/toggle-protection`, { method: "POST" })
-        };
+    
 
    const toggleFileProtection = async (fileId, currentState) => {
   try {
