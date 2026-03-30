@@ -44,7 +44,7 @@ const hasReachedLimit = files.length >= maxFiles;
 const riskScore = user?.riskScore;
 const riskAnalysis = user?.riskAnalysis;
 
-const displayRiskScore = riskScore ?? (100 - securityScore());
+
 
   const fetchFiles = useCallback(() => {
     if (!token) return;
@@ -147,7 +147,7 @@ const displayRiskScore = riskScore ?? (100 - securityScore());
 
         return Math.min(score, 100);
       };
-      
+      const displayRiskScore = riskScore ?? (100 - securityScore());
       const buildVaultData = () => {
         return {
           totalFiles: files.length,
