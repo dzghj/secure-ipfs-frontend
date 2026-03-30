@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import FileUploader from "../components/FileUploader";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-const MAX_FILES = 3;
+//const MAX_FILES = 3;
 
 
 
@@ -25,16 +25,19 @@ const [aiResponse, setAiResponse] = useState("");
 const [aiLoading, setAiLoading] = useState(false);
 
   const token = localStorage.getItem("token");
-  const user = JSON.parse(localStorage.getItem("user"));
+  
 
-  const hasReachedLimit = files.length >= MAX_FILES;
+  const storedUser = localStorage.getItem("user");
+const user = storedUser ? JSON.parse(storedUser) : null;
 
-  /* Detect keyholder login */
-  useEffect(() => {
-    if (user?.role === "keyholder") {
-      setIsKeyHolderMode(true);
-    }
-  }, [user]);
+const maxFiles = user?.maxFileNumber ?? 5;
+const hasReachedLimit = files.length >= maxFiles;
+
+// ✅ NEW
+const riskScore = user?.riskScore;
+const riskAnalysis = user?.riskAnalysis;
+
+const displayRiskScore = riskScore ?? (100 - securityScore());
 
   const fetchFiles = useCallback(() => {
     if (!token) return;
@@ -268,7 +271,7 @@ const [aiLoading, setAiLoading] = useState(false);
           Secure, encrypted, and blockchain-verified storage for your most critical
           legal and ownership documents.
         </p>
-        
+
 
           {/* AI ASSISTANT */}
                 <div className="mb-12 bg-neutral-900 rounded-2xl p-8 border border-neutral-800">
@@ -369,11 +372,11 @@ const [aiLoading, setAiLoading] = useState(false);
        <div className="flex justify-between items-center mb-4">
   <div>
     <h3 className="text-xl font-semibold text-white">
-      🔐 Vault Capacity :  {files.length} / {MAX_FILES}
+      🔐 Vault Capacity :  {files.length} / {maxFiles}
     </h3>
 
     <p className="text-sm text-gray-400 mt-1">
-      Enterprise tier supports up to {MAX_FILES} immutable records.
+      Enterprise tier supports up to {maxFiles} immutable records.
     </p>
    
 
@@ -419,7 +422,7 @@ const [aiLoading, setAiLoading] = useState(false);
   {/* Risk Score */}
   <div className="text-center mb-6">
     <div className="text-5xl font-bold text-green-400">
-      {100 - securityScore()}
+      {displayRiskScore}
     </div>
     <p className="text-xs text-neutral-500 mt-2">
       Overall Vault Security Score
@@ -436,19 +439,19 @@ const [aiLoading, setAiLoading] = useState(false);
 
   {/* Risk Level */}
   <div className="text-center mb-6">
-    {(100 - securityScore()) > 80 && (
+    {displayRiskScore > 80 && (
       <span className="bg-green-900 text-green-400 px-3 py-1 rounded-full text-xs">
         Low Risk
       </span>
     )}
 
-    {(100 - securityScore()) <= 80 && (100 - securityScore()) > 50 && (
+    {displayRiskScore <= 80 && displayRiskScore > 50 && (
       <span className="bg-yellow-900 text-yellow-400 px-3 py-1 rounded-full text-xs">
         Medium Risk
       </span>
     )}
 
-    {(100 - securityScore()) <= 50 && (
+    {displayRiskScore <= 50 && (
       <span className="bg-red-900 text-red-400 px-3 py-1 rounded-full text-xs">
         High Risk
       </span>
@@ -467,7 +470,11 @@ const [aiLoading, setAiLoading] = useState(false);
     <h3 className="text-xl font-semibold mb-4">
           🔐 AI  Alerts Analysis
         </h3>
-     
+        {riskAnalysis && (
+  <div className="mt-4 bg-neutral-950 border border-neutral-800 rounded-xl p-4 text-sm text-gray-300 whitespace-pre-wrap">
+    {riskAnalysis}
+  </div>
+)}
 
     {securityAlerts.length === 0 ? (
       <p className="text-green-400 text-sm">
@@ -667,7 +674,7 @@ const [aiLoading, setAiLoading] = useState(false);
             </h3>
 
             <p className="text-sm text-gray-400 mb-6">
-              Your vault currently supports {MAX_FILES} immutable records.
+              Your vault currently supports {maxFiles} immutable records.
               Upgrade your enterprise plan to expand capacity.
             </p>
 
