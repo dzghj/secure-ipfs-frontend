@@ -219,7 +219,7 @@ const riskAnalysis = user?.riskAnalysis;
           setAiLoading(false);
         }
       };
-      const toggleFileProtection = (fileId) => {
+      const toggleFileProtection22 = (fileId) => {
           setFiles((prev) =>
             prev.map((f) =>
               f.id === fileId
@@ -229,10 +229,10 @@ const riskAnalysis = user?.riskAnalysis;
           );
 
           // OPTIONAL: call backend later
-          // fetch(`/api/file/${fileId}/toggle-protection`, { method: "POST" })
+          //fetch(`/api/file/${fileId}/toggle-protection`, { method: "POST" })
         };
 
-       /* const toggleFileProtection = async (fileId, currentState) => {
+   const toggleFileProtection = async (fileId, currentState) => {
   try {
     const res = await fetch(
       `${API_BASE_URL}/api/file/${fileId}/toggle-protection`,
@@ -263,7 +263,7 @@ const riskAnalysis = user?.riskAnalysis;
     console.error(err);
     alert("Update failed");
   }
-};*/
+};
 
   return (
     <div className="w-1/2 min-h-screen bg-neutral-950 p-10 text-gray-100">
