@@ -239,11 +239,13 @@ const riskAnalysis = user?.riskAnalysis;
 
     if (!res.ok) throw new Error("Failed to update protection");
 
+    const data = await res.json();
+
     // update UI after success
     setFiles((prev) =>
       prev.map((f) =>
         f.id === fileId
-          ? { ...f, keyHolderOn: !currentState }
+          ? { ...f, protectionOn: data.protectionOn }
           : f
       )
     );
@@ -585,14 +587,14 @@ const riskAnalysis = user?.riskAnalysis;
                       </td>
                       <td className="px-4 py-3">
                         <button
-                          onClick={() => toggleFileProtection(file.id)}
+                          onClick={() => toggleFileProtection(file.id, file.protectionOn)}
                           className={`px-4 py-1 rounded-md text-xs font-medium transition ${
-                            file.keyHolderOn
+                            file.protectionOn
                               ? "bg-green-600 hover:bg-green-500"
                               : "bg-neutral-700 hover:bg-neutral-600"
                           }`}
                         >
-                          {file.keyHolderOn ? "Enabled" : "Disabled"}
+                          {file.protectionOn ? "Enabled" : "Disabled"}
                         </button>
                       </td>
                     </tr>
