@@ -715,41 +715,55 @@ const purchasePlan = async (planId) => {
         )}
       </div>
        {/* Request Access Modal */}
-       {loadingPlans ? (
-  <p className="text-gray-400">Loading plans...</p>
-) : (
-  <div className="space-y-3">
-    {upgradePlans.map(plan => (
-      <div
-        key={plan.id}
-        className="border border-neutral-700 rounded-lg p-4 flex justify-between"
+      {showUpgradeModal && (
+  <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+    <div className="bg-neutral-900 p-6 rounded-xl w-96">
+      <h3 className="text-lg font-semibold mb-4">Upgrade Plan</h3>
+
+      {loadingPlans ? (
+        <p className="text-gray-400">Loading plans...</p>
+      ) : (
+        <div className="space-y-3">
+          {upgradePlans.map(plan => (
+            <div
+              key={plan.id}
+              className="border border-neutral-700 rounded-lg p-4 flex justify-between"
+            >
+              <div>
+                <div className="text-white font-medium">
+                  {plan.name}
+                </div>
+                <div className="text-gray-400 text-sm">
+                  Max Files: {plan.maxFiles}
+                </div>
+              </div>
+
+              <div className="text-right">
+                <div className="text-yellow-400 font-bold">
+                  ${plan.price}
+                </div>
+
+                <button
+                  onClick={() => purchasePlan(plan.id)}
+                  className="bg-yellow-600 hover:bg-yellow-700 px-3 py-1 rounded mt-2"
+                >
+                  Upgrade
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <button
+        onClick={() => setShowUpgradeModal(false)}
+        className="mt-4 bg-neutral-700 px-3 py-1 rounded"
       >
-        <div>
-          <div className="text-white font-medium">
-            {plan.name}
-          </div>
-          <div className="text-gray-400 text-sm">
-            Max Files: {plan.maxFiles}
-          </div>
-        </div>
-
-        <div className="text-right">
-          <div className="text-yellow-400 font-bold">
-            ${plan.price}
-          </div>
-
-          <button
-            onClick={() => purchasePlan(plan.id)}
-            className="bg-yellow-600 hover:bg-yellow-700 px-3 py-1 rounded mt-2"
-          >
-            Upgrade
-          </button>
-        </div>
-      </div>
-    ))}
+        Close
+      </button>
+    </div>
   </div>
 )}
-
 
 
 
