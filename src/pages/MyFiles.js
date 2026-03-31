@@ -30,6 +30,9 @@ const [aiLoading, setAiLoading] = useState(false);
   const storedUser = localStorage.getItem("user");
 const user = storedUser ? JSON.parse(storedUser) : null;
 
+const [upgradePlans, setUpgradePlans] = useState([]);
+const [loadingPlans, setLoadingPlans] = useState(false);
+
  /* Detect keyholder login */
  useEffect(() => {
   if (user?.role === "keyholder") {
@@ -38,7 +41,9 @@ const user = storedUser ? JSON.parse(storedUser) : null;
 }, [user]);
 
 const maxFiles = user?.maxFileNumber ?? 5;
-const hasReachedLimit = files.length >= maxFiles;
+//const hasReachedLimit = files.length >= maxFiles;
+const hasReachedLimit = true;
+
 
 // ✅ NEW
 const riskScore = user?.riskScore;
@@ -219,7 +224,53 @@ const riskAnalysis = user?.riskAnalysis;
           setAiLoading(false);
         }
       };
-    
+
+const openUpgradeModal = async () => {
+  setShowUpgradeModal(true);
+  setLoadingPlans(true);
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/upgrade/options`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await res.json();
+    setUpgradePlans(data.plans);
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setLoadingPlans(false);
+  }
+};
+
+const purchasePlan = async (planId) => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/upgrade/subscribe`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ planId }),
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+
+    alert("Upgrade successful!");
+
+    // update user limit locally
+    const updatedUser = { ...user, maxFileNumber: data.maxFiles };
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+
+    window.location.reload();
+  } catch (err) {
+    alert("Upgrade failed");
+  }
+};
+
 
    const toggleFileProtection = async (fileId, currentState) => {
   try {
@@ -392,7 +443,7 @@ const riskAnalysis = user?.riskAnalysis;
 
         <button
           className="bg-yellow-600 hover:bg-yellow-700 px-5 py-2 rounded-lg font-medium text-black transition"
-         onClick={() => setShowUpgradeModal(true)}
+         onClick={() => openUpgradeModal()}
         >
           Upgrade Plan
         </button>
@@ -664,39 +715,42 @@ const riskAnalysis = user?.riskAnalysis;
         )}
       </div>
        {/* Request Access Modal */}
-      {showUpgradeModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-neutral-900 border border-neutral-700 rounded-2xl p-8 w-full max-w-md shadow-2xl">
-            <h3 className="text-xl font-semibold text-white mb-3">
-              Request Extended Vault Access
-            </h3>
-
-            <p className="text-sm text-gray-400 mb-6">
-              Your vault currently supports {maxFiles} immutable records.
-              Upgrade your enterprise plan to expand capacity.
-            </p>
-
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={() => setShowUpgradeModal(false)}
-                className="text-gray-400 hover:text-white"
-              >
-                Cancel
-              </button>
-
-              <button
-                onClick={() => {
-                  setShowUpgradeModal(false);
-                  window.location.href = "/upgrade";
-                }}
-                className="bg-yellow-600 hover:bg-yellow-700 px-4 py-2 rounded-lg font-medium text-black transition"
-              >
-                Upgrade Now
-              </button>
-            </div>
+       {loadingPlans ? (
+  <p className="text-gray-400">Loading plans...</p>
+) : (
+  <div className="space-y-3">
+    {upgradePlans.map(plan => (
+      <div
+        key={plan.id}
+        className="border border-neutral-700 rounded-lg p-4 flex justify-between"
+      >
+        <div>
+          <div className="text-white font-medium">
+            {plan.name}
+          </div>
+          <div className="text-gray-400 text-sm">
+            Max Files: {plan.maxFiles}
           </div>
         </div>
-      )}
+
+        <div className="text-right">
+          <div className="text-yellow-400 font-bold">
+            ${plan.price}
+          </div>
+
+          <button
+            onClick={() => purchasePlan(plan.id)}
+            className="bg-yellow-600 hover:bg-yellow-700 px-3 py-1 rounded mt-2"
+          >
+            Upgrade
+          </button>
+        </div>
+      </div>
+    ))}
+  </div>
+)}
+
+
 
 
     </div>
