@@ -40,9 +40,8 @@ const [loadingPlans, setLoadingPlans] = useState(false);
   }
 }, [user]);
 
-const maxFiles = user?.maxFileNumber ?? 5;
-//const hasReachedLimit = files.length >= maxFiles;
-const hasReachedLimit = true;
+const maxFiles = user?.maxFileNumber ?? 3;
+const hasReachedLimit = files.length >= maxFiles;
 
 
 // ✅ NEW
