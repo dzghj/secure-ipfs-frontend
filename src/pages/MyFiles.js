@@ -23,6 +23,8 @@ function MyFiles() {
 const [aiInput, setAiInput] = useState("");
 const [aiResponse, setAiResponse] = useState("");
 const [aiLoading, setAiLoading] = useState(false);
+const [newEmail, setNewEmail] = useState("");
+const [editingFileId, setEditingFileId] = useState(null);
 
   const token = localStorage.getItem("token");
   
@@ -142,6 +144,33 @@ const riskAnalysis = user?.riskAnalysis;
       alert("Secure document access failed: " + err.message);
     }
   };
+
+      const handleSaveEmail = async (file) => {
+  if (!newEmail) return;
+
+  const updatedList = [
+    ...(file.keyHolderList || []),
+    newEmail,
+  ];
+
+  try {
+    await fetch(`${API_BASE_URL}/api/file/${file.id}/keyholders`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ keyHolderList: updatedList }),
+    });
+
+    setNewEmail("");
+    setEditingFileId(null);
+    fetchFiles(); // refresh list
+
+  } catch (err) {
+    console.error(err);
+  }
+};
       const securityScore = () => {
         let score = 50;
 
@@ -657,22 +686,73 @@ const purchasePlan = async (planId) => {
                         {file.remainingDays != null && " days remaining"}
                       </td>
                       </tr>
-                       <tr>
-                        <td className="px-4 py-3 text-gray-500">
-                          keyHolderEmails
-                        </td>
-                        <td className="px-4 py-3 text-purple-400 text-sm">
-                          {file.emails && file.emails.length > 0 ? (
-                            file.emails.map((email, i) => (
-                              <div key={i}>
-                                {email}
-                              </div>
-                            ))
-                          ) : (
-                            "No Emails"
-                          )}
-                        </td>
-                      </tr>
+                     <tr>
+          <td className="px-4 py-3 text-gray-500">
+            KeyHolder Emails
+          </td>
+
+        <td className="px-4 py-3 text-sm">
+
+          {Array.isArray(file.keyHolderList) && file.keyHolderList.length > 0 ? (
+            <div className="space-y-2">
+
+              {/* Existing Emails */}
+              <div className="flex flex-wrap gap-2">
+                {file.keyHolderList.map((email, i) => (
+                  <span
+                    key={i}
+                    className="bg-purple-600/20 text-purple-300 px-2 py-1 rounded-md text-xs"
+                  >
+                    {email}
+                  </span>
+                ))}
+              </div>
+
+              {/* Add More */}
+              {editingFileId === file.id ? (
+                <div className="flex gap-2 mt-2">
+                  <input
+                    type="email"
+                    placeholder="Enter email"
+                    value={newEmail}
+                    onChange={(e) => setNewEmail(e.target.value)}
+                    className="px-2 py-1 rounded bg-neutral-800 border border-neutral-700 text-white text-xs"
+                  />
+
+                  <button
+                    className="bg-green-600 px-2 py-1 rounded text-xs"
+                    onClick={() => handleSaveEmail(file)}
+                  >
+                    Save
+                  </button>
+                </div>
+              ) : (
+                <button
+                  className="text-xs text-blue-400 mt-2"
+                  onClick={() => setEditingFileId(file.id)}
+                >
+                  + Add Email
+                </button>
+              )}
+
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+
+              <span className="text-gray-500">No Emails</span>
+
+              <button
+                className="bg-purple-600 px-2 py-1 rounded text-xs"
+                onClick={() => setEditingFileId(file.id)}
+              >
+                Add
+              </button>
+
+            </div>
+          )}
+
+        </td>
+      </tr>
                        <tr>
                         <td className="px-4 py-3 text-gray-500">
                           Audit Log
