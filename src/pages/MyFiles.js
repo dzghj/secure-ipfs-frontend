@@ -652,9 +652,10 @@ const purchasePlan = async (planId) => {
                         <td className="px-4 py-3 text-gray-500">
                           KeyHolder Unlock Remaining
                         </td>
-                        <td className="px-4 py-3 text-purple-400 text-sm">
-                          18 days remaining
-                        </td>
+                       <td className="px-4 py-3 text-purple-400 text-sm">
+                        {file.remainingDays ?? "unlimited"} 
+                        {file.remainingDays != null && " days remaining"}
+                      </td>
                       </tr>
                        <tr>
                         <td className="px-4 py-3 text-gray-500">
