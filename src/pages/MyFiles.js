@@ -230,7 +230,7 @@ const openUpgradeModal = async () => {
   setLoadingPlans(true);
 
   try {
-    const res = await fetch(`${API_BASE_URL}/upgrade/options`, {
+    const res = await fetch(`${API_BASE_URL}/api/upgrade/options`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -247,7 +247,7 @@ const openUpgradeModal = async () => {
 
 const purchasePlan = async (planId) => {
   try {
-    const res = await fetch(`${API_BASE_URL}/upgrade/subscribe`, {
+    const res = await fetch(`${API_BASE_URL}/api/upgrade/subscribe`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
