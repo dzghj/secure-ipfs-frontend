@@ -430,7 +430,7 @@ const purchasePlan = async (planId) => {
    
 
     {/* ONLY show when limit reached */}
-    {!hasReachedLimit && (
+    {hasReachedLimit && (
       <div className="mt-4 bg-neutral-950 rounded-xl  text-sm text-gray-300">
        
         <p className="text-yellow-400 font-medium mb-3">
