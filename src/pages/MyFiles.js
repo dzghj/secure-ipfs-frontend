@@ -43,7 +43,7 @@ const [loadingPlans, setLoadingPlans] = useState(false);
 const maxFiles = user?.maxFileNumber ?? 3;
 const hasReachedLimit = files.length >= maxFiles;
 
-
+console.log(user);
 // ✅ NEW
 const riskScore = user?.riskScore;
 const riskAnalysis = user?.riskAnalysis;
