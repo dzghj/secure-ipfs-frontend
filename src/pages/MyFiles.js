@@ -45,7 +45,6 @@ const [loadingPlans, setLoadingPlans] = useState(false);
 const maxFiles = user?.maxFileNumber ?? 3;
 const hasReachedLimit = files.length >= maxFiles;
 
-console.log(user);
 // ✅ NEW
 const riskScore = user?.riskScore;
 const riskAnalysis = user?.riskAnalysis;
@@ -144,6 +143,37 @@ const riskAnalysis = user?.riskAnalysis;
       alert("Secure document access failed: " + err.message);
     }
   };
+
+  const handleRemoveEmail = async (file, emailToRemove) => {
+  if (!window.confirm(`Remove keyholder ${emailToRemove}?`)) return;
+
+  const updatedList = (file.keyHolderList || []).filter(
+    (email) => email !== emailToRemove
+  );
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/file/${file.id}/keyholders`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ keyHolderList: updatedList }),
+    });
+
+    if (!res.ok) throw new Error("Failed to remove email");
+
+    setFiles((prevFiles) =>
+      prevFiles.map((f) =>
+        f.id === file.id ? { ...f, keyHolderList: updatedList } : f
+      )
+    );
+
+  } catch (err) {
+    console.error(err);
+    alert("Failed to remove email");
+  }
+};
 const handleSaveEmail = async (file) => {
   if (!newEmail) return;
 
@@ -706,65 +736,78 @@ const purchasePlan = async (planId) => {
                       </td>
                       </tr>
                        
-<tr>
-  <td className="px-4 py-3 text-gray-500">KeyHolder Emails</td>
-  <td className="px-4 py-3 text-sm">
+<td className="px-4 py-3 text-sm">
 
-    {editingFileId === file.id ? (
-      // Editing mode: show input + save button
-      <div className="flex gap-2 flex-wrap">
-        <input
-          type="email"
-          placeholder="Enter email"
-          value={newEmail}
-          onChange={(e) => setNewEmail(e.target.value)}
-          className="px-2 py-1 rounded bg-neutral-800 border border-neutral-700 text-white text-xs"
-        />
-        <button
-          className="bg-green-600 px-2 py-1 rounded text-xs"
-          onClick={() => handleSaveEmail(file)}
-        >
-          Save
-        </button>
-        <button
-          className="bg-neutral-700 px-2 py-1 rounded text-xs"
-          onClick={() => { setEditingFileId(null); setNewEmail(""); }}
-        >
-          Cancel
-        </button>
-      </div>
-    ) : (
-      // Display mode: show existing emails + add button
-      <div className="flex flex-wrap gap-2 items-center">
-        {Array.isArray(file.keyHolderList) && file.keyHolderList.length > 0 ? (
-          file.keyHolderList.map((email, i) => (
-            <span
-              key={i}
-              className="bg-purple-600/20 text-purple-300 px-2 py-1 rounded-md text-xs"
-            >
-              {email}
-            </span>
-          ))
-        ) : (
-          <span className="text-gray-500">No Emails</span>
-        )}
-       
-          {(file.keyHolderList || []).length < 3 && (
+  {/* EDIT MODE */}
+  {editingFileId === file.id ? (
+    <div className="flex gap-2 flex-wrap">
+      <input
+        type="email"
+        placeholder="Enter email"
+        value={newEmail}
+        onChange={(e) => setNewEmail(e.target.value)}
+        className="px-2 py-1 rounded bg-neutral-800 border border-neutral-700 text-white text-xs"
+      />
+      <button
+        className="bg-green-600 px-2 py-1 rounded text-xs"
+        onClick={() => handleSaveEmail(file)}
+      >
+        Save
+      </button>
+      <button
+        className="bg-neutral-700 px-2 py-1 rounded text-xs"
+        onClick={() => {
+          setEditingFileId(null);
+          setNewEmail("");
+        }}
+      >
+        Cancel
+      </button>
+    </div>
+  ) : (
+    <div className="flex flex-wrap gap-2 items-center">
+
+      {/* EMAIL LIST */}
+      {Array.isArray(file.keyHolderList) && file.keyHolderList.length > 0 ? (
+        file.keyHolderList.map((email, i) => (
+          <div
+            key={i}
+            className="bg-purple-600/20 text-purple-300 px-2 py-1 rounded-md text-xs flex items-center gap-1"
+          >
+            {email}
+
+            {/* REVOKE BUTTON */}
             <button
-              className="text-xs text-blue-400 ml-2"
-              onClick={() => setEditingFileId(file.id)}
+              className="text-red-400 ml-1 hover:text-red-300"
+              onClick={() => handleRemoveEmail(file, email)}
             >
-              + Add Email
+              ✕
             </button>
-          )}
-          <div className="text-xs text-gray-400 mt-1">
-            KeyHolders: {(file.keyHolderList || []).length} / 3
           </div>
-      </div>
-    )}
+        ))
+      ) : (
+        <span className="text-gray-500">No Emails</span>
+      )}
 
-  </td>
-</tr>
+      {/* ADD BUTTON ONLY IF < 3 */}
+      {(file.keyHolderList || []).length < 3 && (
+        <button
+          className="text-xs text-blue-400 ml-2"
+          onClick={() => setEditingFileId(file.id)}
+        >
+          + Add Email
+        </button>
+      )}
+
+      {/* COUNTER */}
+      <div className="text-xs text-gray-500 ml-2">
+        {(file.keyHolderList || []).length} / 3
+      </div>
+
+    </div>
+  )}
+
+</td>
                        <tr>
                         <td className="px-4 py-3 text-gray-500">
                           Audit Log
