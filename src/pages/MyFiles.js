@@ -147,8 +147,21 @@ const riskAnalysis = user?.riskAnalysis;
 const handleSaveEmail = async (file) => {
   if (!newEmail) return;
 
-  // Prevent duplicates
-  const updatedList = Array.from(new Set([...(file.keyHolderList || []), newEmail.trim()]));
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(newEmail.trim())) {
+    alert("Please enter a valid email address");
+    return;
+  }
+
+  // Limit to 3 emails
+  if ((file.keyHolderList || []).length >= 3) {
+    alert("Maximum 3 KeyHolder emails allowed");
+    return;
+  }
+
+  const updatedList = Array.from(
+    new Set([...(file.keyHolderList || []), newEmail.trim()])
+  );
 
   try {
     const res = await fetch(`${API_BASE_URL}/api/file/${file.id}/keyholders`, {
@@ -160,24 +173,23 @@ const handleSaveEmail = async (file) => {
       body: JSON.stringify({ keyHolderList: updatedList }),
     });
 
-    if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
-      throw new Error(data.error || "Failed to save keyholder email");
-    }
+    if (!res.ok) throw new Error("Failed to save email");
 
-    // Clear input and exit editing mode
+    // Update UI immediately
+    setFiles((prevFiles) =>
+      prevFiles.map((f) =>
+        f.id === file.id ? { ...f, keyHolderList: updatedList } : f
+      )
+    );
+
     setNewEmail("");
     setEditingFileId(null);
 
-    // Refresh files to update UI
-    fetchFiles();
   } catch (err) {
     console.error(err);
-    alert("Failed to save email: " + err.message);
+    alert("Failed to save email");
   }
 };
-
-
       const securityScore = () => {
         let score = 50;
 
@@ -736,12 +748,18 @@ const purchasePlan = async (planId) => {
         ) : (
           <span className="text-gray-500">No Emails</span>
         )}
-        <button
-          className="text-xs text-blue-400 ml-2"
-          onClick={() => setEditingFileId(file.id)}
-        >
-          + Add Email
-        </button>
+       
+          {(file.keyHolderList || []).length < 3 && (
+            <button
+              className="text-xs text-blue-400 ml-2"
+              onClick={() => setEditingFileId(file.id)}
+            >
+              + Add Email
+            </button>
+          )}
+          <div className="text-xs text-gray-400 mt-1">
+            KeyHolders: {(file.keyHolderList || []).length} / 3
+          </div>
       </div>
     )}
 
