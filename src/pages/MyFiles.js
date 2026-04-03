@@ -43,6 +43,7 @@ const [loadingPlans, setLoadingPlans] = useState(false);
 }, [user]);
 
 const maxFiles = user?.maxFileNumber ?? 3;
+const lastLogin = user?.lastLogin ?? 'First Time';
 const hasReachedLimit = files.length >= maxFiles;
 
 console.log(user);
@@ -733,7 +734,7 @@ const purchasePlan = async (planId) => {
                         </td>
                        <td className="px-4 py-3 text-purple-400 text-sm">
                         {file.remainingDays ?? "unlimited"} 
-                        {file.remainingDays != null && " days remaining"}
+                        {lastLogin != null && " days remaining"}
                       </td>
                       </tr>
                        
