@@ -44,7 +44,7 @@ const [loadingPlans, setLoadingPlans] = useState(false);
 
 const maxFiles = user?.maxFileNumber ?? 3;
 const lastLogin = user?.lastLogin ?? null;
-console.log('lastLogin ==',lastLogin);
+//console.log('lastLogin ==',lastLogin);
 const hasReachedLimit = files.length >= maxFiles;
 
 console.log(user);
@@ -743,9 +743,11 @@ const purchasePlan = async (planId) => {
                           KeyHolder Unlock Remaining
                         </td>
                         <td className="px-4 py-3 text-purple-400 text-sm">
-                        {lastLogin 
-                          ? `${getRemainingDays(lastLogin)} days remaining` 
-                          : "First login - unlimited"}
+                        {file.protectionOn
+                          ? lastLogin 
+                            ? `${getRemainingDays(lastLogin)} days remaining`
+                            : "First login - unlimited"
+                          : "—" /* or "Disabled" */}
                       </td>
                       </tr>
                        
