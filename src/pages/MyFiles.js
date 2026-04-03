@@ -747,7 +747,7 @@ const purchasePlan = async (planId) => {
                           ? lastLogin 
                             ? `${getRemainingDays(lastLogin)} days remaining`
                             : "First login - unlimited"
-                          : "—" /* or "Disabled" */}
+                          : "— unlimited" /* or "Disabled" */}
                       </td>
                       </tr>
                        
