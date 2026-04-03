@@ -43,7 +43,8 @@ const [loadingPlans, setLoadingPlans] = useState(false);
 }, [user]);
 
 const maxFiles = user?.maxFileNumber ?? 3;
-const lastLogin = user?.lastLogin ?? 'First Time';
+const lastLogin = user?.lastLogin ?? null;
+console.log('lastLogin ==',lastLogin);
 const hasReachedLimit = files.length >= maxFiles;
 
 console.log(user);
@@ -145,7 +146,16 @@ const riskAnalysis = user?.riskAnalysis;
       alert("Secure document access failed: " + err.message);
     }
   };
-
+  const getRemainingDays = (lastLogin) => {
+    if (!lastLogin) return "unlimited"; // first login, no lastLogin
+  
+    const last = new Date(lastLogin);
+    const now = new Date();
+    const diffDays = Math.floor((now - last) / (1000 * 60 * 60 * 24));
+    const remaining = 30 - diffDays;
+  
+    return remaining > 0 ? remaining : 0; // cannot go below 0
+  };
   const handleRemoveEmail = async (file, emailToRemove) => {
   if (!window.confirm(`Remove keyholder ${emailToRemove}?`)) return;
 
@@ -732,9 +742,10 @@ const purchasePlan = async (planId) => {
                         <td className="px-4 py-3 text-gray-500">
                           KeyHolder Unlock Remaining
                         </td>
-                       <td className="px-4 py-3 text-purple-400 text-sm">
-                        {file.remainingDays ?? "unlimited"} 
-                        {lastLogin != null && " days remaining"}
+                        <td className="px-4 py-3 text-purple-400 text-sm">
+                        {lastLogin 
+                          ? `${getRemainingDays(lastLogin)} days remaining` 
+                          : "First login - unlimited"}
                       </td>
                       </tr>
                        
