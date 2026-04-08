@@ -15,10 +15,7 @@ export default function MyFiles() {
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-  useEffect(() => {
-  load();
-}, [load]);
-
+  
 
 
   const load = useCallback(async () => {
@@ -33,6 +30,11 @@ export default function MyFiles() {
     setLoading(false);
   }
 }, [token]);
+
+useEffect(() => {
+  load();
+}, [load]);
+
 
   if (loading) return <Loader />;
 
