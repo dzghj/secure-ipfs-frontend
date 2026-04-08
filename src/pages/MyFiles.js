@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState , useCallback} from "react";
 import Dashboard from "../components/dashboard/Dashboard";
 import AIAssistant from "../components/ai/AIAssistant";
 import FileList from "../components/files/FileList";
@@ -16,21 +16,23 @@ export default function MyFiles() {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   useEffect(() => {
-    load();
-  }, []);
+  load();
+}, [load]);
 
-  const load = async () => {
-    setLoading(true);
-    try {
-      const data = await fetchFilesAPI(token);
-      setFiles(data.files || []);
-      setAlerts(data.securityAlerts || []);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  };
+
+
+  const load = useCallback(async () => {
+  setLoading(true);
+  try {
+    const data = await fetchFilesAPI(token);
+    setFiles(data.files || []);
+    setAlerts(data.securityAlerts || []);
+  } catch (e) {
+    console.error(e);
+  } finally {
+    setLoading(false);
+  }
+}, [token]);
 
   if (loading) return <Loader />;
 
