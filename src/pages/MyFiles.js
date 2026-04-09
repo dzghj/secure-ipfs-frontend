@@ -62,11 +62,11 @@ export default function MyFiles() {
         <div className="w-full flex flex-col px-4 md:px-6 lg:px-8">
 
           {/* ===== TOPBAR ===== */}
-          <div className="flex justify-between items-center py-4 border-b border-neutral-800">
+          <div className="flex justify-between py-4 border-b border-neutral-800">
 
             <h1 className="text-lg font-semibold">Dashboard</h1>
 
-            <div className="flex items-center gap-4">
+            <div className="flex gap-4">
 
               {/* Notifications */}
               <div className="relative">
