@@ -59,7 +59,7 @@ export default function MyFiles() {
 
       {/* ===== MAIN AREA ===== */}
       <div className="flex-1 flex justify-center">
-        <div className="w-full max-w-7xl flex flex-col px-4 md:px-6 lg:px-8">
+        <div className="w-full flex flex-col px-4 md:px-6 lg:px-8">
 
           {/* ===== TOPBAR ===== */}
           <div className="flex justify-between items-center py-4 border-b border-neutral-800">
