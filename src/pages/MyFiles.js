@@ -113,13 +113,9 @@ export default function MyFiles() {
             {/* GRID */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-              {/* AI Assistant */}
-              <div className="bg-neutral-900/80 backdrop-blur-md p-6 rounded-2xl border border-neutral-700 shadow-xl">
-                <AIAssistant token={token} />
-              </div>
-
+             
               {/* AI Insights */}
-              <div className="bg-neutral-900/80 backdrop-blur-md p-6 rounded-2xl border border-neutral-700 shadow-xl">
+              <div className="bg-blue-900/80 backdrop-blur-md p-6 rounded-2xl border border-neutral-700 shadow-xl">
                 <h3 className="text-lg font-semibold mb-3">🧠 AI Insights</h3>
 
                 <p className="text-sm text-gray-400 mb-3">
@@ -142,7 +138,11 @@ export default function MyFiles() {
                   </li>
                 </ul>
               </div>
+               {/* AI Assistant */}
 
+              <div className="w-full mb-6 bg-neutral-900/80 backdrop-blur-md p-6 rounded-2xl border border-neutral-700 shadow-xl">
+              <AIAssistant token={token} />
+              </div>
               {/* FILE LIST */}
               <div className="lg:col-span-3 bg-neutral-900/80 backdrop-blur-md p-6 rounded-2xl border border-neutral-700 shadow-xl">
                 <h3 className="text-lg font-semibold mb-4">📁 Files</h3>
