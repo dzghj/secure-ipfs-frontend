@@ -13,7 +13,7 @@ export default function UpgradeModal({ token, onClose }) {
 
   return (
     <div className="fixed inset-0 bg-black/70 flex justify-center items-center">
-      <div className="bg-neutral-900 p-6 rounded-xl w-96">
+      <div className="bg-blue-800 p-6 rounded-xl w-96">
         <h3 className="mb-4">Upgrade Plan</h3>
 
         {plans.map(p => (

@@ -1,6 +1,6 @@
 export default function AlertsPanel({ alerts }) {
   return (
-    <div className="bg-neutral-900 p-6 rounded-xl">
+    <div className="bg-blue-800 p-6 rounded-xl">
       <h3>Alerts</h3>
 
       {alerts.length === 0 ? (

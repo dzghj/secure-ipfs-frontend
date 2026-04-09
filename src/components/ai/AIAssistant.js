@@ -21,7 +21,7 @@ export default function AIAssistant({ token }) {
   };
 
   return (
-    <div className="bg-neutral-900 p-6 rounded-xl mb-6">
+    <div className="bg-blue-800 p-6 rounded-xl mb-6">
       <h3>🤖 AI Assistant</h3>
 
       <div className="flex gap-2 mt-3">
