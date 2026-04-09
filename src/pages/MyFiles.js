@@ -43,7 +43,7 @@ useEffect(() => {
     <div className="flex min-h-screen bg-neutral-950 text-white">
 
       {/* ===== SIDEBAR ===== */}
-      <div className="w-64 bg-neutral-900 border-r border-neutral-800 p-6 hidden md:block">
+      <div className="w-64 bg-blue-800 border-r border-neutral-800 p-6 hidden md:block">
         <h2 className="text-xl font-bold mb-6">ShadowVault</h2>
         <nav className="space-y-3 text-sm">
           <div className="text-gray-400">Dashboard</div>
@@ -57,7 +57,7 @@ useEffect(() => {
       <div className="flex-1 flex flex-col">
 
         {/* ===== TOPBAR ===== */}
-        <div className="flex justify-between items-center px-6 py-4 border-b border-neutral-800 bg-neutral-900">
+        <div className="flex justify-between items-center px-6 py-4 border-b border-neutral-800 bg-blue-800">
           <h1 className="text-lg font-semibold">Dashboard</h1>
 
           <div className="flex items-center gap-4">
@@ -72,7 +72,7 @@ useEffect(() => {
               </button>
 
               {showNotifications && (
-                <div className="absolute right-0 mt-2 w-64 bg-neutral-900 border border-neutral-700 rounded-lg p-3 text-sm">
+                <div className="absolute right-0 mt-2 w-64 bg-blue-800 border border-neutral-700 rounded-lg p-3 text-sm">
                   {alerts.length === 0 ? (
                     <p className="text-green-400">No alerts</p>
                   ) : (
@@ -111,7 +111,7 @@ useEffect(() => {
             <AIAssistant token={token} />
 
             {/* AI Insights Panel */}
-            <div className="bg-neutral-900 p-6 rounded-xl border border-neutral-800">
+            <div className="bg-blue-800 p-6 rounded-xl border border-neutral-800">
               <h3 className="text-lg font-semibold mb-3">🧠 AI Insights</h3>
               <p className="text-sm text-gray-400 mb-3">
                 Auto analysis of your vault security.
@@ -135,7 +135,7 @@ useEffect(() => {
             </div>
 
             {/* File List */}
-            <div className="lg:col-span-3 bg-neutral-900 p-6 rounded-xl border border-neutral-800">
+            <div className="lg:col-span-3 bg-blue-800 p-6 rounded-xl border border-neutral-800">
               <h3 className="text-lg font-semibold mb-4">📁 Files</h3>
               <FileList files={files} token={token} />
             </div>
