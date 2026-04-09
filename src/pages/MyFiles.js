@@ -142,7 +142,7 @@ export default function MyFiles() {
 
               {/* AI Assistant  */}
               <div className="lg:col-span-3 bg-neutral-900/80 backdrop-blur-md p-6 rounded-2xl border border-neutral-700 shadow-xl">
-               <div className="w-full mb-6 bg-neutral-900/80 backdrop-blur-md p-6 rounded-2xl border border-neutral-700 shadow-xl">
+               <div className="">
               <AIAssistant token={token} />
               </div>
               </div>
