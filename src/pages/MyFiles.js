@@ -39,20 +39,20 @@ export default function MyFiles() {
 
       {/* ===== SIDEBAR ===== */}
       <div className="w-64 bg-neutral-900/80 backdrop-blur-md border-r border-neutral-800 p-6 hidden md:block">
-        <h2 className="text-xl font-bold mb-6">ShadowVault</h2>
+        <h2 className="text-xl font-bold mb-6"></h2>
 
         <nav className="space-y-3 text-sm">
           <div className="text-gray-400 hover:text-white transition cursor-pointer">
             Dashboard
           </div>
           <div className="text-gray-400 hover:text-white transition cursor-pointer">
-            Files
-          </div>
-          <div className="text-gray-400 hover:text-white transition cursor-pointer">
             Security
           </div>
           <div className="text-gray-400 hover:text-white transition cursor-pointer">
-            Settings
+            AI 
+          </div>
+          <div className="text-gray-400 hover:text-white transition cursor-pointer">
+           Files
           </div>
         </nav>
       </div>

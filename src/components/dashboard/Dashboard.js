@@ -11,7 +11,7 @@ export default function Dashboard({ files, alerts, user, onUpgrade }) {
       <RiskScoreCard score={score} />
       <AlertsPanel alerts={alerts} />
 
-      <div className="bg-neutral-900 p-6 rounded-xl">
+      <div className="bg-blue-800 p-6 rounded-xl">
         <h3>Capacity</h3>
         <p>{files.length} / {max}</p>
 
