@@ -138,10 +138,13 @@ export default function MyFiles() {
                   </li>
                 </ul>
               </div>
-               {/* AI Assistant */}
+            
 
-              <div className="w-full mb-6 bg-neutral-900/80 backdrop-blur-md p-6 rounded-2xl border border-neutral-700 shadow-xl">
+              {/* AI Assistant  */}
+              <div className="lg:col-span-3 bg-neutral-900/80 backdrop-blur-md p-6 rounded-2xl border border-neutral-700 shadow-xl">
+               <div className="w-full mb-6 bg-neutral-900/80 backdrop-blur-md p-6 rounded-2xl border border-neutral-700 shadow-xl">
               <AIAssistant token={token} />
+              </div>
               </div>
               {/* FILE LIST */}
               <div className="lg:col-span-3 bg-neutral-900/80 backdrop-blur-md p-6 rounded-2xl border border-neutral-700 shadow-xl">
