@@ -16,7 +16,9 @@ export default function MyFiles() {
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-  const load = useCallback(async () => {
+  
+  useEffect(() => {
+    const load = useCallback(async () => {
     setLoading(true);
     try {
       const data = await fetchFilesAPI(token);
@@ -29,7 +31,6 @@ export default function MyFiles() {
     }
   }, [token]);
 
-  useEffect(() => {
     load();
   }, [load]);
 
