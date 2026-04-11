@@ -42,16 +42,16 @@ export default function MyFiles() {
         
 
         <nav className="space-y-3 text-sm">
-          <div className="text-gray-400 hover:text-white transition cursor-pointer">
+          <div className="text-white hover:text-white transition cursor-pointer">
             Dashboard
           </div>
-          <div className="text-gray-400 hover:text-white transition cursor-pointer">
+          <div className="text-white hover:text-white transition cursor-pointer">
             Security
           </div>
-          <div className="text-gray-400 hover:text-white transition cursor-pointer">
+          <div className="text-white hover:text-white transition cursor-pointer">
             AI 
           </div>
-          <div className="text-gray-400 hover:text-white transition cursor-pointer">
+          <div className="text-white hover:text-white transition cursor-pointer">
            Files
           </div>
         </nav>
@@ -94,7 +94,7 @@ export default function MyFiles() {
               </div>
 
               {/* User */}
-              <div className="text-sm text-gray-400">
+              <div className="text-sm text-white">
                 {user?.email || "User"}
               </div>
             </div>
