@@ -64,7 +64,10 @@ export default function MyFiles() {
           {/* ===== TOPBAR ===== */}
           <div className="flex justify-between py-4 border-b border-neutral-800">
 
-            <h1 className="text-lg font-semibold">Dashboard</h1>
+            <h1 className="text-lg font-semibold"> 🏛 Enterprise Digital Asset Vault</h1>
+            <p className="text-gray-400 mb-4">
+  Secure, encrypted, and blockchain-verified storage for your most critical legal and ownership documents.
+</p>
 
             <div className="flex gap-4">
 
@@ -104,27 +107,6 @@ export default function MyFiles() {
                {/* ===== HERO / PRODUCT INFO ===== */}
 <div className="bg-gradient-to-r from-neutral-900 via-neutral-900 to-neutral-800 border border-neutral-700 rounded-2xl p-6 shadow-xl">
 
-{/* Title */}
-<h2 className="text-2xl font-bold mb-2">
-  🏛 ShadowVault — Enterprise Digital Asset Vault
-</h2>
-
-{/* Description */}
-<p className="text-gray-400 mb-4">
-  Secure, encrypted, and blockchain-verified storage for your most critical legal and ownership documents.
-</p>
-
-{/* Divider */}
-<div className="border-t border-neutral-700 my-4"></div>
-
-{/* Dead Man Switch */}
-<h3 className="text-lg font-semibold mb-2">
-  🔐 Dead-Man Switch Protection
-</h3>
-
-<p className="text-gray-400 text-sm">
-  If enabled, ShadowVault monitors account inactivity. After 30 days a reminder email is sent. After 40 days your designated KeyHolder(s) receive recovery access.
-</p>
 <div className="lg:col-span-3 bg-neutral-900/80 backdrop-blur-md p-6 rounded-2xl border border-neutral-700 shadow-xl">
                <div className="">
               <AIAssistant token={token} />
