@@ -32,8 +32,8 @@ export default function Dashboard({ files, alerts, user, onUpgrade }) {
         )}
       </div>
       <div className="bg-blue-800 p-6 rounded-xl">
-        <h3>Capacity</h3>
-        <p>{files.length} / {max}</p>
+        <h3> 🔐 Dead-Man Switch Protection</h3>
+        <p>If enabled, ShadowVault monitors account inactivity. After 30 days a reminder email is sent. After 40 days your designated KeyHolder(s) receive recovery access.</p>
 
         {reached && (
           <button onClick={onUpgrade} className="bg-yellow-500 mt-3 px-3 py-1">
