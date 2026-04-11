@@ -9,14 +9,14 @@ export default function FileCard({ file, token }) {
   const isProtected = file.protectionOn;
 
   return (
-    <div className="bg-neutral-950 border border-neutral-800 rounded-xl p-6">
+    <div className="bg-blue-800 border border-neutral-800 rounded-xl p-6">
 
       <table className="w-full text-sm text-left text-gray-300">
         <tbody className="divide-y divide-neutral-800">
 
           {/* File Name */}
           <tr>
-            <td className="px-4 py-3 text-gray-500 w-1/3">
+            <td className="px-4 py-3 text-white w-1/3">
               File Name
             </td>
             <td className="px-4 py-3 font-medium text-white">
@@ -26,7 +26,7 @@ export default function FileCard({ file, token }) {
 
           {/* Created */}
           <tr>
-            <td className="px-4 py-3 text-gray-500">
+            <td className="px-4 py-3 text-white">
               Created
             </td>
             <td className="px-4 py-3 font-medium text-white">
@@ -36,7 +36,7 @@ export default function FileCard({ file, token }) {
 
           {/* Integrity */}
           <tr>
-            <td className="px-4 py-3 text-gray-500">
+            <td className="px-4 py-3 text-white">
               Integrity Status
             </td>
             <td className="px-4 py-3 text-blue-400 font-medium">
@@ -46,7 +46,7 @@ export default function FileCard({ file, token }) {
 
           {/* CID */}
           <tr>
-            <td className="px-4 py-3 text-gray-500 align-top">
+            <td className="px-4 py-3 text-white align-top">
               CID Reference
             </td>
             <td className="px-4 py-3 text-xs text-blue-400 break-all">
@@ -56,7 +56,7 @@ export default function FileCard({ file, token }) {
 
           {/* Dead Man */}
           <tr>
-            <td className="px-4 py-3 text-gray-500">
+            <td className="px-4 py-3 text-white">
               Dead Man Protection
             </td>
             <td className="px-4 py-3">
@@ -74,7 +74,7 @@ export default function FileCard({ file, token }) {
 
           {/* Remaining */}
           <tr>
-            <td className="px-4 py-3 text-gray-500">
+            <td className="px-4 py-3 text-white">
               KeyHolder Unlock Remaining
             </td>
             <td className="px-4 py-3 text-purple-400 text-sm">
@@ -84,7 +84,7 @@ export default function FileCard({ file, token }) {
 
           {/* Keyholders */}
           <tr>
-            <td className="px-4 py-3 text-gray-500">
+            <td className="px-4 py-3 text-white">
               KeyHolder Emails
             </td>
             <td className="px-4 py-3 text-sm">
@@ -94,7 +94,7 @@ export default function FileCard({ file, token }) {
 
           {/* Audit */}
           <tr>
-            <td className="px-4 py-3 text-gray-500">
+            <td className="px-4 py-3 text-white">
               Audit Log
             </td>
             <td className="px-4 py-3 text-blue-400 font-medium">
@@ -104,7 +104,7 @@ export default function FileCard({ file, token }) {
 
           {/* Access */}
           <tr>
-            <td className="px-4 py-3 text-gray-500">
+            <td className="px-4 py-3 text-white">
               Secure Access
             </td>
             <td className="px-4 py-3">
