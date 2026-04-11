@@ -101,7 +101,36 @@ export default function MyFiles() {
 
           {/* ===== CONTENT ===== */}
           <div className="py-6 space-y-6">
+               {/* ===== HERO / PRODUCT INFO ===== */}
+<div className="bg-gradient-to-r from-neutral-900 via-neutral-900 to-neutral-800 border border-neutral-700 rounded-2xl p-6 shadow-xl">
 
+{/* Title */}
+<h2 className="text-2xl font-bold mb-2">
+  🏛 ShadowVault — Enterprise Digital Asset Vault
+</h2>
+
+{/* Description */}
+<p className="text-gray-400 mb-4">
+  Secure, encrypted, and blockchain-verified storage for your most critical legal and ownership documents.
+</p>
+
+{/* Divider */}
+<div className="border-t border-neutral-700 my-4"></div>
+
+{/* Dead Man Switch */}
+<h3 className="text-lg font-semibold mb-2">
+  🔐 Dead-Man Switch Protection
+</h3>
+
+<p className="text-gray-400 text-sm">
+  If enabled, ShadowVault monitors account inactivity. After 30 days a reminder email is sent. After 40 days your designated KeyHolder(s) receive recovery access.
+</p>
+<div className="lg:col-span-3 bg-neutral-900/80 backdrop-blur-md p-6 rounded-2xl border border-neutral-700 shadow-xl">
+               <div className="">
+              <AIAssistant token={token} />
+              </div>
+              </div>
+</div>
             {/* Dashboard */}
             <Dashboard
               files={files}
@@ -113,39 +142,7 @@ export default function MyFiles() {
             {/* GRID */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-             
-              {/* AI Insights */}
-              <div className="bg-blue-900/80 backdrop-blur-md p-6 rounded-2xl border border-neutral-700 shadow-xl">
-                <h3 className="text-lg font-semibold mb-3">🧠 AI Insights</h3>
-
-                <p className="text-sm text-gray-400 mb-3">
-                  Auto analysis of your vault security.
-                </p>
-
-                <ul className="text-sm space-y-2">
-                  {alerts.length === 0 ? (
-                    <li className="text-green-400">✔ No risks detected</li>
-                  ) : (
-                    alerts.map((a, i) => (
-                      <li key={i} className="text-yellow-400">
-                        ⚠ {a.type}
-                      </li>
-                    ))
-                  )}
-
-                  <li className="text-blue-400">
-                    📊 Files stored: {files.length}
-                  </li>
-                </ul>
-              </div>
-            
-
-              {/* AI Assistant  */}
-              <div className="lg:col-span-3 bg-neutral-900/80 backdrop-blur-md p-6 rounded-2xl border border-neutral-700 shadow-xl">
-               <div className="">
-              <AIAssistant token={token} />
-              </div>
-              </div>
+           
               {/* FILE LIST */}
               <div className="lg:col-span-3 bg-neutral-900/80 backdrop-blur-md p-6 rounded-2xl border border-neutral-700 shadow-xl">
                 <h3 className="text-lg font-semibold mb-4">📁 Files</h3>
