@@ -22,8 +22,8 @@ export default function Dashboard({ files, alerts, user, onUpgrade }) {
         )}
       </div>
       <div className="bg-blue-800 p-6 rounded-xl">
-        <h3>Capacity</h3>
-        <p>{files.length} / {max}</p>
+        <h3>Purpose</h3>
+        <p> Secure, encrypted, and blockchain-verified storage for your most critical legal and ownership documents.</p>
 
         {reached && (
           <button onClick={onUpgrade} className="bg-yellow-500 mt-3 px-3 py-1">
