@@ -151,7 +151,7 @@ export default function MyFiles() {
 </div>
 
 {/* ===== AI Assistant ===== */}
-<div className="bg-neutral-900/80 backdrop-blur-md p-4 rounded-xl border border-neutral-700">
+<div className="bg-neutral-900/80 backdrop-blur-md p-4 rounded-xl border-neutral-700">
   <AIAssistant token={token} />
 </div>
 
@@ -170,7 +170,12 @@ export default function MyFiles() {
            
               {/* FILE LIST */}
               <div className="lg:col-span-3 bg-neutral-900/80 backdrop-blur-md p-6 rounded-2xl border border-neutral-700 shadow-xl">
-                <h3 className="text-lg font-semibold mb-4">📁 Secure, encrypted, and blockchain-verified storage for your most critical legal and ownership documents.</h3>
+              <h3 className="text-lg font-semibold mb-2">
+                📁 Vault Records
+              </h3>
+              <p className="text-sm text-gray-400 mb-4">
+                Each file is encrypted, blockchain-anchored, and recoverable.
+              </p>
                 <FileList files={files} token={token} />
               </div>
 

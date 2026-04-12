@@ -22,14 +22,25 @@ export default function Dashboard({ files, alerts, user, onUpgrade }) {
         )}
       </div>
       <div className="bg-blue-800 p-6 rounded-xl">
-        <h3>Purpose</h3>
-        <p> </p>
+      <h3 className="text-lg font-semibold mb-3">🧠 Security Intelligence</h3>
 
-        {reached && (
-          <button onClick={onUpgrade} className="bg-yellow-500 mt-3 px-3 py-1">
-            Upgrade
-          </button>
-        )}
+    {alerts.length === 0 ? (
+      <p className="text-green-400 text-sm">
+        ✔ No risks detected. Your vault is secure.
+      </p>
+    ) : (
+      <ul className="space-y-2 text-sm">
+        {alerts.map((a, i) => (
+          <li key={i} className="text-yellow-400">
+            ⚠ {a.type}
+          </li>
+        ))}
+      </ul>
+    )}
+
+    <div className="mt-4 text-xs text-gray-500">
+      AI continuously monitors vault integrity & access patterns.
+    </div>
       </div>
       <div className="bg-blue-800 p-6 rounded-xl">
         <h3> 🔐 Dead-Man Switch Protection</h3>
