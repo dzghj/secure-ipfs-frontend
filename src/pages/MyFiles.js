@@ -38,7 +38,7 @@ export default function MyFiles() {
     <div className="flex min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 text-white">
 
       {/* ===== SIDEBAR ===== */}
-      <div className="w-64 bg-neutral-900/80 backdrop-blur-md border-r border-neutral-800 p-6 hidden md:block">
+      <div className="w-64 bg-blue-900/80 backdrop-blur-md border-r border-neutral-800 p-6 hidden md:block">
         
 
         <nav className="space-y-3 text-sm">
@@ -64,7 +64,14 @@ export default function MyFiles() {
           {/* ===== TOPBAR ===== */}
           <div className="flex justify-between py-4 border-b border-neutral-800">
 
-            <h1 className="text-lg font-semibold"> 🏛 Enterprise Digital Asset Vault</h1>
+          <div>
+  <h1 className="text-xl font-semibold text-white">
+    🏛 ShadowVault
+  </h1>
+  <p className="text-xs text-gray-400">
+    Enterprise Digital Asset Vault
+  </p>
+</div>
           
 
             <div className="flex gap-4">
@@ -103,13 +110,59 @@ export default function MyFiles() {
           {/* ===== CONTENT ===== */}
           <div className="py-6 space-y-6">
                {/* ===== HERO / PRODUCT INFO ===== */}
-<div className="bg-gradient-to-r from-neutral-900 via-neutral-900 to-neutral-800 border border-neutral-700 rounded-2xl p-6 shadow-xl">
+            {/* ===== HERO / PRODUCT INFO ===== */}
+<div className="bg-gradient-to-r from-blue-900/40 via-neutral-900 to-neutral-900 border border-neutral-700 rounded-2xl p-6 shadow-xl space-y-6">
 
-<div className="lg:col-span-3 bg-neutral-900/80 backdrop-blur-md p-6 rounded-2xl border-neutral-700 shadow-xl">
-               <div className="">
-              <AIAssistant token={token} />
-              </div>
-              </div>
+{/* Title */}
+<div>
+  <h2 className="text-2xl font-bold text-white mb-2">
+    🏛 ShadowVault — Enterprise Digital Asset Vault
+  </h2>
+
+  <p className="text-gray-400 text-sm">
+    Secure, encrypted, and blockchain-verified storage for your most critical legal and ownership documents.
+  </p>
+</div>
+
+{/* Dead-Man Switch Info */}
+<div className="bg-purple-900/30 border border-purple-700 rounded-xl p-4">
+  <h3 className="text-sm font-semibold text-purple-300 mb-1">
+    🔐 Dead-Man Switch Protection
+  </h3>
+  <p className="text-xs text-gray-400">
+    If enabled, ShadowVault monitors account inactivity. After <span className="text-white">30 days</span> a reminder email is sent. After <span className="text-white">40 days</span> your designated KeyHolder(s) receive recovery access.
+  </p>
+</div>
+
+{/* ===== STATS ===== */}
+<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+  <div className="bg-neutral-800/60 p-4 rounded-xl border border-neutral-700">
+    <p className="text-xs text-gray-400">Total Files</p>
+    <p className="text-xl font-semibold text-white">{files.length}</p>
+  </div>
+
+  <div className="bg-neutral-800/60 p-4 rounded-xl border border-neutral-700">
+    <p className="text-xs text-gray-400">Protected Files</p>
+    <p className="text-xl font-semibold text-green-400">
+      {files.filter(f => f.protectionOn).length}
+    </p>
+  </div>
+
+  <div className="bg-neutral-800/60 p-4 rounded-xl border border-neutral-700">
+    <p className="text-xs text-gray-400">Security Alerts</p>
+    <p className="text-xl font-semibold text-red-400">
+      {alerts.length}
+    </p>
+  </div>
+
+</div>
+
+{/* ===== AI Assistant ===== */}
+<div className="bg-neutral-900/80 backdrop-blur-md p-4 rounded-xl border border-neutral-700">
+  <AIAssistant token={token} />
+</div>
+
 </div>
             {/* Dashboard */}
             <Dashboard
