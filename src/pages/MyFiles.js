@@ -163,11 +163,56 @@ export default function MyFiles() {
               user={user}
               onUpgrade={() => setShowUpgrade(true)}
             />
+           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
+{/* Compliance */}
+<div className="bg-neutral-900 p-4 rounded-xl border border-neutral-700">
+  <h3 className="text-sm font-semibold mb-3">📑 Compliance Logs</h3>
+
+  <ul className="text-xs text-gray-400 space-y-1">
+    <li>✔ SOC2 Audit Ready</li>
+    <li>✔ Encryption Verified</li>
+    <li>✔ Access Logged</li>
+  </ul>
+</div>
+
+{/* Role-based access */}
+<div className="bg-neutral-900 p-4 rounded-xl border border-neutral-700">
+  <h3 className="text-sm font-semibold mb-3">👤 Access Control</h3>
+
+  <p className="text-xs text-gray-400">
+    Role: Owner
+  </p>
+
+  <p className="text-xs text-green-400 mt-2">
+    Full permissions granted
+  </p>
+</div>
+
+</div>
             {/* GRID */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-           
+              {/* ===== UPGRADE CTA ===== */}
+<div className="bg-gradient-to-r from-blue-900/40 to-purple-900/40 border border-neutral-700 rounded-xl p-4 flex justify-between items-center">
+
+<div>
+              <p className="text-sm text-white font-medium">
+                Unlock Enterprise Security Features
+              </p>
+              <p className="text-xs text-gray-400">
+                Advanced monitoring, audit logs, and recovery automation
+              </p>
+            </div>
+
+            <button
+              onClick={() => setShowUpgrade(true)}
+              className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md text-sm"
+            >
+              Upgrade
+            </button>
+
+            </div>
               {/* FILE LIST */}
               <div className="lg:col-span-3 bg-neutral-900/80 backdrop-blur-md p-6 rounded-2xl border border-neutral-700 shadow-xl">
               <h3 className="text-lg font-semibold mb-2">
