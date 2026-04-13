@@ -121,39 +121,6 @@ export default function MyFiles() {
 {/* Title */}
 
 
-{/* Dead-Man Switch Info */}
-<div className="bg-purple-900/30 border border-purple-700 rounded-xl p-4">
-  <h3 className="text-sm font-semibold text-purple-300 mb-1">
-    🔐 Dead-Man Switch Protection
-  </h3>
-  <p className="text-xs text-gray-400">
-    If enabled, ShadowVault monitors account inactivity. After <span className="text-white">30 days</span> a reminder email is sent. After <span className="text-white">40 days</span> your designated KeyHolder(s) receive recovery access.
-  </p>
-</div>
-
-{/* ===== STATS ===== */}
-<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-
-  <div className="bg-blue-800 p-4 rounded-xl border border-neutral-700">
-    <p className="text-xs text-gray-400">Total Files</p>
-    <p className="text-xl font-semibold text-white">{files.length}</p>
-  </div>
-
-  <div className="bg-blue-800 p-4 rounded-xl border border-neutral-700">
-    <p className="text-xs text-gray-400">Protected Files</p>
-    <p className="text-xl font-semibold text-green-400">
-      {files.filter(f => f.protectionOn).length}
-    </p>
-  </div>
-
-  <div className="bg-blue-800 p-4 rounded-xl border border-neutral-700">
-    <p className="text-xs text-gray-400">Security Alerts</p>
-    <p className="text-xl font-semibold text-red-400">
-      {alerts.length}
-    </p>
-  </div>
-
-</div>
 
 {/* ===== AI Assistant ===== */}
 <div className="bg-neutral-900/80 backdrop-blur-md p-4 rounded-xl border-neutral-700">
