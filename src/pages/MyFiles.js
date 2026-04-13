@@ -69,9 +69,9 @@ export default function MyFiles() {
           {/* ===== TOPBAR ===== */}
           <div className="flex justify-between py-4 border-b border-neutral-800">
 
-          <div>
+          <div className="text-center mx-auto max-w-2xl">
   <h1 className="text-xl font-semibold text-white">
-    🏛 ShadowVault— Enterprise Digital Asset Vault
+    🏛  Digital Asset Vault
   </h1>
   <p className="text-xs text-gray-400">
   Secure, encrypted, and blockchain-verified storage for your most critical legal and ownership documents.
@@ -137,7 +137,7 @@ export default function MyFiles() {
             />
            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-{/* Compliance */}
+{/* Compliance 
 <div className="bg-neutral-900 p-4 rounded-xl border border-neutral-700">
   <h3 className="text-sm font-semibold mb-3">📑 Compliance Logs</h3>
 
@@ -147,8 +147,8 @@ export default function MyFiles() {
     <li>✔ Access Logged</li>
   </ul>
 </div>
-
-{/* Role-based access */}
+*/}
+{/* Role-based access 
 <div className="bg-neutral-900 p-4 rounded-xl border border-neutral-700">
   <h3 className="text-sm font-semibold mb-3">👤 Access Control</h3>
 
@@ -160,6 +160,7 @@ export default function MyFiles() {
     Full permissions granted
   </p>
 </div>
+*/}
 
 </div>
 
