@@ -196,23 +196,22 @@ export default function MyFiles() {
 
 </div>
 
-      {/* ================================
-   📤 FILE UPLOAD + PLAN GATE (Full Width)
+  {/* ================================
+   📤 FILE UPLOAD + PLAN GATE (Centered)
 ================================ */}
-<div className="w-full bg-neutral-900/80 backdrop-blur-md border border-neutral-800 rounded-2xl p-8 mb-10 shadow-xl">
+<div className="w-full bg-blue-900/80 backdrop-blur-md border border-neutral-800 rounded-2xl p-8 mb-10 shadow-xl">
 
 {/* HEADER */}
-<div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-  <div>
-    <h3 className="text-xl font-semibold text-white">
-      📤 Secure Document Upload
-    </h3>
-    <p className="text-sm text-gray-400 mt-1">
-      Upload encrypted, blockchain-anchored records to your vault.
-    </p>
-  </div>
+<div className="flex flex-col items-center text-center gap-3 mb-6">
+  <h3 className="text-xl font-semibold text-white">
+    📤 Secure Document Upload
+  </h3>
 
-  <div className="text-sm text-gray-400">
+  <p className="text-sm text-gray-400">
+    Upload encrypted, blockchain-anchored records to your vault.
+  </p>
+
+  <div className="text-sm text-gray-400 mt-1">
     Capacity:
     <span className="text-white ml-2 font-semibold">
       {files.length} / {maxFiles}
@@ -223,7 +222,6 @@ export default function MyFiles() {
 {/* LIMIT REACHED STATE */}
 {hasReachedLimit ? (
   <div className="bg-yellow-900/20 border border-yellow-700 rounded-xl p-6 text-center">
-
     <p className="text-yellow-400 font-semibold mb-2">
       ⚠ Vault Capacity Reached
     </p>
@@ -241,17 +239,20 @@ export default function MyFiles() {
   </div>
 ) : (
   /* NORMAL UPLOAD */
-  <div className="bg-neutral-950 border border-neutral-800 rounded-xl p-6">
+  <div className="bg-neutral-950 border border-neutral-800 rounded-xl p-6 text-center">
 
     <p className="text-sm text-gray-400 mb-4">
       Drag & drop or select a file. All uploads are encrypted and permanently anchored.
     </p>
 
-    <FileUploader
-  token={token}
-  user={user}
-  onUploadComplete={load}
-/>
+    {/* Center uploader */}
+    <div className="flex justify-center">
+      <FileUploader
+        token={token}
+        user={user}
+        onUploadComplete={load}
+      />
+    </div>
 
     <p className="text-xs text-gray-500 mt-4">
       🔒 Files are encrypted client-side and cannot be altered after anchoring.
