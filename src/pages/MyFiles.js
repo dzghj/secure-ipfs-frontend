@@ -13,12 +13,13 @@ export default function MyFiles() {
   const [loading, setLoading] = useState(true);
   const [showUpgrade, setShowUpgrade] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-  const maxFiles = user?.maxFileNumber ?? 3;
-const hasReachedLimit = files.length >= maxFiles;
-const openUpgradeModal = () => setShowUpgrade(true);
+
 
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const maxFiles = user?.maxFileNumber ?? 3;
+  const hasReachedLimit = files.length >= maxFiles;
+  const openUpgradeModal = () => setShowUpgrade(true);
 
   const load = useCallback(async () => {
     setLoading(true);
