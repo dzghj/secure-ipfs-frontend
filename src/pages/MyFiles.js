@@ -67,14 +67,14 @@ export default function MyFiles() {
         <div className="w-full flex flex-col px-4 md:px-6 lg:px-8">
 
           {/* ===== TOPBAR ===== */}
-          <div className="flex justify-between py-4 border-b border-neutral-800">
+          <div className="flex bg-blue-900/80 justify-between py-4 border-b border-neutral-800">
 
           <div className="text-center mx-auto max-w-2xl">
   <h1 className="text-xl font-semibold text-white">
-    🏛  Digital Asset Vault
+    🏛  Digital Asset Vault - for most critical legal and ownership documents.
   </h1>
-  <p className="text-xs text-gray-400">
-  Secure, encrypted, and blockchain-verified storage for your most critical legal and ownership documents.
+  <p className="text-xl text-white">
+  
   </p>
 </div>
           
@@ -207,7 +207,7 @@ export default function MyFiles() {
   </div>
 ) : (
   /* NORMAL UPLOAD */
-  <div className="bg-neutral-950 border border-neutral-800 rounded-xl p-6 text-center">
+  <div className="bg-blue-950 border border-neutral-800 rounded-xl p-6 text-center">
 
     <p className="text-sm text-gray-400 mb-4">
       Drag & drop or select a file. All uploads are encrypted and permanently anchored.
