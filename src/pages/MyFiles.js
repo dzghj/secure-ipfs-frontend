@@ -5,6 +5,7 @@ import FileList from "../components/files/FileList";
 import UpgradeModal from "../components/common/UpgradeModal";
 import Loader from "../components/common/Loader";
 import { fetchFilesAPI } from "../services/api";
+import FileUploader from "../components/FileUploader";
 
 export default function MyFiles() {
   const [files, setFiles] = useState([]);
@@ -12,6 +13,9 @@ export default function MyFiles() {
   const [loading, setLoading] = useState(true);
   const [showUpgrade, setShowUpgrade] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const maxFiles = user?.maxFileNumber ?? 3;
+const hasReachedLimit = files.length >= maxFiles;
+const openUpgradeModal = () => setShowUpgrade(true);
 
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -246,10 +250,10 @@ export default function MyFiles() {
     </p>
 
     <FileUploader
-      token={token}
-      user={user}
-      onUploadComplete={fetchFiles}
-    />
+  token={token}
+  user={user}
+  onUploadComplete={load}
+/>
 
     <p className="text-xs text-gray-500 mt-4">
       🔒 Files are encrypted client-side and cannot be altered after anchoring.
