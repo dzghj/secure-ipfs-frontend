@@ -195,9 +195,6 @@ export default function MyFiles() {
 </div>
 
 </div>
-            {/* GRID */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
 
       {/* ================================
    📤 FILE UPLOAD + PLAN GATE (Full Width)
@@ -262,6 +259,10 @@ export default function MyFiles() {
   </div>
 )}
 </div>
+            {/* GRID */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+
       <div className="lg:col-span-3 bg-neutral-900/80 backdrop-blur-md p-6 rounded-2xl border border-neutral-700 shadow-xl">
               <h3 className="text-lg font-semibold mb-2">
                 📁 Vault Records
