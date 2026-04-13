@@ -12,8 +12,11 @@ export default function Dashboard({ files, alerts, user, onUpgrade }) {
       <AlertsPanel alerts={alerts} />
 
       <div className="bg-blue-800 p-6 rounded-xl">
-        <h3>Capacity</h3>
-        <p>{files.length} / {max}</p>
+        <h3>Unlock Enterprise Security Features</h3>
+        <p className="text-xs text-gray-400">
+                Advanced monitoring, audit logs, and recovery automation
+              </p>
+        <p>Capacity : {files.length} / {max}</p>
 
         {reached && (
           <button onClick={onUpgrade} className="bg-yellow-500 mt-3 px-3 py-1">

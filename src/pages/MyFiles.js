@@ -193,28 +193,71 @@ export default function MyFiles() {
             {/* GRID */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-              {/* ===== UPGRADE CTA ===== */}
-<div className="bg-gradient-to-r from-blue-900/40 to-purple-900/40 border border-neutral-700 rounded-xl p-4 flex justify-between items-center">
 
-<div>
-              <p className="text-sm text-white font-medium">
-                Unlock Enterprise Security Features
-              </p>
-              <p className="text-xs text-gray-400">
-                Advanced monitoring, audit logs, and recovery automation
-              </p>
-            </div>
+      {/* ================================
+   📤 FILE UPLOAD + PLAN GATE (Full Width)
+================================ */}
+<div className="w-full bg-neutral-900/80 backdrop-blur-md border border-neutral-800 rounded-2xl p-8 mb-10 shadow-xl">
 
-            <button
-              onClick={() => setShowUpgrade(true)}
-              className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md text-sm"
-            >
-              Upgrade
-            </button>
+{/* HEADER */}
+<div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+  <div>
+    <h3 className="text-xl font-semibold text-white">
+      📤 Secure Document Upload
+    </h3>
+    <p className="text-sm text-gray-400 mt-1">
+      Upload encrypted, blockchain-anchored records to your vault.
+    </p>
+  </div>
 
-            </div>
-              {/* FILE LIST */}
-              <div className="lg:col-span-3 bg-neutral-900/80 backdrop-blur-md p-6 rounded-2xl border border-neutral-700 shadow-xl">
+  <div className="text-sm text-gray-400">
+    Capacity:
+    <span className="text-white ml-2 font-semibold">
+      {files.length} / {maxFiles}
+    </span>
+  </div>
+</div>
+
+{/* LIMIT REACHED STATE */}
+{hasReachedLimit ? (
+  <div className="bg-yellow-900/20 border border-yellow-700 rounded-xl p-6 text-center">
+
+    <p className="text-yellow-400 font-semibold mb-2">
+      ⚠ Vault Capacity Reached
+    </p>
+
+    <p className="text-gray-400 text-sm mb-4">
+      You have reached your current plan limit. Upgrade to add more protected records.
+    </p>
+
+    <button
+      onClick={() => openUpgradeModal()}
+      className="bg-yellow-600 hover:bg-yellow-700 text-black font-medium px-6 py-2 rounded-lg transition"
+    >
+      🚀 Upgrade Plan
+    </button>
+  </div>
+) : (
+  /* NORMAL UPLOAD */
+  <div className="bg-neutral-950 border border-neutral-800 rounded-xl p-6">
+
+    <p className="text-sm text-gray-400 mb-4">
+      Drag & drop or select a file. All uploads are encrypted and permanently anchored.
+    </p>
+
+    <FileUploader
+      token={token}
+      user={user}
+      onUploadComplete={fetchFiles}
+    />
+
+    <p className="text-xs text-gray-500 mt-4">
+      🔒 Files are encrypted client-side and cannot be altered after anchoring.
+    </p>
+  </div>
+)}
+</div>
+      <div className="lg:col-span-3 bg-neutral-900/80 backdrop-blur-md p-6 rounded-2xl border border-neutral-700 shadow-xl">
               <h3 className="text-lg font-semibold mb-2">
                 📁 Vault Records
               </h3>
