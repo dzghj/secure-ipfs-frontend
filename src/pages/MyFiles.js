@@ -48,16 +48,19 @@ export default function MyFiles() {
 
         <nav className="space-y-3 text-sm">
           <div className="text-white hover:text-white transition cursor-pointer">
-            Dashboard
+             Files
           </div>
           <div className="text-white hover:text-white transition cursor-pointer">
-            Security
+            Usage
           </div>
           <div className="text-white hover:text-white transition cursor-pointer">
-            AI 
+            API Keys
           </div>
           <div className="text-white hover:text-white transition cursor-pointer">
-           Files
+           Nodes
+          </div>
+           <div className="text-white hover:text-white transition cursor-pointer">
+           Settings
           </div>
         </nav>
       </div>
