@@ -13,6 +13,36 @@ export default function FileCard({ file, token }) {
     : "—";
 
   const isProtected = file.protectionOn;
+const deleteFile = async (fileId) => {
+  if (!window.confirm("Are you sure you want to delete this file?")) return;
+
+  try {
+    const res = await fetch(`/api/file/${fileId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) throw new Error(data.message || "Delete failed");
+
+    alert("File deleted");
+
+    // 🔥 refresh UI (choose ONE)
+
+    // Option A: reload page
+    window.location.reload();
+
+    // Option B (better if you pass setFiles):
+    // setFiles(prev => prev.filter(f => f.id !== fileId));
+
+  } catch (err) {
+    console.error(err);
+    alert("Delete failed");
+  }
+};
 
   const copyCID = () => {
     if (!file.cid) return;
@@ -32,7 +62,7 @@ export default function FileCard({ file, token }) {
       : "text-red-400 bg-red-900";
 
   return (
-    <div className="group bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+    <div className="group bg-blue-800 border border-neutral-800 rounded-2xl p-6 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
 
       {/* HEADER */}
       <div className="flex justify-between items-start mb-5">
@@ -110,6 +140,18 @@ export default function FileCard({ file, token }) {
           )}
         </div>
       </div>
+       {/* CID */}
+      <div className="mb-5">
+        <p className="text-gray-500 text-xs mb-1">View Audit</p>
+
+        <div className="flex items-center gap-2 bg-neutral-950 border border-neutral-800 rounded-lg p-2 group-hover:border-blue-600 transition">
+          <span className="text-xs text-blue-400 break-all flex-1">
+            {file.audit || "—"}
+          </span>
+
+          
+        </div>
+      </div>
 
       {/* 🔐 PROTECTION STATUS */}
       <div className="mb-5 flex justify-between items-center">
@@ -147,8 +189,11 @@ export default function FileCard({ file, token }) {
       {/* ACTIONS */}
       <div className="flex justify-between items-center pt-4 border-t border-neutral-800">
 
-        <button className="text-xs text-gray-400 hover:text-white transition">
-          View Audit
+        <button 
+         className="text-xs text-red-400 hover:text-red-300 transition"
+  onClick={() => deleteFile(file.id)}
+        >
+           Delete File
         </button>
 
         <button
