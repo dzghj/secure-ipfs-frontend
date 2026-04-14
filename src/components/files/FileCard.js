@@ -21,156 +21,146 @@ export default function FileCard({ file, token }) {
     setTimeout(() => setCopied(false), 1500);
   };
 
+  // 🔥 Mock risk (replace with real later)
+  const riskScore = file.riskScore ?? 72;
+
+  const riskColor =
+    riskScore > 80
+      ? "text-green-400 bg-green-900"
+      : riskScore > 50
+      ? "text-yellow-400 bg-yellow-900"
+      : "text-red-400 bg-red-900";
+
   return (
-    <div className="bg-blue-800 border border-neutral-800 rounded-xl p-6">
+    <div className="group bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
 
-      <table className="w-full text-sm text-left text-gray-300">
-        <tbody className="divide-y divide-neutral-800">
+      {/* HEADER */}
+      <div className="flex justify-between items-start mb-5">
+        <div>
+          <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+            {file.filename}
 
-          {/* File Name */}
-          <tr>
-            <td className="px-4 py-3 text-white w-1/3">File Name</td>
-            <td className="px-4 py-3 font-medium text-white">
-              {file.filename}
-            </td>
-          </tr>
+            {/* 🔔 ALERT DOT */}
+            {file.hasAlert && (
+              <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+            )}
+          </h3>
 
-          {/* Created */}
-          <tr>
-            <td className="px-4 py-3 text-white">Created</td>
-            <td className="px-4 py-3 font-medium text-white">
-              {createdDate}
-            </td>
-          </tr>
+          <p className="text-xs text-gray-500 mt-1">
+            Created: {createdDate}
+          </p>
+        </div>
 
-          {/* ✅ Last Access Time */}
-          <tr>
-            <td className="px-4 py-3 text-white">Last Access</td>
-            <td className="px-4 py-3 text-gray-300">
-              {lastAccessDate}
-            </td>
-          </tr>
+        {/* 📊 RISK BADGE */}
+        <div className={`text-xs px-3 py-1 rounded-full ${riskColor}`}>
+          Risk: {riskScore}
+        </div>
+      </div>
 
-          {/* Integrity */}
-          <tr>
-            <td className="px-4 py-3 text-white">Integrity Status</td>
-            <td className="px-4 py-3 text-blue-400 font-medium">
-              Blockchain Anchored & Verified
-              {file.verifiedAt && (
-                <span className="text-xs text-gray-300 ml-2">
-                  ({new Date(file.verifiedAt).toLocaleString()})
-                </span>
-              )}
-            </td>
-          </tr>
+      {/* 🧠 AI SUMMARY */}
+      {file.riskSummary && (
+        <div className="mb-5 bg-neutral-950 border border-neutral-800 rounded-lg p-3 text-xs text-gray-300">
+          🤖 {file.riskSummary}
+        </div>
+      )}
 
-          {/* CID + Copy */}
-          <tr>
-            <td className="px-4 py-3 text-white align-top">
-              CID Reference
-            </td>
-            <td className="px-4 py-3 text-xs text-blue-400 break-all">
-              <div className="flex items-center gap-2">
-                <span className="break-all">{file.cid || "—"}</span>
-                {file.cid && (
-                  <button
-                    onClick={copyCID}
-                    className="text-xs bg-neutral-700 px-2 py-1 rounded hover:bg-neutral-600"
-                  >
-                    {copied ? "Copied" : "Copy"}
-                  </button>
-                )}
-              </div>
-            </td>
-          </tr>
+      {/* METADATA */}
+      <div className="grid grid-cols-2 gap-4 mb-5 text-sm">
 
-          {/* ✅ IP Address */}
-          <tr>
-            <td className="px-4 py-3 text-white">
-              Last Access IP
-            </td>
-            <td className="px-4 py-3 text-gray-300">
-              {file.lastIp || "Unknown"}
-            </td>
-          </tr>
+        <div>
+          <p className="text-gray-500 text-xs">Last Access</p>
+          <p className="text-gray-300">{lastAccessDate}</p>
+        </div>
 
-          {/* ✅ Location */}
-          <tr>
-            <td className="px-4 py-3 text-white">
-              Location
-            </td>
-            <td className="px-4 py-3 text-gray-300">
-              {file.lastLocation || "Unknown"}
-            </td>
-          </tr>
+        <div>
+          <p className="text-gray-500 text-xs">IP Address</p>
+          <p className="text-gray-300">{file.lastIp || "Unknown"}</p>
+        </div>
 
-          {/* Dead Man */}
-          <tr>
-            <td className="px-4 py-3 text-white">
-              Dead Man Protection
-            </td>
-            <td className="px-4 py-3">
-              <button
-                className={`px-4 py-1 rounded-md text-xs font-medium transition ${
-                  isProtected
-                    ? "bg-green-600 hover:bg-green-500"
-                    : "bg-neutral-700 hover:bg-neutral-600"
-                }`}
-              >
-                {isProtected ? "Enabled" : "Disabled"}
-              </button>
-            </td>
-          </tr>
+        <div>
+          <p className="text-gray-500 text-xs">Location</p>
+          <p className="text-gray-300">{file.lastLocation || "Unknown"}</p>
+        </div>
 
-          {/* Remaining */}
-          <tr>
-            <td className="px-4 py-3 text-white">
-              KeyHolder Unlock Remaining
-            </td>
-            <td className="px-4 py-3 text-purple-400 text-sm">
-              {isProtected ? "30 days remaining" : "—"}
-            </td>
-          </tr>
+        <div>
+          <p className="text-gray-500 text-xs">Unlock Timer</p>
+          <p className="text-purple-400">
+            {isProtected ? "30 days remaining" : "—"}
+          </p>
+        </div>
 
-          {/* Keyholders */}
-          <tr>
-            <td className="px-4 py-3 text-white">
-              KeyHolder Emails
-            </td>
-            <td className="px-4 py-3 text-sm">
-              <KeyHolderManager file={file} token={token} />
-            </td>
-          </tr>
+      </div>
 
-          {/* Audit */}
-          <tr>
-            <td className="px-4 py-3 text-white">
-              Audit Log
-            </td>
-            <td className="px-4 py-3 text-blue-400 font-medium">
-              {/* future */}
-            </td>
-          </tr>
+      {/* CID */}
+      <div className="mb-5">
+        <p className="text-gray-500 text-xs mb-1">CID Reference</p>
 
-          {/* Access */}
-          <tr>
-            <td className="px-4 py-3 text-white">
-              Secure Access
-            </td>
-            <td className="px-4 py-3">
-              <button
-                className="px-5 py-2 rounded-md text-sm font-medium bg-green-600 hover:bg-green-700"
-                onClick={() => {
-                  window.open(`/api/file/${file.id}/view`, "_blank");
-                }}
-              >
-                View
-              </button>
-            </td>
-          </tr>
+        <div className="flex items-center gap-2 bg-neutral-950 border border-neutral-800 rounded-lg p-2 group-hover:border-blue-600 transition">
+          <span className="text-xs text-blue-400 break-all flex-1">
+            {file.cid || "—"}
+          </span>
 
-        </tbody>
-      </table>
+          {file.cid && (
+            <button
+              onClick={copyCID}
+              className="text-xs bg-neutral-700 px-2 py-1 rounded hover:bg-neutral-600"
+            >
+              {copied ? "Copied" : "Copy"}
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* 🔐 PROTECTION STATUS */}
+      <div className="mb-5 flex justify-between items-center">
+        <div>
+          <p className="text-gray-500 text-xs">Protection</p>
+          <p
+            className={`text-sm ${
+              isProtected ? "text-green-400" : "text-gray-400"
+            }`}
+          >
+            {isProtected ? "Active" : "Inactive"}
+          </p>
+        </div>
+
+        <button
+          className={`px-4 py-1 rounded-md text-xs font-medium transition ${
+            isProtected
+              ? "bg-green-600 hover:bg-green-500"
+              : "bg-neutral-700 hover:bg-neutral-600"
+          }`}
+        >
+          {isProtected ? "Disable" : "Enable"}
+        </button>
+      </div>
+
+      {/* 👥 KEYHOLDERS */}
+      <div className="mb-5">
+        <p className="text-gray-500 text-xs mb-2">KeyHolders</p>
+
+        <div className="bg-neutral-950 border border-neutral-800 rounded-lg p-3">
+          <KeyHolderManager file={file} token={token} />
+        </div>
+      </div>
+
+      {/* ACTIONS */}
+      <div className="flex justify-between items-center pt-4 border-t border-neutral-800">
+
+        <button className="text-xs text-gray-400 hover:text-white transition">
+          View Audit
+        </button>
+
+        <button
+          className="px-5 py-2 rounded-lg text-sm font-medium bg-green-600 hover:bg-green-700 transition"
+          onClick={() => {
+            window.open(`/api/file/${file.id}/view`, "_blank");
+          }}
+        >
+          View File
+        </button>
+
+      </div>
 
     </div>
   );
