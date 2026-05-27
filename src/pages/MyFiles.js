@@ -20,6 +20,7 @@ export default function MyFiles() {
   const maxFiles = user?.maxFileNumber ?? 3;
   const hasReachedLimit = files.length >= maxFiles;
   const openUpgradeModal = () => setShowUpgrade(true);
+  
 
   const load = useCallback(async () => {
     setLoading(true);
