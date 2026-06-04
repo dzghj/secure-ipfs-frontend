@@ -2,12 +2,12 @@ import { useState } from "react";
 import KeyHolderManager from "./KeyHolderManager";
 
 export default function FileCard({ file, token }) {
+  const [copied, setCopied] = useState(false);
+  const [busy, setBusy] = useState(false);
+
   if (!file) {
     return null;
   }
-
-  const [copied, setCopied] = useState(false);
-  const [busy, setBusy] = useState(false);
 
   const createdDate = file.uploadedAt
     ? new Date(file.uploadedAt).toLocaleDateString()
