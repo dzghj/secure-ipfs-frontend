@@ -6,12 +6,12 @@ import FileList from "../components/files/FileList";
 
 export default function MyFiles() {
   const [files, setFiles] = useState([]);
-  const [alerts, setAlerts] = useState([]);
+  //const [alerts, setAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showUpgrade, setShowUpgrade] = useState(false);
 
   const [checkin, setCheckin] = useState("90");
-  const [customDays, setCustomDays] = useState(30);
+  //const [customDays, setCustomDays] = useState(30);
 
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -23,7 +23,7 @@ export default function MyFiles() {
     try {
       const data = await fetchFilesAPI(token);
       setFiles(data.files || []);
-      setAlerts(data.securityAlerts || []);
+     // setAlerts(data.securityAlerts || []);
     } catch (e) {
       console.error(e);
     } finally {
