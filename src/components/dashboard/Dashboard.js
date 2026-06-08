@@ -7,11 +7,11 @@ export default function Dashboard({ files, alerts, user, onUpgrade }) {
   const score = 100 - alerts.length * 10;
 
   return (
-    <div className="grid grid-cols-3 gap-6 mb-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
       <RiskScoreCard score={score} />
       <AlertsPanel alerts={alerts} />
 
-      <div className="bg-blue-800 p-6 rounded-xl">
+      <div className="bg-dark-card p-6 rounded-xl border border-dark-border">
         <h3>Unlock Enterprise Security Features</h3>
         <p className="text-xs text-gray-400">
                 Advanced monitoring, audit logs, and recovery automation
@@ -19,12 +19,12 @@ export default function Dashboard({ files, alerts, user, onUpgrade }) {
         <p>Capacity : {files.length} / {max}</p>
 
         {reached && (
-          <button onClick={onUpgrade} className="bg-yellow-500 mt-3 px-3 py-1">
+          <button onClick={onUpgrade} className="bg-primary text-dark-bg mt-3 px-3 py-1 rounded font-semibold">
             Upgrade
           </button>
         )}
       </div>
-      <div className="bg-blue-800 p-6 rounded-xl">
+      <div className="bg-dark-card p-6 rounded-xl border border-dark-border">
       <h3 className="text-lg font-semibold mb-3">🧠 Security Intelligence</h3>
 
     {alerts.length === 0 ? (
@@ -45,12 +45,12 @@ export default function Dashboard({ files, alerts, user, onUpgrade }) {
       AI continuously monitors vault integrity & access patterns.
     </div>
       </div>
-      <div className="bg-blue-800 p-6 rounded-xl">
+      <div className="bg-dark-card p-6 rounded-xl border border-dark-border">
         <h3> 🔐 Dead-Man Switch Protection</h3>
         <p>If enabled, ShadowVault monitors account inactivity. After 30 days a reminder email is sent. After 40 days your designated KeyHolder(s) receive recovery access.</p>
 
         {reached && (
-          <button onClick={onUpgrade} className="bg-yellow-500 mt-3 px-3 py-1">
+          <button onClick={onUpgrade} className="bg-primary text-dark-bg mt-3 px-3 py-1 rounded font-semibold">
             Upgrade
           </button>
         )}
@@ -58,7 +58,7 @@ export default function Dashboard({ files, alerts, user, onUpgrade }) {
     
      
                {/* AI Insights */}
-               <div className="bg-blue-900/80 backdrop-blur-md p-6 rounded-2xl border border-neutral-700 shadow-xl">
+               <div className="bg-dark-card p-6 rounded-2xl border border-dark-border shadow-xl">
                 <h3 className="text-lg font-semibold mb-3">🧠 AI Insights</h3>
 
                 <p className="text-sm text-gray-400 mb-3">
@@ -77,7 +77,7 @@ export default function Dashboard({ files, alerts, user, onUpgrade }) {
                     ))
                   )}
 
-                  <li className="text-blue-400">
+                  <li className="text-primary">
                     📊 Files stored: {files.length}
                     </li>*/}
                 </ul>

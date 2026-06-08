@@ -42,77 +42,60 @@ export default function Register() {
   return (
     <form
       onSubmit={handleRegister}
-      className="
-        w-full max-w-md
-        bg-gray-800
-        border border-gray-700
-        rounded-xl
-        p-8
-        shadow-lg
-        space-y-5
-      "
+      className="w-full max-w-md bg-dark-card border border-dark-border rounded-xl p-8 shadow-lg space-y-5"
     >
-      <h2 className="text-2xl font-bold text-center">
-        Create your account
-      </h2>
-
-      <p className="text-sm text-gray-400 text-center">
-        Enter your email to get started.
-      </p>
+      <div className="text-center mb-6">
+        <h2 className="text-3xl font-bold text-white">Create Your Vault</h2>
+        <p className="text-gray-400 mt-2">Secure your important documents today</p>
+      </div>
 
       {!emailSent && (
         <div>
-          <label className="block text-sm text-gray-400 mb-1">Email</label>
+          <label className="block text-sm font-medium text-gray-300 mb-2">Email Address</label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="
-              w-full px-3 py-2
-              bg-gray-900
-              border border-gray-700
-              rounded-md
-              focus:outline-none
-              focus:border-indigo-500
-            "
+            className="w-full px-4 py-2 bg-dark-bg border border-dark-border rounded-lg focus:outline-none focus:border-primary text-white placeholder-gray-500"
+            placeholder="your@email.com"
             required
           />
         </div>
       )}
 
-      {error && <p className="text-red-500 text-sm text-center">{error}</p>}
-      {message && <p className="text-green-500 text-sm text-center">{message}</p>}
+      {error && <p className="text-red-400 text-sm text-center bg-red-500 bg-opacity-10 border border-red-500 rounded-lg p-3">{error}</p>}
+      {message && <p className="text-primary text-sm text-center bg-primary bg-opacity-10 border border-primary rounded-lg p-3">{message}</p>}
 
       {!emailSent ? (
         <button
           type="submit"
           disabled={loading}
-          className={`
-            w-full py-3
-            rounded-lg
-            font-semibold
-            transition
-            ${loading ? "bg-gray-600 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700"}
-          `}
+          className={`w-full py-3 rounded-lg font-semibold transition text-lg ${
+            loading ? "bg-gray-600 cursor-not-allowed" : "bg-primary hover:bg-primary-dark text-dark-bg"
+          }`}
         >
-          {loading ? "Sending..." : "Continue"}
+          {loading ? "Sending..." : "Get Started"}
         </button>
       ) : (
         <button
           type="button"
           onClick={() => navigate("/login")}
-          className="
-            w-full py-3
-            bg-indigo-600
-            hover:bg-indigo-700
-            rounded-lg
-            font-semibold
-            transition
-          "
+          className="w-full py-3 bg-primary hover:bg-primary-dark text-dark-bg rounded-lg font-semibold transition text-lg"
         >
           Go to Login
         </button>
       )}
+
+      <div className="border-t border-dark-border pt-4 text-center text-sm text-gray-400">
+        Already have an account?{" "}
+        <button
+          type="button"
+          onClick={() => navigate("/login")}
+          className="text-primary hover:text-primary-dark transition font-medium"
+        >
+          Sign in here
+        </button>
+      </div>
     </form>
   );
 }

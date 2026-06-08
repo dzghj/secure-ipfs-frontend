@@ -41,26 +41,26 @@ export default function MyFiles() {
   if (loading) return <Loader />;
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 text-white">
+    <div className="flex min-h-screen bg-dark-bg text-white">
 
       {/* ===== SIDEBAR ===== */}
-      <div className="w-64 bg-blue-900/80 backdrop-blur-md border-r border-neutral-800 p-6 hidden md:block">
+      <div className="w-64 bg-dark-card border-r border-dark-border p-6 hidden md:block">
         
 
         <nav className="space-y-3 text-sm">
-          <div className="text-white hover:text-white transition cursor-pointer">
+          <div className="text-gray-300 hover:text-primary transition cursor-pointer">
              Files
           </div>
-          <div className="text-white hover:text-white transition cursor-pointer">
+          <div className="text-gray-300 hover:text-primary transition cursor-pointer">
             Usage
           </div>
-          <div className="text-white hover:text-white transition cursor-pointer">
+          <div className="text-gray-300 hover:text-primary transition cursor-pointer">
             API Keys
           </div>
-          <div className="text-white hover:text-white transition cursor-pointer">
+          <div className="text-gray-300 hover:text-primary transition cursor-pointer">
            Nodes
           </div>
-           <div className="text-white hover:text-white transition cursor-pointer">
+           <div className="text-gray-300 hover:text-primary transition cursor-pointer">
            Settings
           </div>
         </nav>
@@ -71,7 +71,7 @@ export default function MyFiles() {
         <div className="w-full flex flex-col px-4 md:px-6 lg:px-8">
 
           {/* ===== TOPBAR ===== */}
-          <div className="flex bg-blue-900/80 justify-between py-4 border-b border-neutral-800">
+          <div className="flex bg-dark-card justify-between py-4 border-b border-dark-border">
 
           <div className="text-center mx-auto max-w-2xl">
   <h1 className="text-xl font-semibold text-white">
@@ -85,17 +85,17 @@ export default function MyFiles() {
 
             <div className="flex gap-4">
 
-              {/* Notifications */}
+            {/* Notifications */}
               <div className="relative">
                 <button
                   onClick={() => setShowNotifications(!showNotifications)}
-                  className="bg-neutral-800 hover:bg-neutral-700 transition px-3 py-1 rounded"
+                  className="bg-dark-card hover:bg-dark-border transition px-3 py-1 rounded"
                 >
                   🔔
                 </button>
 
                 {showNotifications && (
-                  <div className="absolute right-0 mt-2 w-64 bg-neutral-900/90 backdrop-blur-md border border-neutral-700 rounded-xl p-3 text-sm shadow-xl">
+                  <div className="absolute right-0 mt-2 w-64 bg-dark-card border border-dark-border rounded-xl p-3 text-sm shadow-xl">
                     {alerts.length === 0 ? (
                       <p className="text-green-400">No alerts</p>
                     ) : (
@@ -120,14 +120,14 @@ export default function MyFiles() {
           <div className="py-6 space-y-6">
                {/* ===== HERO / PRODUCT INFO ===== */}
             {/* ===== HERO / PRODUCT INFO ===== */}
-<div className="bg-gradient-to-r from-blue-900/40 via-neutral-900 to-neutral-900 border border-neutral-700 rounded-2xl p-6 shadow-xl space-y-6">
+<div className="bg-gradient-to-r from-dark-card to-dark-bg border border-dark-border rounded-2xl p-6 shadow-xl space-y-6">
 
 {/* Title */}
 
 
 
 {/* ===== AI Assistant ===== */}
-<div className="bg-neutral-900/80 backdrop-blur-md p-4 rounded-xl border-neutral-700">
+<div className="bg-dark-bg border border-dark-border p-4 rounded-xl">
   <AIAssistant token={token} />
 </div>
 
@@ -171,7 +171,7 @@ export default function MyFiles() {
   {/* ================================
    📤 FILE UPLOAD + PLAN GATE (Centered)
 ================================ */}
-<div className="w-full bg-blue-900/80 backdrop-blur-md border border-neutral-800 rounded-2xl p-8 mb-10 shadow-xl">
+<div className="w-full bg-dark-card border border-dark-border rounded-2xl p-8 mb-10 shadow-xl">
 
 {/* HEADER */}
 <div className="flex flex-col items-center text-center gap-3 mb-6">
@@ -211,7 +211,7 @@ export default function MyFiles() {
   </div>
 ) : (
   /* NORMAL UPLOAD */
-  <div className="bg-blue-950 border border-neutral-800 rounded-xl p-6 text-center">
+  <div className="bg-dark-card border border-dark-border rounded-xl p-6 text-center">
 
     <p className="text-sm text-gray-400 mb-4">
       Drag & drop or select a file. All uploads are encrypted and permanently anchored.
@@ -236,7 +236,7 @@ export default function MyFiles() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
 
-      <div className="lg:col-span-3 bg-neutral-900/80 backdrop-blur-md p-6 rounded-2xl border border-neutral-700 shadow-xl">
+      <div className="lg:col-span-3 bg-dark-card p-6 rounded-2xl border border-dark-border shadow-xl">
               <h3 className="text-lg font-semibold mb-2">
                 📁 Vault Records
               </h3>
