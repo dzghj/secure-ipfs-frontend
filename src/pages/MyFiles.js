@@ -95,7 +95,7 @@ export default function MyFiles() {
                 : "bg-white/20"
             } text-gray-900`}
           >
-            Custom Days {checkin === "custom" && `(${customDays})`}
+            Custom Days {checkin === "custom" && `30`}
           </button>
         </div>
 
