@@ -18,7 +18,7 @@ export default function KeyHolderManager({ file, token }) {
   return (
     <div className="mt-3">
       {emails.map(e => (
-        <span key={e} className="text-xs bg-purple-700 px-2 mr-1">
+        <span key={e} className="text-xs bg-primary text-dark-bg px-2 mr-1 rounded font-semibold">
           {e}
         </span>
       ))}
@@ -27,9 +27,10 @@ export default function KeyHolderManager({ file, token }) {
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          className="bg-neutral-800 text-xs p-1"
+          className="bg-dark-bg text-xs p-1 border border-dark-border rounded focus:outline-none focus:border-primary text-white placeholder-gray-500"
+          placeholder="email@example.com"
         />
-        <button onClick={add} className="text-blue-400 text-xs">
+        <button onClick={add} className="text-primary text-xs font-medium hover:text-primary-dark transition">
           Add
         </button>
       </div>

@@ -28,30 +28,39 @@ export default function Layout({ onLogout }) {
   );
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col">
+    <div className="min-h-screen bg-dark-bg text-white flex flex-col">
       {/* ---------- Header ---------- */}
-      <header className="flex items-center justify-between px-8 py-4 border-b border-gray-800">
+      <header className="flex items-center justify-between px-8 py-4 border-b border-dark-border bg-dark-bg">
         <div
           onClick={() => navigate("/")}
-          className="text-2xl font-bold text-indigo-500 cursor-pointer"
+          className="flex items-center gap-2 text-2xl font-bold text-primary cursor-pointer hover:opacity-80 transition"
         >
-          Shadow Vault
+          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+            <span className="text-dark-bg font-bold">🔒</span>
+          </div>
+          <span>SecureVault</span>
         </div>
+
+        <nav className="hidden md:flex items-center gap-8">
+          <a href="#features" className="text-sm text-gray-300 hover:text-primary transition">Features</a>
+          <a href="#security" className="text-sm text-gray-300 hover:text-primary transition">Security</a>
+          <a href="#vault" className="text-sm text-gray-300 hover:text-primary transition">Vault</a>
+        </nav>
 
         {/* ✅ Auth-aware button */}
         {isLoggedIn ? (
           <button
             onClick={handleLogout}
-            className="px-5 py-2 text-sm font-medium border border-red-500 text-red-400 hover:bg-red-500 hover:text-white rounded-md transition"
+            className="px-5 py-2 text-sm font-medium border border-red-500 text-red-400 hover:bg-red-500 hover:text-white rounded-lg transition"
           >
             Logout
           </button>
         ) : (
           <button
             onClick={() => navigate("/login")}
-            className="px-5 py-2 text-sm font-medium border border-gray-600 hover:border-indigo-500 rounded-md transition"
+            className="px-5 py-2 text-sm font-medium bg-primary text-dark-bg hover:bg-primary-dark rounded-lg transition font-semibold"
           >
-            Login
+            Get Started
           </button>
         )}
       </header>
@@ -66,10 +75,17 @@ export default function Layout({ onLogout }) {
       </main>
 
       {/* ---------- Footer ---------- */}
-      <footer className="py-6 text-center text-gray-500 text-sm border-t border-gray-800">
-        © {new Date().getFullYear()} Shadow Vault.
-        <br/>
-        Store Important Files Safely and Privately.
+      <footer className="py-8 border-t border-dark-border bg-dark-bg">
+        <div className="max-w-6xl mx-auto px-8 grid grid-cols-2 md:grid-cols-5 gap-4 text-center md:text-left text-sm text-gray-400 mb-6">
+          <div className="flex items-center justify-center md:justify-start gap-2"><span>🔐</span> AES-256 Encryption</div>
+          <div className="flex items-center justify-center md:justify-start gap-2"><span>🔑</span> Zero Knowledge</div>
+          <div className="flex items-center justify-center md:justify-start gap-2"><span>✓</span> PIPEDA Compliant</div>
+          <div className="flex items-center justify-center md:justify-start gap-2"><span>🌐</span> Data Privacy</div>
+          <div className="flex items-center justify-center md:justify-start gap-2"><span>📞</span> 24/7 Support</div>
+        </div>
+        <div className="text-center text-gray-500 text-xs border-t border-dark-border pt-6">
+          © {new Date().getFullYear()} SecureVault. All rights reserved.
+        </div>
       </footer>
     </div>
   );

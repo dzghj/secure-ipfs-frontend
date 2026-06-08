@@ -40,64 +40,67 @@ export default function Login({ setToken, setUser }) {
   return (
     <form
       onSubmit={handleLogin}
-      className="w-full max-w-md bg-gray-800 border border-gray-700 rounded-xl p-8 shadow-lg space-y-5"
+      className="w-full max-w-md bg-dark-card border border-dark-border rounded-xl p-8 shadow-lg space-y-5"
     >
-      <h2 className="text-2xl font-bold text-center text-white">
-        Sign in to your vault
-      </h2>
+      <div className="text-center mb-6">
+        <h2 className="text-3xl font-bold text-white">Welcome Back</h2>
+        <p className="text-gray-400 mt-2">Sign in to your SecureVault</p>
+      </div>
 
       <div>
-        <label className="block text-sm text-gray-400 mb-1">Email</label>
+        <label className="block text-sm font-medium text-gray-300 mb-2">Email Address</label>
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-md focus:outline-none focus:border-indigo-500"
+          className="w-full px-4 py-2 bg-dark-bg border border-dark-border rounded-lg focus:outline-none focus:border-primary text-white placeholder-gray-500"
+          placeholder="your@email.com"
           required
         />
       </div>
 
       <div>
-        <label className="block text-sm text-gray-400 mb-1">Password</label>
+        <label className="block text-sm font-medium text-gray-300 mb-2">Password</label>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-md focus:outline-none focus:border-indigo-500"
+          className="w-full px-4 py-2 bg-dark-bg border border-dark-border rounded-lg focus:outline-none focus:border-primary text-white placeholder-gray-500"
+          placeholder="••••••••"
           required
         />
       </div>
 
-      {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+      {error && <p className="text-red-400 text-sm text-center bg-red-500 bg-opacity-10 border border-red-500 rounded-lg p-3">{error}</p>}
 
       <button
         type="submit"
         disabled={loading}
-        className={`w-full py-3 rounded-lg font-semibold transition ${
-          loading ? "bg-gray-600 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700"
+        className={`w-full py-3 rounded-lg font-semibold transition text-lg ${
+          loading ? "bg-gray-600 cursor-not-allowed" : "bg-primary hover:bg-primary-dark text-dark-bg"
         }`}
       >
-        {loading ? "Logging in..." : "Login"}
+        {loading ? "Signing in..." : "Sign In"}
       </button>
 
       <div className="text-center text-sm text-gray-400">
         <button
           type="button"
           onClick={() => navigate("/forgot-password")}
-          className="hover:text-indigo-500 transition"
+          className="hover:text-primary transition font-medium"
         >
           Forgot password?
         </button>
       </div>
 
-      <div className="text-center text-sm text-gray-400">
+      <div className="border-t border-dark-border pt-4 text-center text-sm text-gray-400">
         Don't have an account?{" "}
         <button
           type="button"
           onClick={() => navigate("/register")}
-          className="text-indigo-400 hover:text-indigo-300 transition"
+          className="text-primary hover:text-primary-dark transition font-medium"
         >
-          Register
+          Create one now
         </button>
       </div>
     </form>
