@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import UpgradeModal from "../components/common/UpgradeModal";
 import Loader from "../components/common/Loader";
 import { fetchFilesAPI } from "../services/api";
-import FileList from "../components/files/FileList";
+import FileList from "../components/FileList";
 
 export default function MyFiles() {
   const [files, setFiles] = useState([]);
