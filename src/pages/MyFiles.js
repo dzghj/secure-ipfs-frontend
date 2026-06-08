@@ -11,7 +11,7 @@ export default function MyFiles() {
   const [showUpgrade, setShowUpgrade] = useState(false);
 
   const [checkin, setCheckin] = useState("90");
-  //const [customDays, setCustomDays] = useState(30);
+  const [customDays, setCustomDays] = useState(30);
 
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -38,7 +38,7 @@ export default function MyFiles() {
   const handleSave = async () => {
     console.log(
       "Saving check-in interval:",
-      checkin === "custom" ? customDays : checkin
+      checkin === "custom" ? "30" : checkin
     );
     alert("Changes saved.");
   };
