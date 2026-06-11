@@ -65,9 +65,9 @@ const FOLDER_TYPES = [
   { id: "other",    label: "Other",    color: "#a0a0a0" },
 ];
 
-function FolderSvg({ color }) {
+function FolderSvg({ color, size = 44 }) {
   return (
-    <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+    <svg width={size} height={size} viewBox="0 0 44 44" fill="none">
       <path d="M4 12a3 3 0 0 1 3-3h9l3 4h17a3 3 0 0 1 3 3v16a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V12z"
         fill={color} opacity="0.75" />
       <path d="M4 18h36v14a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V18z" fill={color} />
@@ -77,26 +77,38 @@ function FolderSvg({ color }) {
 
 // ─── Tab: Vault ───────────────────────────────────────────────────────────────
 
-function VaultPage({ files, token, hasReachedLimit, onUpgrade }) {
+function VaultPage({ files, token, hasReachedLimit, onUpgrade, user }) {
+  const firstName = user?.name?.split(" ")[0] || "User";
+  const lastName  = user?.name?.split(" ").slice(1).join(" ") || "";
+  const initials  = user?.name
+    ? user.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase()
+    : "U";
+
+  // Derive unique categories from files
+  const categories = [...new Set(files.map(f => f.category || "Personal"))];
+  const now        = new Date();
+  const checkinStr = now.toLocaleDateString("en-AU", {
+    day: "2-digit", month: "short", year: "numeric",
+  }) + " · " + now.toLocaleTimeString("en-AU", { hour: "2-digit", minute: "2-digit", hour12: false });
+
   return (
     <div className="w-full px-8 py-10">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-3xl font-bold mb-1">My Vault</h1>
-          <p className="text-gray-400 text-sm">{files.length} document{files.length !== 1 ? "s" : ""} secured</p>
+
+      {/* ── Greeting ── */}
+      <div className="flex items-center gap-4 mb-8">
+        <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center font-bold text-white text-lg flex-shrink-0">
+          {initials}
         </div>
-        <div className="flex items-center gap-3">
-          <div className="px-4 py-2 bg-primary bg-opacity-20 border border-primary rounded-lg text-primary text-sm font-medium">
-            🔐 Encrypted
-          </div>
+        <div>
+          <p className="text-gray-400 text-sm">Hi,</p>
+          <h1 className="text-2xl font-bold leading-tight">{user?.name || "User"}</h1>
         </div>
       </div>
 
-      {/* Plan limit warning */}
+      {/* ── Plan limit warning ── */}
       {hasReachedLimit && (
-        <div className="bg-yellow-600 text-black p-4 rounded-xl text-center mb-6 flex items-center justify-between">
-          <span className="font-medium">You've reached your plan limit.</span>
+        <div className="bg-yellow-600 text-black p-4 rounded-xl mb-6 flex items-center justify-between">
+          <span className="font-medium text-sm">You've reached your plan limit.</span>
           <button
             onClick={onUpgrade}
             className="ml-4 bg-black text-white px-4 py-2 rounded-lg text-sm font-semibold"
@@ -106,46 +118,83 @@ function VaultPage({ files, token, hasReachedLimit, onUpgrade }) {
         </div>
       )}
 
-      {/* Security badge */}
-      <div className="mb-6 p-4 bg-gradient-to-r from-primary to-primary-dark rounded-xl text-white text-center font-semibold text-sm">
-        🛡️ End-to-End Encrypted &nbsp;·&nbsp; AES-256 &nbsp;·&nbsp; Zero Knowledge
-      </div>
-
-      {/* Stats row */}
-      <div className="grid grid-cols-3 gap-4 mb-8">
-        {[
-          { label: "Total Files",  value: files.length,                  icon: "📁" },
-          { label: "Encrypted",    value: files.length,                  icon: "🔒" },
-          { label: "Storage Used", value: `${files.length * 2 || 0} MB`, icon: "💾" },
-        ].map((s, i) => (
-          <div key={i} className="bg-dark-card border border-dark-border rounded-xl p-4 text-center hover:border-primary transition">
-            <div className="text-2xl mb-2">{s.icon}</div>
-            <div className="text-2xl font-bold text-primary">{s.value}</div>
-            <div className="text-xs text-gray-400 mt-1">{s.label}</div>
+      {/* ── Vault Summary card ── */}
+      <div className="bg-dark-card border border-dark-border rounded-2xl p-6 mb-6 hover:border-primary transition">
+        <h2 className="text-lg font-bold mb-4">Vault Summary</h2>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="bg-gradient-to-br from-primary to-primary-dark rounded-xl p-5 text-white">
+            <div className="text-4xl font-bold mb-1">
+              {String(categories.length || 0).padStart(2, "0")}
+            </div>
+            <div className="text-sm opacity-80">Categories</div>
           </div>
-        ))}
-      </div>
-
-      {/* Files list */}
-      <div className="bg-dark-card border border-dark-border rounded-2xl p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold">📁 Vault Records</h3>
-          <span className="text-xs text-gray-400 bg-white/5 px-3 py-1 rounded-full border border-dark-border">
-            Encrypted &amp; Secured
-          </span>
+          <div className="bg-gradient-to-br from-primary to-primary-dark rounded-xl p-5 text-white">
+            <div className="text-4xl font-bold mb-1">
+              {String(files.length).padStart(2, "0")}
+            </div>
+            <div className="text-sm opacity-80">Documents</div>
+          </div>
         </div>
-        <p className="text-sm text-gray-400 mb-5">
-          All files are protected with military-grade AES-256 encryption.
-        </p>
+      </div>
 
-        <FileList files={files} token={token} />
-
-        {files.length === 0 && (
-          <div className="text-center py-12">
-            <div className="text-5xl mb-4">🗄️</div>
-            <p className="text-gray-400 mb-2">No files uploaded yet.</p>
-            <p className="text-xs text-gray-500">Your encrypted files will appear here once uploaded.</p>
+      {/* ── Continuity Switch status ── */}
+      <div className="bg-dark-card border border-dark-border rounded-2xl p-6 mb-6 hover:border-primary transition">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-bold mb-1">Continuity Switch</h2>
+            <p className="text-sm text-emerald-400 font-medium mb-1">Checked-in Successfully!</p>
+            <p className="text-xs text-gray-500">{checkinStr}</p>
+            <p className="text-xs text-gray-400 mt-1">Your next check-in is in 90 days.</p>
           </div>
+          <div className="w-14 h-14 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-lg flex-shrink-0">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+              stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <polyline points="9 12 11 14 15 10" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      {/* ── My Vault folder grid ── */}
+      <div className="bg-dark-card border border-dark-border rounded-2xl p-6">
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="text-lg font-bold">My Vault</h2>
+          <button className="text-primary text-sm font-semibold hover:opacity-80 transition">
+            See All
+          </button>
+        </div>
+
+        {files.length === 0 && categories.length === 0 ? (
+          <div className="text-center py-10">
+            <div className="text-5xl mb-3">🗄️</div>
+            <p className="text-gray-400 text-sm">No files yet. Add a folder to get started.</p>
+          </div>
+        ) : (
+          <>
+            {/* Folder grid by category */}
+            <div className="grid grid-cols-3 gap-4 mb-6">
+              {(categories.length > 0 ? categories : ["Personal"]).map((cat, i) => {
+                const ft = FOLDER_TYPES.find(f => f.label.toLowerCase() === cat.toLowerCase())
+                        || FOLDER_TYPES[i % FOLDER_TYPES.length];
+                const count = files.filter(f => (f.category || "Personal") === cat).length;
+                return (
+                  <div key={cat}
+                    className="flex flex-col items-center bg-dark-bg border border-dark-border rounded-xl p-4 hover:border-primary transition cursor-pointer">
+                    <FolderSvg color={ft.color} size={40} />
+                    <span className="text-xs text-gray-300 mt-2 font-medium">{cat}</span>
+                    <span className="text-xs text-gray-500 mt-0.5">{count} file{count !== 1 ? "s" : ""}</span>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* File list */}
+            <div className="border-t border-dark-border pt-5">
+              <h3 className="text-sm font-semibold text-gray-400 mb-4 uppercase tracking-wide">All Files</h3>
+              <FileList files={files} token={token} />
+            </div>
+          </>
         )}
       </div>
     </div>
@@ -167,7 +216,6 @@ function AddFolderPage() {
       </div>
 
       <div className="max-w-2xl">
-        {/* Category Name */}
         <div className="mb-6">
           <label className="text-sm text-gray-400 mb-2 block font-medium">Category Name</label>
           <input
@@ -178,7 +226,6 @@ function AddFolderPage() {
           />
         </div>
 
-        {/* Description */}
         <div className="mb-8">
           <label className="text-sm text-gray-400 mb-2 block font-medium">Description</label>
           <input
@@ -189,7 +236,6 @@ function AddFolderPage() {
           />
         </div>
 
-        {/* Colour picker */}
         <div className="mb-8">
           <label className="text-sm text-gray-400 mb-3 block font-medium">Select Folder Colour</label>
           <div className="grid grid-cols-3 gap-3">
@@ -255,9 +301,9 @@ function NomineesPage() {
 
         <div className="max-w-2xl">
           {[
-            { label: "Name",         key: "name",         placeholder: "Enter Name",         type: "text"  },
-            { label: "Email",        key: "email",        placeholder: "Enter Email",        type: "email" },
-            { label: "Phone Number", key: "phone",        placeholder: "Enter Phone Number", type: "tel"   },
+            { label: "Name",         key: "name",         placeholder: "Enter Name",               type: "text"  },
+            { label: "Email",        key: "email",        placeholder: "Enter Email",              type: "email" },
+            { label: "Phone Number", key: "phone",        placeholder: "Enter Phone Number",       type: "tel"   },
             { label: "Relationship", key: "relationship", placeholder: "e.g. Spouse, Sibling, Lawyer", type: "text" },
           ].map(f => (
             <div key={f.key} className="mb-5">
@@ -275,13 +321,12 @@ function NomineesPage() {
             </div>
           ))}
 
-          {/* Access level */}
           <div className="mb-6">
             <label className="text-sm text-gray-400 mb-3 block font-medium">Access Level</label>
             <div className="flex gap-3">
               {[
-                { id: "full",    label: "Full Access",    desc: "All folders & files" },
-                { id: "partial", label: "Partial Access", desc: "Selected folders only" },
+                { id: "full",    label: "Full Access",    desc: "All folders & files"    },
+                { id: "partial", label: "Partial Access", desc: "Selected folders only"  },
               ].map(a => (
                 <button
                   key={a.id}
@@ -301,7 +346,6 @@ function NomineesPage() {
             </div>
           </div>
 
-          {/* Info notice */}
           <div className="flex items-start gap-3 bg-primary bg-opacity-10 border border-primary border-opacity-30 rounded-xl p-4 mb-6 text-sm text-gray-300">
             <span className="text-xl flex-shrink-0">🔒</span>
             Nominees can only access data according to the permissions you assign. You can update or revoke access at any time.
@@ -320,7 +364,6 @@ function NomineesPage() {
 
   return (
     <div className="w-full px-8 py-10">
-      {/* Header */}
       <div className="flex items-start justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold mb-1">Nominees</h1>
@@ -334,12 +377,10 @@ function NomineesPage() {
         </button>
       </div>
 
-      {/* Nominee Access info card */}
-      <div className="bg-dark-card border border-dark-border rounded-2xl p-6 mb-8 hover:border-primary transition">
+      <div className="bg-dark-card border border-dark-border rounded-2xl p-6 mb-6 hover:border-primary transition">
         <h3 className="text-xl font-semibold text-primary mb-2">Nominee Access</h3>
         <p className="text-gray-400 text-sm leading-relaxed mb-5">
           Add trusted individuals who can access your vault data if you miss a check-in.
-          They will be notified based on your Continuity Switch settings.
         </p>
 
         {nominees.length === 0 ? (
@@ -376,18 +417,17 @@ function NomineesPage() {
         )}
       </div>
 
-      {/* Security note */}
       <div className="bg-dark-card border border-dark-border rounded-xl p-5">
         <h4 className="font-semibold mb-3 flex items-center gap-2"><span>🛡️</span> How Nominee Access Works</h4>
         <div className="space-y-3">
           {[
-            { icon: "✓", text: "Nominees are notified only when you miss a check-in deadline." },
-            { icon: "✓", text: "You control exactly which folders each nominee can access." },
-            { icon: "✓", text: "You can update or remove nominees at any time." },
-          ].map((item, i) => (
+            "Nominees are notified only when you miss a check-in deadline.",
+            "You control exactly which folders each nominee can access.",
+            "You can update or remove nominees at any time.",
+          ].map((text, i) => (
             <div key={i} className="flex gap-3 items-start text-sm text-gray-400">
-              <span className="text-primary flex-shrink-0 mt-0.5">{item.icon}</span>
-              {item.text}
+              <span className="text-primary flex-shrink-0 mt-0.5">✓</span>
+              {text}
             </div>
           ))}
         </div>
@@ -411,13 +451,12 @@ function SwitchPage({ checkin, setCheckin, onSave }) {
 
   return (
     <div className="w-full px-8 py-10">
-      {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-1">Continuity Switch</h1>
         <p className="text-gray-400 text-sm">Configure how often you confirm your activity.</p>
       </div>
 
-      {/* Status banner — matches reference image */}
+      {/* Status banner */}
       <div className="rounded-2xl mb-8 bg-gradient-to-b from-green-100 to-green-200 p-8 text-center shadow-lg">
         <img src="/image1.png" alt="checked" className="mx-auto w-24 h-24 mb-4" />
         <div className="text-2xl font-bold text-gray-900">Successfully Checked-In!</div>
@@ -444,16 +483,13 @@ function SwitchPage({ checkin, setCheckin, onSave }) {
               }`}
             >
               <span className={`w-4 h-4 rounded-full border-2 flex-shrink-0 transition-all ${
-                checkin === opt.id
-                  ? "border-primary bg-primary"
-                  : "border-gray-500 bg-transparent"
+                checkin === opt.id ? "border-primary bg-primary" : "border-gray-500 bg-transparent"
               }`} />
               {opt.label}
             </button>
           ))}
         </div>
 
-        {/* Custom days */}
         <button
           onClick={() => setCheckin("custom")}
           className={`w-full p-4 rounded-xl border-2 flex items-center gap-3 transition-all font-medium ${
@@ -479,7 +515,7 @@ function SwitchPage({ checkin, setCheckin, onSave }) {
         </button>
       </div>
 
-      {/* How check-in works */}
+      {/* How it works */}
       <div className="mb-8">
         <h2 className="text-lg font-semibold mb-4">How Check-In Works</h2>
         <div className="bg-dark-card border border-dark-border rounded-2xl p-6 space-y-5">
@@ -504,13 +540,13 @@ function SwitchPage({ checkin, setCheckin, onSave }) {
   );
 }
 
-// ─── Sidebar tabs config ──────────────────────────────────────────────────────
+// ─── Sidebar tabs ─────────────────────────────────────────────────────────────
 
 const TABS = [
-  { id: "vault",     label: "Vault",      Icon: IconVault,     emoji: "🗄️"  },
-  { id: "addFolder", label: "Add Folder", Icon: IconAddFolder, emoji: "📁"  },
-  { id: "nominees",  label: "Nominees",   Icon: IconNominees,  emoji: "👥"  },
-  { id: "switch",    label: "Switch",     Icon: IconSwitch,    emoji: "🛡️" },
+  { id: "vault",     label: "Vault",      Icon: IconVault     },
+  { id: "addFolder", label: "Add Folder", Icon: IconAddFolder },
+  { id: "nominees",  label: "Nominees",   Icon: IconNominees  },
+  { id: "switch",    label: "Switch",     Icon: IconSwitch    },
 ];
 
 // ─── Main Component ───────────────────────────────────────────────────────────
@@ -549,25 +585,21 @@ export default function MyFiles() {
   if (loading) return <Loader />;
 
   return (
-    // Use the same outer wrapper pattern as Main.js: min-h-screen bg-dark-bg text-white
-    // `overflow-hidden` on root + `overflow-y-auto` on main prevents layout shift
     <div className="flex min-h-screen bg-dark-bg text-white overflow-hidden">
 
-      {/* ── Left Sidebar ── fixed width, never shrinks ── */}
+      {/* ── Left Sidebar — fixed width, never shrinks ── */}
       <aside
         style={{ width: "220px", minWidth: "220px" }}
         className="h-screen sticky top-0 bg-dark-card border-r border-dark-border flex flex-col py-8 px-3"
       >
-        {/* Branding */}
+        {/* Logo / title */}
         <div className="px-3 mb-8">
-          <div className="text-xs text-gray-500 uppercase tracking-widest font-semibold mb-1">
-            SecureVault
-          </div>
-          <div className="text-xs text-gray-600">My Files</div>
+          <div className="text-sm font-bold text-white mb-0.5">SecureVault</div>
+          <div className="text-xs text-gray-500">My Files</div>
         </div>
 
-        {/* Nav links */}
-        <nav className="flex flex-col gap-1 flex-1">
+        {/* Nav */}
+        <nav className="flex flex-col gap-1">
           {TABS.map(({ id, label, Icon }) => {
             const active = activeTab === id;
             return (
@@ -589,17 +621,9 @@ export default function MyFiles() {
             );
           })}
         </nav>
-
-        {/* Bottom info */}
-        <div className="px-3 mt-6">
-          <div className="bg-primary bg-opacity-10 border border-primary border-opacity-20 rounded-xl p-3 text-xs text-gray-400">
-            <div className="text-primary font-semibold mb-1">🔐 AES-256</div>
-            All files encrypted
-          </div>
-        </div>
       </aside>
 
-      {/* ── Main Content — flex-1 + min-w-0 prevents shrinking ── */}
+      {/* ── Main content — flex-1 + min-w-0 prevents any shrinking ── */}
       <main className="flex-1 min-w-0 overflow-y-auto">
         {activeTab === "vault" && (
           <VaultPage
@@ -607,6 +631,7 @@ export default function MyFiles() {
             token={token}
             hasReachedLimit={hasReachedLimit}
             onUpgrade={() => setShowUpgrade(true)}
+            user={user}
           />
         )}
         {activeTab === "addFolder" && <AddFolderPage />}
@@ -620,7 +645,6 @@ export default function MyFiles() {
         )}
       </main>
 
-      {/* ── Upgrade Modal ── */}
       {showUpgrade && (
         <UpgradeModal token={token} onClose={() => setShowUpgrade(false)} />
       )}
