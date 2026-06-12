@@ -79,8 +79,8 @@ function FolderSvg({ color, size = 44 }) {
 // ─── Tab: Vault ───────────────────────────────────────────────────────────────
 
 function VaultPage({ files, token, hasReachedLimit, onUpgrade, user }) {
-  const firstName = user?.name?.split(" ")[0] || "User";
-  const lastName  = user?.name?.split(" ").slice(1).join(" ") || "";
+ // const firstName = user?.name?.split(" ")[0] || "User";
+ // const lastName  = user?.name?.split(" ").slice(1).join(" ") || "";
   const initials  = user?.name
     ? user.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase()
     : "U";
