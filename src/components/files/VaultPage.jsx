@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import FolderGrid from "./FolderGrid";
 import FolderDetail from "./FolderDetail";
-import FileList from "./FileList";
 
 export default function VaultPage({ files, token, hasReachedLimit, onUpgrade, user }) {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -128,13 +127,9 @@ export default function VaultPage({ files, token, hasReachedLimit, onUpgrade, us
               onFolderClick={setSelectedCategory}
             />
 
-            {/* All files list */}
-            <div className="border-t border-dark-border mt-6 pt-5">
-              <h3 className="text-sm font-semibold text-gray-400 mb-4 uppercase tracking-wide">
-                All Files
-              </h3>
-              <FileList files={files} token={token} />
-            </div>
+            <p className="text-xs text-gray-500 text-center mt-5">
+              Click a category to view its files.
+            </p>
           </>
         )}
       </div>

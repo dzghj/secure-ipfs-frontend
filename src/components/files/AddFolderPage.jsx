@@ -19,7 +19,7 @@ export default function AddFolderPage() {
         <p className="text-gray-400 text-sm">Organise your vault with custom categories.</p>
       </div>
 
-      <div className="max-w-2xl">
+      <div className="max-w-2xl mx-auto">
         <div className="mb-6">
           <label className="text-sm text-gray-400 mb-2 block font-medium">
             Category Name
