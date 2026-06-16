@@ -28,7 +28,7 @@ export default function Layout({ onLogout }) {
   );
 
   return (
-    <div className="min-h-screen bg-dark-bg text-white flex flex-col">
+    <div className="min-h-screen h-screen bg-dark-bg text-white flex flex-col overflow-hidden">
       {/* ---------- Header ---------- */}
       <header className="flex items-center justify-between px-8 py-4 border-b border-dark-border bg-dark-bg">
         <div
@@ -67,8 +67,8 @@ export default function Layout({ onLogout }) {
 
       {/* ---------- Main ---------- */}
       <main
-        className={`flex flex-1 px-6 ${
-          centerContent ? "items-center justify-center" : ""
+        className={`flex flex-1 overflow-hidden ${
+          centerContent ? "px-6 items-center justify-center" : ""
         }`}
       >
         <Outlet />

@@ -43,7 +43,7 @@ export default function MyFiles() {
   if (loading) return <Loader />;
 
   return (
-    <div className="flex min-h-screen bg-dark-bg text-white overflow-hidden">
+    <div className="flex h-full w-full bg-dark-bg text-white overflow-hidden">
       <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
 
       <main className="flex-1 min-w-0 overflow-y-auto">
