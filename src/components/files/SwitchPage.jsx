@@ -19,7 +19,7 @@ export default function SwitchPage({ checkin, setCheckin, onSave }) {
   const [customDays, setCustomDays] = useState("");
 
   return (
-    <div className="w-full px-8 py-10">
+    <div className="px-8 py-10">
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-1">Continuity Switch</h1>
         <p className="text-gray-400 text-sm">Configure how often you confirm your activity.</p>

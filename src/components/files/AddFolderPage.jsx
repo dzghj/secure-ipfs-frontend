@@ -13,7 +13,7 @@ export default function AddFolderPage() {
   };
 
   return (
-    <div className="w-full px-8 py-10">
+    <div className="px-8 py-10">
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-1">Add New Folder</h1>
         <p className="text-gray-400 text-sm">Organise your vault with custom categories.</p>

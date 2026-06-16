@@ -23,7 +23,7 @@ function AddNomineeForm({ onSave, onBack }) {
   };
 
   return (
-    <div className="w-full px-8 py-10">
+    <div className="px-8 py-10">
       <div className="flex items-center gap-4 mb-8">
         <button
           onClick={onBack}
@@ -108,7 +108,7 @@ export default function NomineesPage() {
   }
 
   return (
-    <div className="w-full px-8 py-10">
+    <div className="px-8 py-10">
       <div className="flex items-start justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold mb-1">Nominees</h1>

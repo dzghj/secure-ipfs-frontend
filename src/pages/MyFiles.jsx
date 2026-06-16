@@ -47,24 +47,27 @@ export default function MyFiles() {
       <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
 
       <main className="flex-1 min-w-0 overflow-y-auto">
-        {activeTab === "vault" && (
-          <VaultPage
-            files={files}
-            token={token}
-            hasReachedLimit={hasReachedLimit}
-            onUpgrade={() => setShowUpgrade(true)}
-            user={user}
-          />
-        )}
-        {activeTab === "addFolder" && <AddFolderPage />}
-        {activeTab === "nominees"  && <NomineesPage />}
-        {activeTab === "switch"    && (
-          <SwitchPage
-            checkin={checkin}
-            setCheckin={setCheckin}
-            onSave={handleSave}
-          />
-        )}
+        {/* Center content at 80% width */}
+        <div className="w-4/5 mx-auto">
+          {activeTab === "vault" && (
+            <VaultPage
+              files={files}
+              token={token}
+              hasReachedLimit={hasReachedLimit}
+              onUpgrade={() => setShowUpgrade(true)}
+              user={user}
+            />
+          )}
+          {activeTab === "addFolder" && <AddFolderPage />}
+          {activeTab === "nominees"  && <NomineesPage />}
+          {activeTab === "switch"    && (
+            <SwitchPage
+              checkin={checkin}
+              setCheckin={setCheckin}
+              onSave={handleSave}
+            />
+          )}
+        </div>
       </main>
 
       {showUpgrade && (
