@@ -14,7 +14,7 @@ export default function FolderDetail({ category, files, token, onBack }) {
   );
 
   return (
-    <div className="w-full px-8 py-10">
+    <div className="px-8 py-10">
       {/* Header */}
       <div className="flex items-center gap-4 mb-8">
         <button

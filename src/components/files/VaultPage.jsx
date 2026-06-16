@@ -45,7 +45,7 @@ export default function VaultPage({ files, token, hasReachedLimit, onUpgrade, us
 
   // ── Vault dashboard ───────────────────────────────────────────────────────
   return (
-    <div className="w-full px-8 py-10">
+    <div className="px-8 py-10">
 
       {/* Greeting */}
       <div className="flex items-center gap-4 mb-8">
