@@ -5,14 +5,13 @@ import FolderDetail from "./FolderDetail";
 export default function VaultPage({ files, token, hasReachedLimit, onUpgrade, user }) {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const initials = user?.name
-    ? user.name
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .slice(0, 2)
-        .toUpperCase()
-    : "U";
+  const displayName = user?.name || user?.email || "User";
+  const initials = displayName
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 
   const categories = [...new Set(files.map((f) => f.category || "Personal"))];
 
@@ -53,7 +52,7 @@ export default function VaultPage({ files, token, hasReachedLimit, onUpgrade, us
         </div>
         <div>
           <p className="text-gray-400 text-sm">Hi,</p>
-          <h1 className="text-2xl font-bold leading-tight">{user?.name || "User"}</h1>
+          <h1 className="text-2xl font-bold leading-tight">{displayName}</h1>
         </div>
       </div>
 
