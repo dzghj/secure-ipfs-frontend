@@ -27,8 +27,10 @@ export default function Layout({ onLogout }) {
     location.pathname.startsWith(path)
   );
 
+  const isMyFiles = location.pathname.startsWith("/myfiles");
+
   return (
-    <div className="min-h-screen h-screen bg-dark-bg text-white flex flex-col overflow-hidden">
+    <div className={`bg-dark-bg text-white flex flex-col ${isMyFiles ? "h-screen overflow-hidden" : "min-h-screen"}`}>
       {/* ---------- Header ---------- */}
       <header className="flex items-center justify-between px-8 py-4 border-b border-dark-border bg-dark-bg">
         <div
@@ -67,8 +69,12 @@ export default function Layout({ onLogout }) {
 
       {/* ---------- Main ---------- */}
       <main
-        className={`flex flex-1 overflow-hidden ${
-          centerContent ? "px-6 items-center justify-center" : ""
+        className={`flex flex-1 ${
+          isMyFiles
+            ? "overflow-hidden"
+            : centerContent
+            ? "px-6 items-center justify-center overflow-y-auto"
+            : "overflow-y-auto"
         }`}
       >
         <Outlet />
