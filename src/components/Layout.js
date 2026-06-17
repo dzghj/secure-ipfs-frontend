@@ -38,9 +38,9 @@ export default function Layout({ onLogout }) {
           className="flex items-center gap-2 text-2xl font-bold text-primary cursor-pointer hover:opacity-80 transition"
         >
           <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-            <span className="text-dark-bg font-bold">🔒</span>
+            <span className="text-dark-bg font-bold">⛓️</span>
           </div>
-          <span>SecureVault</span>
+          <span>LegacyChain</span>
         </div>
 
         <nav className="hidden md:flex items-center gap-8">
@@ -90,7 +90,7 @@ export default function Layout({ onLogout }) {
           <div className="flex items-center justify-center md:justify-start gap-2"><span>📞</span> 24/7 Support</div>
         </div>
         <div className="text-center text-gray-500 text-xs border-t border-dark-border pt-6">
-          © {new Date().getFullYear()} SecureVault. All rights reserved.
+          © {new Date().getFullYear()} LegacyChain. All rights reserved.
         </div>
       </footer>
     </div>
