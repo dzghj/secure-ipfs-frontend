@@ -63,7 +63,7 @@ export default function Sidebar({ activeTab, onTabChange }) {
     >
       {/* Logo / title */}
       <div className="px-3 mb-8">
-        <div className="text-sm font-bold text-white mb-0.5">SecureVault</div>
+        <div className="text-sm font-bold text-white mb-0.5">LegacyChain</div>
         <div className="text-xs text-gray-500">My Files</div>
       </div>
 
