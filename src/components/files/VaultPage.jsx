@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import FolderGrid from "./FolderGrid";
 import FolderDetail from "./FolderDetail";
 
-export default function VaultPage({ files, token, hasReachedLimit, onUpgrade, user }) {
+export default function VaultPage({ files, token, hasReachedLimit, onUpgrade, user, onUploadComplete }) {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const displayName = user?.name || user?.email || "User";
@@ -37,6 +37,7 @@ export default function VaultPage({ files, token, hasReachedLimit, onUpgrade, us
         files={files}
         token={token}
         onBack={() => setSelectedCategory(null)}
+        onUploadComplete={onUploadComplete}
       />
     );
   }

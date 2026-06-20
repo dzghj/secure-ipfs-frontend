@@ -56,6 +56,7 @@ export default function MyFiles() {
               hasReachedLimit={hasReachedLimit}
               onUpgrade={() => setShowUpgrade(true)}
               user={user}
+              onUploadComplete={load}
             />
           )}
           {activeTab === "addFolder" && <AddFolderPage />}
