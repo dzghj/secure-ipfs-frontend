@@ -5,7 +5,7 @@ import { FolderSvg } from "./FolderCard";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
-export default function FolderDetail({ category, files, token, onBack, onUploadComplete }) {
+export default function FolderDetail({ category, files, token, onBack, onUploadComplete, nominees = [] }) {
   const ft =
     FOLDER_TYPES.find(
       (f) => f.label.toLowerCase() === category.toLowerCase()
@@ -117,7 +117,7 @@ export default function FolderDetail({ category, files, token, onBack, onUploadC
         </div>
       ) : (
         <div className="mb-6">
-          <FileList files={categoryFiles} token={token} />
+          <FileList files={categoryFiles} token={token} nominees={nominees} />
         </div>
       )}
 

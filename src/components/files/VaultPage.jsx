@@ -62,6 +62,7 @@ export default function VaultPage({
         token={token}
         onBack={() => setSelectedCategory(null)}
         onUploadComplete={onUploadComplete}
+        nominees={nominees}
       />
     );
   }
