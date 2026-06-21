@@ -2,14 +2,41 @@ import React, { useState } from "react";
 import { FolderSvg } from "./FolderCard";
 import { FOLDER_TYPES } from "./FolderGrid";
 
-export default function AddFolderPage() {
-  const [categoryName, setCategoryName] = useState("Personal");
-  const [description,  setDescription]  = useState("");
-  const [selected,     setSelected]     = useState("personal");
+// Remove Photos, Videos, Other
+const SELECTABLE_TYPES = FOLDER_TYPES.filter(
+  (ft) => !["photos", "videos", "other"].includes(ft.id)
+);
 
-  const handleCreate = () => {
-    // TODO: wire up to API
-    alert(`Folder "${categoryName}" created!`);
+export default function AddFolderPage({ onFolderCreated, existingCategories = [] }) {
+  const [selected,  setSelected]  = useState("personal");
+  const [creating,  setCreating]  = useState(false);
+  const [success,   setSuccess]   = useState("");
+  const [error,     setError]     = useState("");
+
+  const selectedType = SELECTABLE_TYPES.find((ft) => ft.id === selected) || SELECTABLE_TYPES[0];
+  const categoryName = selectedType.label;
+
+  const handleCreate = async () => {
+    if (!categoryName) return;
+
+    // Check if category already exists
+    if (existingCategories.map((c) => c.toLowerCase()).includes(categoryName.toLowerCase())) {
+      setError(`"${categoryName}" folder already exists.`);
+      return;
+    }
+
+    setCreating(true);
+    setError("");
+
+    try {
+      // Notify parent — parent adds it to the categories list and switches to vault tab
+      if (onFolderCreated) onFolderCreated(categoryName);
+      setSuccess(`"${categoryName}" folder created!`);
+    } catch (err) {
+      setError("Failed to create folder.");
+    } finally {
+      setCreating(false);
+    }
   };
 
   return (
@@ -20,42 +47,15 @@ export default function AddFolderPage() {
           <p className="text-gray-400 text-sm">Organise your vault with custom categories.</p>
         </div>
 
-        <div className="mb-6">
-          <label className="text-sm text-gray-400 mb-2 block font-medium">
-            Category Name
-          </label>
-          <input
-            className="w-full bg-dark-card border border-dark-border rounded-xl px-4 py-3 text-white placeholder-gray-500 outline-none focus:border-primary transition"
-            value={categoryName}
-            onChange={(e) => setCategoryName(e.target.value)}
-            placeholder="e.g. Personal, Medical, Legal..."
-          />
-        </div>
-
-        <div className="mb-8">
-          <label className="text-sm text-gray-400 mb-2 block font-medium">
-            Description
-          </label>
-          <input
-            className="w-full bg-dark-card border border-dark-border rounded-xl px-4 py-3 text-white placeholder-gray-500 outline-none focus:border-primary transition"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Enter description"
-          />
-        </div>
-
         <div className="mb-8">
           <label className="text-sm text-gray-400 mb-3 block font-medium">
-            Select Folder Colour
+            Select Folder Type
           </label>
           <div className="grid grid-cols-3 gap-3">
-            {FOLDER_TYPES.map((ft) => (
+            {SELECTABLE_TYPES.map((ft) => (
               <button
                 key={ft.id}
-                onClick={() => {
-                  setSelected(ft.id);
-                  setCategoryName(ft.label);
-                }}
+                onClick={() => { setSelected(ft.id); setError(""); setSuccess(""); }}
                 className={`flex flex-col items-center py-5 px-2 rounded-2xl border-2 transition-all hover:border-primary ${
                   selected === ft.id
                     ? "border-primary bg-dark-card"
@@ -69,11 +69,15 @@ export default function AddFolderPage() {
           </div>
         </div>
 
+        {error   && <p className="text-red-400 text-sm mb-4">{error}</p>}
+        {success && <p className="text-emerald-400 text-sm mb-4">✓ {success}</p>}
+
         <button
           onClick={handleCreate}
-          className="w-full bg-primary text-white py-4 rounded-xl font-semibold text-lg hover:bg-primary-dark transition"
+          disabled={creating}
+          className="w-full bg-primary text-white py-4 rounded-xl font-semibold text-lg hover:bg-primary-dark transition disabled:opacity-50"
         >
-          ✨ Create Folder
+          {creating ? "Creating…" : "✨ Create Folder"}
         </button>
       </div>
     </div>
