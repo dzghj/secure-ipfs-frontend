@@ -1,7 +1,5 @@
 import { useState } from "react";
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-
 const FILE_TYPE_ICONS = {
   pdf:   "📄",
   image: "🖼️",
@@ -29,13 +27,12 @@ function formatDate(dateStr) {
 }
 
 export default function FileCard({ file, token }) {
-  const [downloading, setDownloading] = useState(false);
+  const [viewing, setViewing] = useState(false);
 
   if (!file) return null;
 
   const fileName    = file.filename || file.name || "Untitled";
   const fileType    = file.type     || "Document";
-  const fileId      = file.id       || file._id  || null;
   const cid         = file.cid      || null;
   const createdAt   = formatDate(file.createdAt || file.created_at || file.uploadedAt);
   const isProtected = !!(
@@ -45,51 +42,12 @@ export default function FileCard({ file, token }) {
   );
   const icon = getFileIcon(fileType);
 
-  const handleView = async () => {
-    if (!cid && !fileId) return;
-    setDownloading(true);
-
-    try {
-      // Prefer backend download endpoint so the server returns the file with
-      // correct headers (Content-Disposition: attachment; filename="...").
-      // Fall back to a proxied CID fetch if no fileId available.
-      const url = fileId
-        ? `${API_BASE_URL}/api/file/${fileId}/download`
-        : `${API_BASE_URL}/api/download?cid=${encodeURIComponent(cid)}`;
-
-      const res = await fetch(url, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-      });
-
-      if (!res.ok) throw new Error("Download failed");
-
-      const blob = await res.blob();
-
-      // Try to read the filename from the Content-Disposition header first,
-      // then fall back to the stored fileName.
-      let downloadName = fileName;
-      const disposition = res.headers.get("Content-Disposition");
-      if (disposition) {
-        const match = disposition.match(/filename\*?=(?:UTF-8''|")?([^";]+)/i);
-        if (match) downloadName = decodeURIComponent(match[1].replace(/"/g, ""));
-      }
-
-      // Trigger browser download with the correct filename
-      const objectUrl = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = objectUrl;
-      a.download = downloadName;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(objectUrl);
-    } catch (err) {
-      console.error("Download error:", err);
-      // Last-resort fallback: open the IPFS gateway in a new tab
-      if (cid) window.open(`https://ipfs.io/ipfs/${cid}`, "_blank", "noopener,noreferrer");
-    } finally {
-      setDownloading(false);
+  const handleView = () => {
+    if (cid) {
+      window.open(`https://ipfs.io/ipfs/${cid}`, "_blank", "noopener,noreferrer");
     }
+    setViewing(true);
+    setTimeout(() => setViewing(false), 1500);
   };
 
   return (
@@ -116,14 +74,13 @@ export default function FileCard({ file, token }) {
         )}
       </div>
 
-      {/* View / Download button */}
-      {(cid || fileId) && (
+      {/* View button */}
+      {cid && (
         <button
           onClick={handleView}
-          disabled={downloading}
-          className="flex-shrink-0 text-xs px-3 py-1.5 rounded-lg bg-primary/20 hover:bg-primary/40 text-primary border border-primary/30 transition font-medium disabled:opacity-50"
+          className="flex-shrink-0 text-xs px-3 py-1.5 rounded-lg bg-primary/20 hover:bg-primary/40 text-primary border border-primary/30 transition font-medium"
         >
-          {downloading ? "…" : "View"}
+          {viewing ? "✓ Opening" : "View"}
         </button>
       )}
     </div>
