@@ -5,7 +5,6 @@ import {
   updateNomineeAPI,
   deleteNomineeAPI,
 } from "../../services/api";
-
 const FORM_FIELDS = [
   { label: "Name",         key: "name",         placeholder: "Enter Name",                   type: "text"  },
   { label: "Email",        key: "email",        placeholder: "Enter Email",                  type: "email" },
@@ -173,11 +172,10 @@ function NomineeForm({ onSave, onBack, allCategories, initial }) {
 }
 
 /* ── Main nominees list page ──────────────────────────────── */
-export default function NomineesPage({ allCategories = [] }) {
-  const [nominees, setNominees] = useState([]);
+export default function NomineesPage({ allCategories = [], nominees = [], onNomineesChange }) {
   const [loading,  setLoading]  = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [editing,  setEditing]  = useState(null); // nominee being edited
+  const [editing,  setEditing]  = useState(null);
 
   const token = localStorage.getItem("token");
 
@@ -185,7 +183,7 @@ export default function NomineesPage({ allCategories = [] }) {
     setLoading(true);
     try {
       const data = await fetchNomineesAPI(token);
-      setNominees(data);
+      onNomineesChange?.(data);
     } catch (e) {
       console.error(e);
     } finally {
@@ -198,10 +196,10 @@ export default function NomineesPage({ allCategories = [] }) {
   const handleSave = async (form) => {
     if (editing) {
       const updated = await updateNomineeAPI(token, editing.id, form);
-      setNominees((prev) => prev.map((n) => (n.id === updated.id ? updated : n)));
+      onNomineesChange?.(nominees.map((n) => (n.id === updated.id ? updated : n)));
     } else {
       const created = await createNomineeAPI(token, form);
-      setNominees((prev) => [...prev, created]);
+      onNomineesChange?.([...nominees, created]);
     }
     setShowForm(false);
     setEditing(null);
@@ -211,7 +209,7 @@ export default function NomineesPage({ allCategories = [] }) {
     if (!window.confirm("Remove this nominee?")) return;
     try {
       await deleteNomineeAPI(token, id);
-      setNominees((prev) => prev.filter((n) => n.id !== id));
+      onNomineesChange?.(nominees.filter((n) => n.id !== id));
     } catch (e) {
       alert("Failed to remove nominee.");
     }
