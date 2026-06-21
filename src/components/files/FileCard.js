@@ -26,7 +26,7 @@ function formatDate(dateStr) {
   return d.toLocaleDateString("en-AU", { day: "2-digit", month: "short", year: "numeric" });
 }
 
-export default function FileCard({ file }) {
+export default function FileCard({ file, token }) {
   const [viewing, setViewing] = useState(false);   // true while fetching / just opened
 
   if (!file) return null;
@@ -43,29 +43,35 @@ export default function FileCard({ file }) {
   const icon = getFileIcon(fileType);
 
   const handleView = async () => {
-    if (!cid) return;
+    if (!cid && !file.id) return;
     setViewing(true);
 
     try {
-      // Fetch the raw file from IPFS gateway
-      const res = await fetch(`https://ipfs.io/ipfs/${cid}`);
+      // Use the backend's view endpoint — it fetches from IPFS server-side,
+      // sets correct Content-Disposition and Content-Type headers, and
+      // streams the original unmodified file back to the browser.
+      const viewUrl = file.viewUrl || `${process.env.REACT_APP_API_BASE_URL}/api/file/${file.id}/view`;
+
+      const res = await fetch(viewUrl, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
       if (!res.ok) throw new Error("Fetch failed");
 
       const blob = await res.blob();
-
-      // Force-download with the original filename stored in the file record
       const objectUrl = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = objectUrl;
-      a.download = fileName;   // use the stored original name, e.g. "oogog_ft.jpg"
+      a.download = fileName;
       document.body.appendChild(a);
       a.click();
       a.remove();
       URL.revokeObjectURL(objectUrl);
     } catch (err) {
       console.error("View error:", err);
-      // Fallback: open in new tab
-      window.open(`https://ipfs.io/ipfs/${cid}`, "_blank", "noopener,noreferrer");
+      // Fallback: open backend view URL directly in new tab
+      const viewUrl = file.viewUrl || `${process.env.REACT_APP_API_BASE_URL}/api/file/${file.id}/view`;
+      window.open(viewUrl, "_blank", "noopener,noreferrer");
     } finally {
       setTimeout(() => setViewing(false), 1500);
     }
@@ -96,7 +102,7 @@ export default function FileCard({ file }) {
       </div>
 
       {/* View button */}
-      {cid && (
+      {(cid || file.id) && (
         <button
           onClick={handleView}
           disabled={viewing}
