@@ -48,60 +48,44 @@ export default function FileCard({ file, token }) {
     setDownloading(true);
     setError("");
 
-    // Always read token from localStorage to guarantee it's current
     const authToken = token || localStorage.getItem("token");
     const viewUrl = file.viewUrl
       || `${process.env.REACT_APP_API_BASE_URL}/api/file/${file.id}/view`;
 
-    console.log("=== FileCard Download Debug ===");
-    console.log("File object:", file);
-    console.log("file.id:", file.id);
-    console.log("file.cid:", file.cid);
-    console.log("fileName:", fileName);
-    console.log("viewUrl:", viewUrl);
-    console.log("authToken present:", !!authToken);
-    console.log("authToken value:", authToken);
-
     try {
-      console.log("Fetching from:", viewUrl);
       const res = await fetch(viewUrl, {
         headers: { Authorization: `Bearer ${authToken}` },
       });
 
-      console.log("Response status:", res.status);
-      console.log("Response ok:", res.ok);
-      console.log("Response headers:");
-      res.headers.forEach((value, key) => console.log(`  ${key}: ${value}`));
-
       if (!res.ok) {
         const text = await res.text();
-        console.error("Server error body:", text);
         throw new Error(`Server returned ${res.status}: ${text}`);
       }
 
-      const blob = await res.blob();
-      console.log("Blob type:", blob.type);
-      console.log("Blob size (bytes):", blob.size);
+      const json = await res.json();
 
-      // Parse JSON response to find the actual file data
-      const text = await blob.text();
-      console.log("Full JSON response:", text);
+      // Backend returns { data: "<base64>", mimeType: "image/jpeg", filename: "..." }
+      const base64 = json.data;
+      const mimeType = json.mimeType || "application/octet-stream";
+      const downloadName = json.filename || fileName;
 
-      const json = JSON.parse(text);
-      console.log("JSON keys:", Object.keys(json));
-      console.log("json.fileData (first 100):", String(json.fileData || json.data || json.content || json.file || "NOT FOUND").slice(0, 100));
-      console.log("json.fileUrl:", json.fileUrl || json.url || json.downloadUrl || "NOT FOUND");
+      // Decode base64 → binary → Blob
+      const byteChars = atob(base64);
+      const byteArray = new Uint8Array(byteChars.length);
+      for (let i = 0; i < byteChars.length; i++) {
+        byteArray[i] = byteChars.charCodeAt(i);
+      }
+      const blob = new Blob([byteArray], { type: mimeType });
 
+      // Trigger download with correct filename
       const objectUrl = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = objectUrl;
-      a.download = fileName;
+      a.download = downloadName;
       document.body.appendChild(a);
-      // a.click();   // temporarily disabled — waiting to see JSON structure
+      a.click();
       a.remove();
       URL.revokeObjectURL(objectUrl);
-
-      console.log("Download triggered successfully");
     } catch (err) {
       console.error("Download failed:", err);
       setError(err.message);
