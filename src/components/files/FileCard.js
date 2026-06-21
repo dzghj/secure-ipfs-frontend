@@ -83,16 +83,21 @@ export default function FileCard({ file, token }) {
       console.log("Blob type:", blob.type);
       console.log("Blob size (bytes):", blob.size);
 
-      // Peek at the first bytes to check if it's real file data or JSON error
-      const preview = await blob.slice(0, 100).text();
-      console.log("First 100 bytes of blob:", preview);
+      // Parse JSON response to find the actual file data
+      const text = await blob.text();
+      console.log("Full JSON response:", text);
+
+      const json = JSON.parse(text);
+      console.log("JSON keys:", Object.keys(json));
+      console.log("json.fileData (first 100):", String(json.fileData || json.data || json.content || json.file || "NOT FOUND").slice(0, 100));
+      console.log("json.fileUrl:", json.fileUrl || json.url || json.downloadUrl || "NOT FOUND");
 
       const objectUrl = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = objectUrl;
       a.download = fileName;
       document.body.appendChild(a);
-      a.click();
+      // a.click();   // temporarily disabled — waiting to see JSON structure
       a.remove();
       URL.revokeObjectURL(objectUrl);
 
