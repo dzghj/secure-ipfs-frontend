@@ -13,7 +13,7 @@ export const FOLDER_TYPES = [
   { id: "other",    label: "Other",    color: "#a0a0a0" },
 ];
 
-export default function FolderGrid({ files, categories, onFolderClick }) {
+export default function FolderGrid({ files, categories, onFolderClick, nomineesByCategory = {} }) {
   const displayCategories = categories.length > 0 ? categories : ["Personal"];
 
   return (
@@ -31,8 +31,9 @@ export default function FolderGrid({ files, categories, onFolderClick }) {
         return (
           <FolderCard
             key={cat}
-            folder={ft}
+            folder={{ ...ft, label: cat }}
             fileCount={count}
+            nominees={nomineesByCategory[cat] || []}
             onClick={() => onFolderClick(cat)}
           />
         );
