@@ -53,7 +53,7 @@ export default function Layout({ onLogout }) {
         {isLoggedIn ? (
           <button
             onClick={handleLogout}
-            className="px-5 py-2 text-sm font-medium border border-red-500 text-red-400 hover:bg-red-500 hover:text-white rounded-lg transition"
+            className="px-5 py-2 text-sm font-medium bg-primary text-dark-bg hover:bg-primary-dark rounded-lg transition font-semibold"
           >
             Logout
           </button>
