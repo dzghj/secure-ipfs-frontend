@@ -53,19 +53,39 @@ export default function FileCard({ file, token }) {
     const viewUrl = file.viewUrl
       || `${process.env.REACT_APP_API_BASE_URL}/api/file/${file.id}/view`;
 
+    console.log("=== FileCard Download Debug ===");
+    console.log("File object:", file);
+    console.log("file.id:", file.id);
+    console.log("file.cid:", file.cid);
+    console.log("fileName:", fileName);
+    console.log("viewUrl:", viewUrl);
+    console.log("authToken present:", !!authToken);
+    console.log("authToken value:", authToken);
+
     try {
+      console.log("Fetching from:", viewUrl);
       const res = await fetch(viewUrl, {
         headers: { Authorization: `Bearer ${authToken}` },
       });
 
+      console.log("Response status:", res.status);
+      console.log("Response ok:", res.ok);
+      console.log("Response headers:");
+      res.headers.forEach((value, key) => console.log(`  ${key}: ${value}`));
+
       if (!res.ok) {
         const text = await res.text();
-        console.error("View endpoint error:", res.status, text);
-        throw new Error(`Server returned ${res.status}`);
+        console.error("Server error body:", text);
+        throw new Error(`Server returned ${res.status}: ${text}`);
       }
 
       const blob = await res.blob();
-      console.log("Downloaded blob:", blob.type, blob.size, "bytes");
+      console.log("Blob type:", blob.type);
+      console.log("Blob size (bytes):", blob.size);
+
+      // Peek at the first bytes to check if it's real file data or JSON error
+      const preview = await blob.slice(0, 100).text();
+      console.log("First 100 bytes of blob:", preview);
 
       const objectUrl = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -75,6 +95,8 @@ export default function FileCard({ file, token }) {
       a.click();
       a.remove();
       URL.revokeObjectURL(objectUrl);
+
+      console.log("Download triggered successfully");
     } catch (err) {
       console.error("Download failed:", err);
       setError(err.message);
