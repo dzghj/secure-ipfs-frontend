@@ -1,4 +1,3 @@
-import { useState } from "react";
 
 const FILE_TYPE_ICONS = {
   pdf:   "📄",
@@ -27,8 +26,6 @@ function formatDate(dateStr) {
 }
 
 export default function FileCard({ file, token }) {
-  const [viewing, setViewing] = useState(false);   // true while fetching / just opened
-
   if (!file) return null;
 
   const fileName    = file.filename || file.name || "Untitled";
@@ -42,39 +39,10 @@ export default function FileCard({ file, token }) {
   );
   const icon = getFileIcon(fileType);
 
-  const handleView = async () => {
+  const handleView = () => {
     if (!cid && !file.id) return;
-    setViewing(true);
-
-    try {
-      // Use the backend's view endpoint — it fetches from IPFS server-side,
-      // sets correct Content-Disposition and Content-Type headers, and
-      // streams the original unmodified file back to the browser.
-      const viewUrl = file.viewUrl || `${process.env.REACT_APP_API_BASE_URL}/api/file/${file.id}/view`;
-
-      const res = await fetch(viewUrl, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (!res.ok) throw new Error("Fetch failed");
-
-      const blob = await res.blob();
-      const objectUrl = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = objectUrl;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(objectUrl);
-    } catch (err) {
-      console.error("View error:", err);
-      // Fallback: open backend view URL directly in new tab
-      const viewUrl = file.viewUrl || `${process.env.REACT_APP_API_BASE_URL}/api/file/${file.id}/view`;
-      window.open(viewUrl, "_blank", "noopener,noreferrer");
-    } finally {
-      setTimeout(() => setViewing(false), 1500);
-    }
+    const viewUrl = file.viewUrl || `${process.env.REACT_APP_API_BASE_URL}/api/file/${file.id}/view`;
+    window.open(viewUrl, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -105,10 +73,9 @@ export default function FileCard({ file, token }) {
       {(cid || file.id) && (
         <button
           onClick={handleView}
-          disabled={viewing}
-          className="flex-shrink-0 text-xs px-3 py-1.5 rounded-lg bg-primary/20 hover:bg-primary/40 text-primary border border-primary/30 transition font-medium disabled:opacity-50"
+          className="flex-shrink-0 text-xs px-3 py-1.5 rounded-lg bg-primary/20 hover:bg-primary/40 text-primary border border-primary/30 transition font-medium"
         >
-          {viewing ? "…" : "View"}
+          View
         </button>
       )}
     </div>
