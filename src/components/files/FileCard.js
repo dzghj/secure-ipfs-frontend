@@ -26,18 +26,28 @@ function formatDate(dateStr) {
   return d.toLocaleDateString("en-AU", { day: "2-digit", month: "short", year: "numeric" });
 }
 
-export default function FileCard({ file, token }) {
+export default function FileCard({ file, token, nominees = [] }) {
   const [downloading, setDownloading] = useState(false);
   const [error, setError] = useState("");
 
   if (!file) return null;
 
-  const fileName    = file.filename || file.name || "Untitled";
-  const fileType    = file.type     || "Document";
-  const cid         = file.cid      || null;
-  const createdAt   = formatDate(file.createdAt || file.created_at || file.uploadedAt);
+  const fileName     = file.filename || file.name || "Untitled";
+  const fileType     = file.type     || "Document";
+  const cid          = file.cid      || null;
+  const fileCategory = file.category || "Personal";
+  const createdAt    = formatDate(file.createdAt || file.created_at || file.uploadedAt);
+
+  // Protected if any full-access nominee exists (covers all files),
+  // or a partial nominee covers this file's category, or legacy keyHolderList
   const isProtected = !!(
-    file.nominees?.length ||
+    nominees.some((n) => n.accessLevel === "full") ||
+    nominees.some(
+      (n) =>
+        n.accessLevel === "partial" &&
+        Array.isArray(n.allowedFolders) &&
+        n.allowedFolders.includes(fileCategory)
+    ) ||
     file.keyHolderList?.length ||
     file.protected
   );
