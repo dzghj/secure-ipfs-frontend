@@ -1,3 +1,4 @@
+import { useState } from "react";
 
 const FILE_TYPE_ICONS = {
   pdf:   "📄",
@@ -26,6 +27,9 @@ function formatDate(dateStr) {
 }
 
 export default function FileCard({ file, token }) {
+  const [downloading, setDownloading] = useState(false);
+  const [error, setError] = useState("");
+
   if (!file) return null;
 
   const fileName    = file.filename || file.name || "Untitled";
@@ -39,10 +43,44 @@ export default function FileCard({ file, token }) {
   );
   const icon = getFileIcon(fileType);
 
-  const handleView = () => {
-    if (!cid && !file.id) return;
-    const viewUrl = file.viewUrl || `${process.env.REACT_APP_API_BASE_URL}/api/file/${file.id}/view`;
-    window.open(viewUrl, "_blank", "noopener,noreferrer");
+  const handleView = async () => {
+    if (!file.id && !cid) return;
+    setDownloading(true);
+    setError("");
+
+    // Always read token from localStorage to guarantee it's current
+    const authToken = token || localStorage.getItem("token");
+    const viewUrl = file.viewUrl
+      || `${process.env.REACT_APP_API_BASE_URL}/api/file/${file.id}/view`;
+
+    try {
+      const res = await fetch(viewUrl, {
+        headers: { Authorization: `Bearer ${authToken}` },
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        console.error("View endpoint error:", res.status, text);
+        throw new Error(`Server returned ${res.status}`);
+      }
+
+      const blob = await res.blob();
+      console.log("Downloaded blob:", blob.type, blob.size, "bytes");
+
+      const objectUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = objectUrl;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(objectUrl);
+    } catch (err) {
+      console.error("Download failed:", err);
+      setError(err.message);
+    } finally {
+      setDownloading(false);
+    }
   };
 
   return (
@@ -71,12 +109,16 @@ export default function FileCard({ file, token }) {
 
       {/* View button */}
       {(cid || file.id) && (
-        <button
-          onClick={handleView}
-          className="flex-shrink-0 text-xs px-3 py-1.5 rounded-lg bg-primary/20 hover:bg-primary/40 text-primary border border-primary/30 transition font-medium"
-        >
-          View
-        </button>
+        <div className="flex flex-col items-end gap-1 flex-shrink-0">
+          <button
+            onClick={handleView}
+            disabled={downloading}
+            className="text-xs px-3 py-1.5 rounded-lg bg-primary/20 hover:bg-primary/40 text-primary border border-primary/30 transition font-medium disabled:opacity-50"
+          >
+            {downloading ? "…" : "View"}
+          </button>
+          {error && <p className="text-xs text-red-400">{error}</p>}
+        </div>
       )}
     </div>
   );
