@@ -85,7 +85,11 @@ export default function MyFiles() {
             />
           )}
           {activeTab === "nominees" && (
-            <NomineesPage allCategories={allCategories} />
+            <NomineesPage
+              allCategories={allCategories}
+              nominees={nominees}
+              onNomineesChange={setNominees}
+            />
           )}
           {activeTab === "switch" && (
             <SwitchPage
