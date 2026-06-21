@@ -13,7 +13,11 @@ function FolderSvg({ color, size = 44 }) {
   );
 }
 
-export default function FolderCard({ folder, fileCount, onClick }) {
+export default function FolderCard({ folder, fileCount, onClick, nominees = [] }) {
+  // Show up to 3 nominee avatars, then a "+N more" counter
+  const shown = nominees.slice(0, 3);
+  const extra = nominees.length - shown.length;
+
   return (
     <button
       onClick={onClick}
@@ -24,6 +28,32 @@ export default function FolderCard({ folder, fileCount, onClick }) {
       <span className="text-xs text-gray-500 mt-0.5">
         {fileCount} file{fileCount !== 1 ? "s" : ""}
       </span>
+
+      {/* Nominee access indicator */}
+      {nominees.length > 0 && (
+        <div className="flex items-center gap-1 mt-2">
+          {/* Stacked avatars */}
+          <div className="flex -space-x-1">
+            {shown.map((n) => (
+              <div
+                key={n.id}
+                title={`${n.name} (${n.accessLevel === "full" ? "Full" : "Partial"})`}
+                className="w-5 h-5 rounded-full bg-primary border border-dark-bg flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
+              >
+                {n.name[0].toUpperCase()}
+              </div>
+            ))}
+            {extra > 0 && (
+              <div className="w-5 h-5 rounded-full bg-dark-border border border-dark-bg flex items-center justify-center text-gray-400 text-xs font-bold flex-shrink-0">
+                +{extra}
+              </div>
+            )}
+          </div>
+          <span className="text-xs text-gray-500 ml-1">
+            {nominees.length === 1 ? "1 nominee" : `${nominees.length} nominees`}
+          </span>
+        </div>
+      )}
     </button>
   );
 }

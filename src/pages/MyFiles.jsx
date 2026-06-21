@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { fetchFilesAPI } from "../services/api";
+import { fetchFilesAPI, fetchNomineesAPI } from "../services/api";
 
 import Loader        from "../components/common/Loader";
 import UpgradeModal  from "../components/common/UpgradeModal";
@@ -10,11 +10,12 @@ import NomineesPage  from "../components/files/NomineesPage";
 import SwitchPage    from "../components/files/SwitchPage";
 
 export default function MyFiles() {
-  const [files,       setFiles]       = useState([]);
-  const [loading,     setLoading]     = useState(true);
-  const [showUpgrade, setShowUpgrade] = useState(false);
-  const [activeTab,   setActiveTab]   = useState("vault");
-  const [checkin,     setCheckin]     = useState("90");
+  const [files,           setFiles]           = useState([]);
+  const [nominees,        setNominees]        = useState([]);
+  const [loading,         setLoading]         = useState(true);
+  const [showUpgrade,     setShowUpgrade]     = useState(false);
+  const [activeTab,       setActiveTab]       = useState("vault");
+  const [checkin,         setCheckin]         = useState("90");
   const [extraCategories, setExtraCategories] = useState([]);
 
   const token           = localStorage.getItem("token");
@@ -29,8 +30,12 @@ export default function MyFiles() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await fetchFilesAPI(token);
-      setFiles(data.files || []);
+      const [fileData, nomineeData] = await Promise.all([
+        fetchFilesAPI(token),
+        fetchNomineesAPI(token).catch(() => []),
+      ]);
+      setFiles(fileData.files || []);
+      setNominees(nomineeData || []);
     } catch (e) {
       console.error(e);
     } finally {
@@ -64,6 +69,7 @@ export default function MyFiles() {
           {activeTab === "vault" && (
             <VaultPage
               files={files}
+              nominees={nominees}
               token={token}
               hasReachedLimit={hasReachedLimit}
               onUpgrade={() => setShowUpgrade(true)}
@@ -78,8 +84,10 @@ export default function MyFiles() {
               existingCategories={allCategories}
             />
           )}
-          {activeTab === "nominees"  && <NomineesPage />}
-          {activeTab === "switch"    && (
+          {activeTab === "nominees" && (
+            <NomineesPage allCategories={allCategories} />
+          )}
+          {activeTab === "switch" && (
             <SwitchPage
               checkin={checkin}
               setCheckin={setCheckin}

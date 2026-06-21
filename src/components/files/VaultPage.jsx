@@ -2,7 +2,16 @@ import React, { useState } from "react";
 import FolderGrid from "./FolderGrid";
 import FolderDetail from "./FolderDetail";
 
-export default function VaultPage({ files, token, hasReachedLimit, onUpgrade, user, onUploadComplete, extraCategories = [] }) {
+export default function VaultPage({
+  files,
+  nominees = [],
+  token,
+  hasReachedLimit,
+  onUpgrade,
+  user,
+  onUploadComplete,
+  extraCategories = [],
+}) {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const displayName = user?.name || user?.username || user?.email?.split("@")[0] || "User";
@@ -29,6 +38,20 @@ export default function VaultPage({ files, token, hasReachedLimit, onUpgrade, us
       minute: "2-digit",
       hour12: false,
     });
+
+  // Build a map: category → nominees who can see it
+  // A "full access" nominee can see every folder.
+  // A "partial" nominee can only see folders in their allowedFolders list.
+  const nomineesByCategory = {};
+  categories.forEach((cat) => {
+    nomineesByCategory[cat] = nominees.filter(
+      (n) =>
+        n.accessLevel === "full" ||
+        (n.accessLevel === "partial" &&
+          Array.isArray(n.allowedFolders) &&
+          n.allowedFolders.includes(cat))
+    );
+  });
 
   // ── Folder detail drill-down ──────────────────────────────────────────────
   if (selectedCategory) {
@@ -74,7 +97,7 @@ export default function VaultPage({ files, token, hasReachedLimit, onUpgrade, us
       {/* Vault Summary */}
       <div className="bg-dark-card border border-dark-border rounded-2xl p-6 mb-6 hover:border-primary transition">
         <h2 className="text-lg font-bold mb-4">Vault Summary</h2>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-3 gap-4">
           <div className="bg-gradient-to-br from-primary to-primary-dark rounded-xl p-5 text-white">
             <div className="text-4xl font-bold mb-1">
               {String(categories.length || 0).padStart(2, "0")}
@@ -86,6 +109,12 @@ export default function VaultPage({ files, token, hasReachedLimit, onUpgrade, us
               {String(files.length).padStart(2, "0")}
             </div>
             <div className="text-sm opacity-80">Documents</div>
+          </div>
+          <div className="bg-gradient-to-br from-primary to-primary-dark rounded-xl p-5 text-white">
+            <div className="text-4xl font-bold mb-1">
+              {String(nominees.length).padStart(2, "0")}
+            </div>
+            <div className="text-sm opacity-80">Nominees</div>
           </div>
         </div>
       </div>
@@ -109,6 +138,55 @@ export default function VaultPage({ files, token, hasReachedLimit, onUpgrade, us
         </div>
       </div>
 
+      {/* Nominee Access Overview — only show when nominees exist */}
+      {nominees.length > 0 && (
+        <div className="bg-dark-card border border-dark-border rounded-2xl p-6 mb-6 hover:border-primary transition">
+          <h2 className="text-lg font-bold mb-4">Nominee Access Overview</h2>
+          <div className="space-y-3">
+            {nominees.map((n) => (
+              <div
+                key={n.id}
+                className="flex items-center gap-3 bg-dark-bg border border-dark-border rounded-xl px-4 py-3"
+              >
+                {/* Avatar */}
+                <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center font-bold text-white text-sm flex-shrink-0">
+                  {n.name[0].toUpperCase()}
+                </div>
+
+                {/* Name + scope */}
+                <div className="flex-1 min-w-0">
+                  <div className="font-semibold text-sm text-white">{n.name}</div>
+                  <div className="text-xs text-gray-400 truncate">{n.email}</div>
+                  {n.accessLevel === "partial" && (
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {(n.allowedFolders || []).map((f) => (
+                        <span
+                          key={f}
+                          className="text-xs px-2 py-0.5 bg-blue-900 bg-opacity-40 text-blue-300 border border-blue-800 rounded-full"
+                        >
+                          {f}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Badge */}
+                <span
+                  className={`text-xs px-3 py-1.5 rounded-full font-semibold flex-shrink-0 ${
+                    n.accessLevel === "full"
+                      ? "bg-emerald-500 bg-opacity-20 text-emerald-400 border border-emerald-500 border-opacity-30"
+                      : "bg-blue-500 bg-opacity-20 text-blue-400 border border-blue-500 border-opacity-30"
+                  }`}
+                >
+                  {n.accessLevel === "full" ? "✓ Full Access" : "◑ Partial Access"}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* My Vault folder grid */}
       <div className="bg-dark-card border border-dark-border rounded-2xl p-6">
         <div className="flex items-center justify-between mb-5">
@@ -126,6 +204,7 @@ export default function VaultPage({ files, token, hasReachedLimit, onUpgrade, us
               files={files}
               categories={categories}
               onFolderClick={setSelectedCategory}
+              nomineesByCategory={nomineesByCategory}
             />
 
             <p className="text-xs text-gray-500 text-center mt-5">

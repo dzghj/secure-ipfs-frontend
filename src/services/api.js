@@ -39,3 +39,52 @@ export const updateKeyholdersAPI = async (token, fileId, list) => {
   });
 };
 
+/* ===== Nominees API ===== */
+
+export const fetchNomineesAPI = async (token) => {
+  const res = await fetch(`${API_BASE_URL}/api/nominees`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Failed to fetch nominees");
+  return data.nominees;
+};
+
+export const createNomineeAPI = async (token, nominee) => {
+  const res = await fetch(`${API_BASE_URL}/api/nominees`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(nominee),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Failed to create nominee");
+  return data.nominee;
+};
+
+export const updateNomineeAPI = async (token, id, updates) => {
+  const res = await fetch(`${API_BASE_URL}/api/nominees/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(updates),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Failed to update nominee");
+  return data.nominee;
+};
+
+export const deleteNomineeAPI = async (token, id) => {
+  const res = await fetch(`${API_BASE_URL}/api/nominees/${id}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Failed to delete nominee");
+  return data;
+};
+
