@@ -26,8 +26,8 @@ function formatDate(dateStr) {
   return d.toLocaleDateString("en-AU", { day: "2-digit", month: "short", year: "numeric" });
 }
 
-export default function FileCard({ file, token }) {
-  const [viewing, setViewing] = useState(false);
+export default function FileCard({ file }) {
+  const [viewing, setViewing] = useState(false);   // true while fetching / just opened
 
   if (!file) return null;
 
@@ -42,12 +42,33 @@ export default function FileCard({ file, token }) {
   );
   const icon = getFileIcon(fileType);
 
-  const handleView = () => {
-    if (cid) {
-      window.open(`https://ipfs.io/ipfs/${cid}`, "_blank", "noopener,noreferrer");
-    }
+  const handleView = async () => {
+    if (!cid) return;
     setViewing(true);
-    setTimeout(() => setViewing(false), 1500);
+
+    try {
+      // Fetch the raw file from IPFS gateway
+      const res = await fetch(`https://ipfs.io/ipfs/${cid}`);
+      if (!res.ok) throw new Error("Fetch failed");
+
+      const blob = await res.blob();
+
+      // Force-download with the original filename stored in the file record
+      const objectUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = objectUrl;
+      a.download = fileName;   // use the stored original name, e.g. "oogog_ft.jpg"
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(objectUrl);
+    } catch (err) {
+      console.error("View error:", err);
+      // Fallback: open in new tab
+      window.open(`https://ipfs.io/ipfs/${cid}`, "_blank", "noopener,noreferrer");
+    } finally {
+      setTimeout(() => setViewing(false), 1500);
+    }
   };
 
   return (
@@ -78,9 +99,10 @@ export default function FileCard({ file, token }) {
       {cid && (
         <button
           onClick={handleView}
-          className="flex-shrink-0 text-xs px-3 py-1.5 rounded-lg bg-primary/20 hover:bg-primary/40 text-primary border border-primary/30 transition font-medium"
+          disabled={viewing}
+          className="flex-shrink-0 text-xs px-3 py-1.5 rounded-lg bg-primary/20 hover:bg-primary/40 text-primary border border-primary/30 transition font-medium disabled:opacity-50"
         >
-          {viewing ? "✓ Opening" : "View"}
+          {viewing ? "…" : "View"}
         </button>
       )}
     </div>
