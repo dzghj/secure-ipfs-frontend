@@ -15,11 +15,16 @@ export default function MyFiles() {
   const [showUpgrade, setShowUpgrade] = useState(false);
   const [activeTab,   setActiveTab]   = useState("vault");
   const [checkin,     setCheckin]     = useState("90");
+  const [extraCategories, setExtraCategories] = useState([]);
 
   const token           = localStorage.getItem("token");
   const user            = JSON.parse(localStorage.getItem("user") || "{}");
   const maxFiles        = user?.maxFileNumber ?? 3;
   const hasReachedLimit = files.length >= maxFiles;
+
+  // Merge categories from files + any manually created ones
+  const fileCategories = [...new Set(files.map((f) => f.category || "Personal"))];
+  const allCategories  = [...new Set([...fileCategories, ...extraCategories])];
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -40,6 +45,13 @@ export default function MyFiles() {
     alert("Changes saved.");
   };
 
+  const handleFolderCreated = (categoryName) => {
+    setExtraCategories((prev) =>
+      prev.includes(categoryName) ? prev : [...prev, categoryName]
+    );
+    setActiveTab("vault");
+  };
+
   if (loading) return <Loader />;
 
   return (
@@ -57,9 +69,15 @@ export default function MyFiles() {
               onUpgrade={() => setShowUpgrade(true)}
               user={user}
               onUploadComplete={load}
+              extraCategories={extraCategories}
             />
           )}
-          {activeTab === "addFolder" && <AddFolderPage />}
+          {activeTab === "addFolder" && (
+            <AddFolderPage
+              onFolderCreated={handleFolderCreated}
+              existingCategories={allCategories}
+            />
+          )}
           {activeTab === "nominees"  && <NomineesPage />}
           {activeTab === "switch"    && (
             <SwitchPage

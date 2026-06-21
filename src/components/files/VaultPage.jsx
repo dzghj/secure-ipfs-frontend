@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import FolderGrid from "./FolderGrid";
 import FolderDetail from "./FolderDetail";
 
-export default function VaultPage({ files, token, hasReachedLimit, onUpgrade, user, onUploadComplete }) {
+export default function VaultPage({ files, token, hasReachedLimit, onUpgrade, user, onUploadComplete, extraCategories = [] }) {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const displayName = user?.name || user?.email || "User";
+  const displayName = user?.name || user?.username || user?.email?.split("@")[0] || "User";
   const initials = displayName
     .split(" ")
     .map((n) => n[0])
@@ -13,7 +13,8 @@ export default function VaultPage({ files, token, hasReachedLimit, onUpgrade, us
     .slice(0, 2)
     .toUpperCase();
 
-  const categories = [...new Set(files.map((f) => f.category || "Personal"))];
+  const fileCategories = [...new Set(files.map((f) => f.category || "Personal"))];
+  const categories = [...new Set([...fileCategories, ...extraCategories])];
 
   const now = new Date();
   const checkinStr =
