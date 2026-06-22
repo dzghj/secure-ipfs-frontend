@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { fetchFilesAPI, fetchNomineesAPI } from "../services/api";
+import { fetchFilesAPI, fetchNomineesAPI, fetchCheckinIntervalAPI, saveCheckinIntervalAPI } from "../services/api";
 
 import Loader        from "../components/common/Loader";
 import UpgradeModal  from "../components/common/UpgradeModal";
@@ -30,12 +30,14 @@ export default function MyFiles() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const [fileData, nomineeData] = await Promise.all([
+      const [fileData, nomineeData, checkinData] = await Promise.all([
         fetchFilesAPI(token),
         fetchNomineesAPI(token).catch(() => []),
+        fetchCheckinIntervalAPI(token).catch(() => ({ checkinInterval: 90 })),
       ]);
       setFiles(fileData.files || []);
       setNominees(nomineeData || []);
+      setCheckin(String(checkinData.checkinInterval || 90));
     } catch (e) {
       console.error(e);
     } finally {
@@ -45,9 +47,16 @@ export default function MyFiles() {
 
   useEffect(() => { load(); }, [load]);
 
-  const handleSave = () => {
-    console.log("Saving check-in interval:", checkin);
-    alert("Changes saved.");
+  const handleSave = async () => {
+    try {
+      const days = checkin === "custom"
+        ? parseInt(document.querySelector('input[type="number"]')?.value || "90", 10)
+        : parseInt(checkin, 10);
+      await saveCheckinIntervalAPI(token, days);
+      alert(`✓ Check-in interval saved: every ${days} days`);
+    } catch (err) {
+      alert("Failed to save: " + err.message);
+    }
   };
 
   const handleFolderCreated = (categoryName) => {
