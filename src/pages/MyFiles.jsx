@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { fetchFilesAPI, fetchNomineesAPI, fetchCheckinIntervalAPI, saveCheckinIntervalAPI } from "../services/api";
+import { fetchFilesAPI, fetchNomineesAPI, fetchCheckinIntervalAPI, saveCheckinIntervalAPI, fetchFoldersAPI, createFolderAPI } from "../services/api";
 
 import Loader        from "../components/common/Loader";
 import UpgradeModal  from "../components/common/UpgradeModal";
@@ -17,7 +17,6 @@ export default function MyFiles() {
   const [activeTab,       setActiveTab]       = useState("vault");
   const [checkin,         setCheckin]         = useState("90");
   const [extraCategories, setExtraCategories] = useState([]);
-
   const token           = localStorage.getItem("token");
   const user            = JSON.parse(localStorage.getItem("user") || "{}");
   const maxFiles        = user?.maxFileNumber ?? 3;
@@ -30,14 +29,16 @@ export default function MyFiles() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const [fileData, nomineeData, checkinData] = await Promise.all([
+      const [fileData, nomineeData, checkinData, folderData] = await Promise.all([
         fetchFilesAPI(token),
         fetchNomineesAPI(token).catch(() => []),
         fetchCheckinIntervalAPI(token).catch(() => ({ checkinInterval: 90 })),
+        fetchFoldersAPI(token).catch(() => []),
       ]);
       setFiles(fileData.files || []);
       setNominees(nomineeData || []);
       setCheckin(String(checkinData.checkinInterval || 90));
+      setExtraCategories((folderData || []).map((f) => f.name));
     } catch (e) {
       console.error(e);
     } finally {
@@ -59,10 +60,15 @@ export default function MyFiles() {
     }
   };
 
-  const handleFolderCreated = (categoryName) => {
-    setExtraCategories((prev) =>
-      prev.includes(categoryName) ? prev : [...prev, categoryName]
-    );
+  const handleFolderCreated = async (categoryName) => {
+    try {
+      await createFolderAPI(token, categoryName);
+      setExtraCategories((prev) =>
+        prev.includes(categoryName) ? prev : [...prev, categoryName]
+      );
+    } catch (err) {
+      console.error("Failed to save folder:", err);
+    }
     setActiveTab("vault");
   };
 
