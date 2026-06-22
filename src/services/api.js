@@ -113,3 +113,28 @@ export const saveCheckinIntervalAPI = async (token, interval) => {
   if (!res.ok) throw new Error(data.message || "Failed to save check-in interval");
   return data;
 };
+
+/* ===== Folders API ===== */
+
+export const fetchFoldersAPI = async (token) => {
+  const res = await fetch(`${API_BASE_URL}/api/folders`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Failed to fetch folders");
+  return data.folders; // [{ id, name, createdAt }]
+};
+
+export const createFolderAPI = async (token, name) => {
+  const res = await fetch(`${API_BASE_URL}/api/folders`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ name }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Failed to create folder");
+  return data.folder;
+};
