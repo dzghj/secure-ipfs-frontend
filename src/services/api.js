@@ -88,3 +88,28 @@ export const deleteNomineeAPI = async (token, id) => {
   return data;
 };
 
+
+/* ===== Check-in Interval API ===== */
+
+export const fetchCheckinIntervalAPI = async (token) => {
+  const res = await fetch(`${API_BASE_URL}/api/checkin/interval`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Failed to fetch check-in interval");
+  return data;
+};
+
+export const saveCheckinIntervalAPI = async (token, interval) => {
+  const res = await fetch(`${API_BASE_URL}/api/checkin/interval`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ interval }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Failed to save check-in interval");
+  return data;
+};
