@@ -44,9 +44,13 @@ export default function Layout({ onLogout }) {
         </div>
 
         <nav className="hidden md:flex items-center gap-8">
-          <a href="#features" className="text-sm text-gray-300 hover:text-primary transition">Features</a>
-          <a href="#security" className="text-sm text-gray-300 hover:text-primary transition">Security</a>
-          <a href="#vault" className="text-sm text-gray-300 hover:text-primary transition">Vault</a>
+          {!isMyFiles && (
+            <>
+              <a href="#features" className="text-sm text-gray-300 hover:text-primary transition">Features</a>
+              <a href="#security" className="text-sm text-gray-300 hover:text-primary transition">Security</a>
+              <a href="#vault" className="text-sm text-gray-300 hover:text-primary transition">Vault</a>
+            </>
+          )}
         </nav>
 
         {/* ✅ Auth-aware button */}
