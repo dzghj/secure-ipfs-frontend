@@ -80,7 +80,47 @@ export default function SetPassword() {
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      setTimeout(() => navigate("/myfiles"), 1500);
+        // After successful set-password, if this account corresponds to a nominee, attempt to generate a keypair and upload public key
+        (async function setupNomineeKey() {
+          try {
+            const authHeader = { headers: { Authorization: `Bearer ${res.data.token}` } };
+            const me = await axios.get(`${API_BASE_URL}/api/nominees/me`, authHeader);
+            const nominee = me.data.nominees?.[0];
+            if (!nominee) return;
+            if (nominee.publicKey) return; // already has key
+
+            // Generate RSA-OAEP keypair in browser
+            const keyPair = await window.crypto.subtle.generateKey(
+              { name: "RSA-OAEP", modulusLength: 2048, publicExponent: new Uint8Array([1, 0, 1]), hash: "SHA-256" },
+              true,
+              ["encrypt", "decrypt"]
+            );
+
+            const spki = await window.crypto.subtle.exportKey("spki", keyPair.publicKey);
+            const pkcs8 = await window.crypto.subtle.exportKey("pkcs8", keyPair.privateKey);
+
+            const toBase64 = (buf) => {
+              const bytes = new Uint8Array(buf);
+              let binary = "";
+              for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
+              return window.btoa(binary);
+            };
+
+            const pubPem = `-----BEGIN PUBLIC KEY-----\n${toBase64(spki)}\n-----END PUBLIC KEY-----`;
+            const privPem = `-----BEGIN PRIVATE KEY-----\n${toBase64(pkcs8)}\n-----END PRIVATE KEY-----`;
+
+            // Post public key to nominee endpoint
+            await axios.post(`${API_BASE_URL}/api/nominees/${nominee.id}/public-key`, { publicKey: pubPem }, authHeader);
+
+            // Store private key locally (prompt user to backup securely)
+            localStorage.setItem("nomineePrivateKey", privPem);
+            alert("Generated keypair for nominee and uploaded public key. Please back up your private key stored in localStorage 'nomineePrivateKey'.");
+          } catch (e) {
+            console.error("Nominee key setup failed", e);
+          }
+        })();
+
+        setTimeout(() => navigate("/myfiles"), 1500);
     } catch (err) {
       const message =
         err.response?.data?.message || "Failed to set password";
