@@ -73,6 +73,7 @@ export default function FileCard({ file, token, nominees = [] }) {
       }
 
       const json = await res.json();
+      
 
       // Backend returns { data: "<base64>", mimeType: "image/jpeg", filename: "..." }
       const base64 = json.data;
