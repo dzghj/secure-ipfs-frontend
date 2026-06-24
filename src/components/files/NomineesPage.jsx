@@ -349,6 +349,7 @@ export default function NomineesPage({ allCategories = [], nominees = [], onNomi
             "Nominees are notified only when you miss a check-in deadline.",
             "You control exactly which folders each nominee can access.",
             "You can update or remove nominees at any time.",
+            "We'll resend an unopened access invitation up to two times so nothing important gets missed.",
           ].map((text, i) => (
             <div key={i} className="flex gap-3 items-start text-sm text-gray-400">
               <span className="text-primary flex-shrink-0 mt-0.5">✓</span>
