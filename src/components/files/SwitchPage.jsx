@@ -102,16 +102,6 @@ export default function SwitchPage({ checkin, setCheckin, onSave }) {
             </div>
           ))}
         </div>
-
-        {/* Nominee re-notification note */}
-        <div className="flex items-start gap-3 mt-4 bg-dark-card border border-dark-border rounded-xl px-5 py-4">
-          <span className="text-primary flex-shrink-0 mt-0.5">📧</span>
-          <p className="text-sm text-gray-400 leading-relaxed">
-            If a nominee does not access your files after being notified, the system will
-            automatically resend the access link twice — spaced apart like interview reminders —
-            to ensure your wishes are never missed.
-          </p>
-        </div>
       </div>
 
       <button
