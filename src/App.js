@@ -70,9 +70,7 @@ import NomineeAccess from "./pages/NomineeAccess";
 
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
-           <Route path="/set-password/:token" element={<SetPassword />} />
-
-          <Route path="/nominee-access" element={<NomineeAccess />} />
+          <Route path="/set-password/:token" element={<SetPassword />} />
 
           {/* ---------- PROTECTED ---------- */}
           <Route
@@ -111,6 +109,9 @@ import NomineeAccess from "./pages/NomineeAccess";
           {/* ---------- FALLBACK ---------- */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
+
+        {/* Standalone — no header/footer, public nominee access */}
+        <Route path="/nominee-access" element={<NomineeAccess />} />
       </Routes>
     </Router>
   );
