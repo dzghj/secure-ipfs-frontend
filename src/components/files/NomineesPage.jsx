@@ -258,6 +258,17 @@ export default function NomineesPage({ allCategories = [], nominees = [], onNomi
         </button>
       </div>
 
+      {/* What are nominees — onboarding explainer */}
+      <div className="bg-dark-card border border-dark-border rounded-2xl p-6 mb-6">
+        <h3 className="font-bold text-white mb-2 flex items-center gap-2"><span>👥</span> What is a Nominee?</h3>
+        <p className="text-sm text-gray-400 leading-relaxed">
+          A nominee is someone you trust to access your vault if you are no longer able to.
+          When your continuity switch triggers — because you've missed a check-in — your nominees
+          receive a secure, time-limited link to the files you've chosen to share with them.
+          They could be a spouse, a solicitor, an adult child, or any trusted person.
+        </p>
+      </div>
+
       {/* Nominee list card */}
       <div className="bg-dark-card border border-dark-border rounded-2xl p-6 mb-6 hover:border-primary transition">
         <h3 className="text-xl font-semibold text-primary mb-2">Nominee Access</h3>
