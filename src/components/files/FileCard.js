@@ -73,31 +73,29 @@ export default function FileCard({ file, token, nominees = [] }) {
       }
 
       const json = await res.json();
-      
 
       // Backend returns { data: "<base64>", mimeType: "image/jpeg", filename: "..." }
       const base64 = json.data;
       const mimeType = json.mimeType || "application/octet-stream";
       const downloadName = json.filename || fileName;
 
-          // Decode base64 → binary → Blob
-          const byteChars = atob(base64);
-          const byteArray = new Uint8Array(byteChars.length);
-          for (let i = 0; i < byteChars.length; i++) {
-            byteArray[i] = byteChars.charCodeAt(i);
-          }
-          const blob = new Blob([byteArray], { type: mimeType });
+      // Decode base64 → binary → Blob
+      const byteChars = atob(base64);
+      const byteArray = new Uint8Array(byteChars.length);
+      for (let i = 0; i < byteChars.length; i++) {
+        byteArray[i] = byteChars.charCodeAt(i);
+      }
+      const blob = new Blob([byteArray], { type: mimeType });
 
-          // Trigger download with correct filename
-          const objectUrl = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = objectUrl;
-          a.download = downloadName;
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          URL.revokeObjectURL(objectUrl);
-        }
+      // Trigger download with correct filename
+      const objectUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = objectUrl;
+      a.download = downloadName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(objectUrl);
     } catch (err) {
       console.error("Download failed:", err);
       setError(err.message);
