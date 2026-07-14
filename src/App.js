@@ -17,6 +17,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Main from "./pages/Main";
 import SetPassword from "./pages/setPassword";
+import NomineeAccess from "./pages/NomineeAccess";
 
   function App() {
     const [token, setToken] = React.useState(localStorage.getItem("token"));
@@ -69,7 +70,7 @@ import SetPassword from "./pages/setPassword";
 
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
-           <Route path="/set-password/:token" element={<SetPassword />} />
+          <Route path="/set-password/:token" element={<SetPassword />} />
 
           {/* ---------- PROTECTED ---------- */}
           <Route
@@ -108,6 +109,9 @@ import SetPassword from "./pages/setPassword";
           {/* ---------- FALLBACK ---------- */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
+
+        {/* Standalone — no header/footer, public nominee access */}
+        <Route path="/nominee-access" element={<NomineeAccess />} />
       </Routes>
     </Router>
   );

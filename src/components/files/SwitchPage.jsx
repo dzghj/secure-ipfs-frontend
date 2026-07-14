@@ -25,6 +25,18 @@ export default function SwitchPage({ checkin, setCheckin, onSave }) {
         <p className="text-gray-400 text-sm">Configure how often you confirm your activity.</p>
       </div>
 
+      {/* What is the continuity switch — onboarding explainer */}
+      <div className="bg-dark-card border border-dark-border rounded-2xl p-6 mb-8">
+        <h3 className="font-bold text-white mb-2 flex items-center gap-2"><span>🛡️</span> What is the Continuity Switch?</h3>
+        <p className="text-sm text-gray-400 leading-relaxed">
+          The Continuity Switch is your dead man's handle. As long as you log in within your
+          chosen interval, your vault stays private. If you miss a check-in — due to illness,
+          incapacitation, or passing — the switch triggers automatically and notifies your
+          nominated people, giving them access to exactly the files you've authorised.
+          No lawyers needed. No delays. Your wishes, executed on your terms.
+        </p>
+      </div>
+
       {/* Status banner */}
       <div className="rounded-2xl mb-8 bg-gradient-to-b from-green-100 to-green-200 p-8 text-center shadow-lg">
         <img src="/image1.png" alt="checked" className="mx-auto w-24 h-24 mb-4" />
