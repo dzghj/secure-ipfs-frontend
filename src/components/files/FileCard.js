@@ -67,100 +67,18 @@ export default function FileCard({ file, token, nominees = [] }) {
         headers: { Authorization: `Bearer ${authToken}` },
       });
 
-        if (!res.ok) {
-          // Try nominee flow: fetch encrypted bytes + encrypted symmetric key, then decrypt client-side
-          const downloadRes = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/file/${file.id}/download-encrypted`, { headers: { Authorization: `Bearer ${authToken}` } });
-          if (!downloadRes.ok) {
-            const text = await downloadRes.text();
-            throw new Error(`Server returned ${downloadRes.status}: ${text}`);
-          }
-          const downloadJson = await downloadRes.json();
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`Server returned ${res.status}: ${text}`);
+      }
 
-          const keyRes = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/file/${file.id}/nominee-key`, { headers: { Authorization: `Bearer ${authToken}` } });
-          if (!keyRes.ok) {
-            const text = await keyRes.text();
-            throw new Error(`Server returned ${keyRes.status}: ${text}`);
-          }
-          const keyJson = await keyRes.json();
+      const json = await res.json();
+      
 
-          const encryptedFileB64 = downloadJson.data;
-          const ivHex = downloadJson.iv;
-          const authTagHex = downloadJson.authTag;
-          const mimeType = downloadJson.mimeType || "application/octet-stream";
-          const downloadName = downloadJson.filename || fileName;
-
-          const encryptedKeyB64 = keyJson.encryptedKey;
-
-          // Helper conversions
-          const b64ToBuf = (b64) => {
-            const bin = atob(b64);
-            const buf = new Uint8Array(bin.length);
-            for (let i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i);
-            return buf.buffer;
-          };
-
-          const hexToBytes = (hex) => {
-            const len = hex.length / 2;
-            const out = new Uint8Array(len);
-            for (let i = 0; i < len; i++) out[i] = parseInt(hex.substr(i * 2, 2), 16);
-            return out;
-          };
-
-          // Import private key from localStorage (PEM)
-          const privPem = localStorage.getItem("nomineePrivateKey");
-          if (!privPem) throw new Error("No nominee private key found in localStorage (nomineePrivateKey)");
-
-          const pemToArrayBuffer = (pem) => {
-            const b64 = pem.replace(/-----[^-]+-----/g, "").replace(/\s+/g, "");
-            const bin = atob(b64);
-            const buf = new Uint8Array(bin.length);
-            for (let i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i);
-            return buf.buffer;
-          };
-
-          const privKeyBuf = pemToArrayBuffer(privPem);
-          const cryptoKey = await window.crypto.subtle.importKey(
-            "pkcs8",
-            privKeyBuf,
-            { name: "RSA-OAEP", hash: "SHA-256" },
-            false,
-            ["decrypt"]
-          );
-
-          // Decrypt symmetric key
-          const encryptedKeyBuf = b64ToBuf(encryptedKeyB64);
-          const symKeyBuf = await window.crypto.subtle.decrypt({ name: "RSA-OAEP" }, cryptoKey, encryptedKeyBuf);
-
-          // Import symmetric key for AES-GCM
-          const aesKey = await window.crypto.subtle.importKey("raw", symKeyBuf, "AES-GCM", false, ["decrypt"]);
-
-          // Prepare ciphertext + authTag appended
-          const encFileBuf = b64ToBuf(encryptedFileB64);
-          const authTag = hexToBytes(authTagHex);
-          const ciphertext = new Uint8Array(encFileBuf.byteLength + authTag.byteLength);
-          ciphertext.set(new Uint8Array(encFileBuf), 0);
-          ciphertext.set(authTag, encFileBuf.byteLength);
-
-          const iv = hexToBytes(ivHex);
-
-          const plainBuf = await window.crypto.subtle.decrypt({ name: "AES-GCM", iv: iv }, aesKey, ciphertext.buffer);
-          const blob = new Blob([plainBuf], { type: mimeType });
-
-          const objectUrl = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = objectUrl;
-          a.download = downloadName;
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          URL.revokeObjectURL(objectUrl);
-        } else {
-          const json = await res.json();
-
-          // Backend returns { data: "<base64>", mimeType: "image/jpeg", filename: "..." }
-          const base64 = json.data;
-          const mimeType = json.mimeType || "application/octet-stream";
-          const downloadName = json.filename || fileName;
+      // Backend returns { data: "<base64>", mimeType: "image/jpeg", filename: "..." }
+      const base64 = json.data;
+      const mimeType = json.mimeType || "application/octet-stream";
+      const downloadName = json.filename || fileName;
 
           // Decode base64 → binary → Blob
           const byteChars = atob(base64);

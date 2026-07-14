@@ -258,6 +258,17 @@ export default function NomineesPage({ allCategories = [], nominees = [], onNomi
         </button>
       </div>
 
+      {/* What are nominees — onboarding explainer */}
+      <div className="bg-dark-card border border-dark-border rounded-2xl p-6 mb-6">
+        <h3 className="font-bold text-white mb-2 flex items-center gap-2"><span>👥</span> What is a Nominee?</h3>
+        <p className="text-sm text-gray-400 leading-relaxed">
+          A nominee is someone you trust to access your vault if you are no longer able to.
+          When your continuity switch triggers — because you've missed a check-in — your nominees
+          receive a secure, time-limited link to the files you've chosen to share with them.
+          They could be a spouse, a solicitor, an adult child, or any trusted person.
+        </p>
+      </div>
+
       {/* Nominee list card */}
       <div className="bg-dark-card border border-dark-border rounded-2xl p-6 mb-6 hover:border-primary transition">
         <h3 className="text-xl font-semibold text-primary mb-2">Nominee Access</h3>
@@ -349,6 +360,7 @@ export default function NomineesPage({ allCategories = [], nominees = [], onNomi
             "Nominees are notified only when you miss a check-in deadline.",
             "You control exactly which folders each nominee can access.",
             "You can update or remove nominees at any time.",
+            "We'll resend an unopened access invitation up to two times so nothing important gets missed.",
           ].map((text, i) => (
             <div key={i} className="flex gap-3 items-start text-sm text-gray-400">
               <span className="text-primary flex-shrink-0 mt-0.5">✓</span>
@@ -357,6 +369,163 @@ export default function NomineesPage({ allCategories = [], nominees = [], onNomi
           ))}
         </div>
       </div>
+
+      {/* ── DEV TEST PANEL — remove before production ── */}
+      <NomineeTestPanel nominees={nominees} token={token} />
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   🧪 DEV ONLY — Nominee Access Test Panel
+   Hardcoded for testing. Remove this component before go-live.
+══════════════════════════════════════════════════════════ */
+function NomineeTestPanel({ nominees, token }) {
+  const [selectedId, setSelectedId] = useState("");
+  const [sending,    setSending]    = useState(false);
+  const [checking,   setChecking]   = useState(false);
+  const [result,     setResult]     = useState(null);
+  const [status,     setStatus]     = useState(null);
+  const API = process.env.REACT_APP_API_BASE_URL;
+
+  const reset = (id) => { setSelectedId(id); setResult(null); setStatus(null); };
+
+  const handleSendLink = async () => {
+    if (!selectedId) return alert("Select a nominee first.");
+    setSending(true);
+    setResult(null);
+    setStatus(null);
+    try {
+      const res = await fetch(`${API}/api/nominee-access/send/${selectedId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ expiresIn: "1h" }), // short expiry for testing
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Failed");
+      setResult({ link: data.link });
+    } catch (e) {
+      setResult({ error: e.message });
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleCheckStatus = async () => {
+    if (!selectedId) return alert("Select a nominee first.");
+    setChecking(true);
+    setStatus(null);
+    try {
+      const res = await fetch(`${API}/api/nominee-access/status/${selectedId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Failed");
+      setStatus(data);
+    } catch (e) {
+      setStatus({ error: e.message });
+    } finally {
+      setChecking(false);
+    }
+  };
+
+  return (
+    <div className="mt-6 border border-yellow-600 border-opacity-50 bg-yellow-900 bg-opacity-10 rounded-2xl p-6">
+      {/* Header */}
+      <div className="flex items-center gap-2 mb-1">
+        <span className="text-yellow-400 text-lg">🧪</span>
+        <h4 className="font-bold text-yellow-400">Dev Test Panel</h4>
+        <span className="ml-auto text-xs text-yellow-700 font-mono uppercase">Remove before production</span>
+      </div>
+      <p className="text-xs text-yellow-700 mb-5">
+        Trigger a nominee access email, copy the link, then check if it's been opened.
+      </p>
+
+      {/* Nominee selector */}
+      <div className="mb-4">
+        <label className="text-xs text-gray-400 mb-2 block font-medium">Select Nominee</label>
+        {nominees.length === 0 ? (
+          <p className="text-xs text-gray-500">No nominees yet — add one above first.</p>
+        ) : (
+          <select
+            value={selectedId}
+            onChange={(e) => reset(e.target.value)}
+            className="w-full bg-dark-bg border border-dark-border rounded-xl px-4 py-2.5 text-white text-sm outline-none focus:border-yellow-500 transition"
+          >
+            <option value="">— pick a nominee —</option>
+            {nominees.map((n) => (
+              <option key={n.id} value={n.id}>
+                {n.name} ({n.email})
+              </option>
+            ))}
+          </select>
+        )}
+      </div>
+
+      {/* Action buttons */}
+      <div className="flex gap-3 mb-4">
+        <button
+          onClick={handleSendLink}
+          disabled={sending || !selectedId}
+          className="flex-1 py-2.5 rounded-xl bg-yellow-500 text-black font-semibold text-sm hover:bg-yellow-400 transition disabled:opacity-40"
+        >
+          {sending ? "Sending…" : "📧 Send Access Link"}
+        </button>
+        <button
+          onClick={handleCheckStatus}
+          disabled={checking || !selectedId}
+          className="flex-1 py-2.5 rounded-xl border border-yellow-600 text-yellow-400 font-semibold text-sm hover:bg-yellow-900 hover:bg-opacity-40 transition disabled:opacity-40"
+        >
+          {checking ? "Checking…" : "🔍 Check If Opened"}
+        </button>
+      </div>
+
+      {/* Send result */}
+      {result && (
+        <div className={`rounded-xl p-4 mb-3 text-sm ${result.error ? "bg-red-900 bg-opacity-30 border border-red-700" : "bg-dark-bg border border-dark-border"}`}>
+          {result.error ? (
+            <p className="text-red-400">❌ {result.error}</p>
+          ) : (
+            <>
+              <p className="text-emerald-400 font-semibold mb-2">✓ Email triggered</p>
+              <p className="text-xs text-gray-400 mb-1">Access link (use this if RESEND is not configured):</p>
+              <div className="flex items-center gap-2 bg-black bg-opacity-40 rounded-lg px-3 py-2">
+                <span className="text-xs text-blue-400 break-all font-mono flex-1">{result.link}</span>
+                <button
+                  onClick={() => navigator.clipboard.writeText(result.link)}
+                  className="text-xs px-2 py-1 rounded bg-white/10 hover:bg-white/20 text-gray-300 flex-shrink-0 transition"
+                >
+                  Copy
+                </button>
+              </div>
+              <p className="text-xs text-gray-500 mt-2">⏱ Expires in 1 hour (hardcoded for testing)</p>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Status result */}
+      {status && (
+        <div className={`rounded-xl p-4 text-sm ${status.error ? "bg-red-900 bg-opacity-30 border border-red-700" : "bg-dark-bg border border-dark-border"}`}>
+          {status.error ? (
+            <p className="text-red-400">❌ {status.error}</p>
+          ) : status.opened ? (
+            <>
+              <p className="text-emerald-400 font-semibold">✅ Link has been opened</p>
+              <p className="text-xs text-gray-400 mt-1">
+                {status.nomineeEmail} redeemed it on {new Date(status.openedAt).toLocaleString()}
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="text-yellow-400 font-semibold">⏳ Not opened yet</p>
+              <p className="text-xs text-gray-400 mt-1">
+                {status.nomineeEmail} has not redeemed the access link.
+              </p>
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 }

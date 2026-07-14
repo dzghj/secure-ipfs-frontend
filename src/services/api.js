@@ -138,3 +138,21 @@ export const createFolderAPI = async (token, name) => {
   if (!res.ok) throw new Error(data.message || "Failed to create folder");
   return data.folder;
 };
+
+/* ===== Nominee Access (token) ===== */
+export const fetchNomineeAccess = async (token) => {
+  const res = await fetch(`${API_BASE_URL}/api/nominee-access?token=${encodeURIComponent(token)}`);
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Failed to fetch nominee access");
+  return data.files;
+};
+
+export const downloadNomineeAccessFile = async (token, fileId) => {
+  const res = await fetch(`${API_BASE_URL}/api/nominee-access/${fileId}?token=${encodeURIComponent(token)}`);
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.message || "Failed to download file");
+  }
+  const blob = await res.blob();
+  return blob;
+};
