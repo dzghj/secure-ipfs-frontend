@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import { buildEncryptedUpload } from "../utils/crypto";
 
 function FileUploader({ token, user, onUploadComplete }) {
   const [file, setFile] = useState(null);
@@ -15,8 +16,8 @@ function FileUploader({ token, user, onUploadComplete }) {
     setUploading(true);
 
     try {
-      const formData = new FormData();
-      formData.append("file", file);
+      // Encrypt in the browser — plaintext never leaves the device.
+      const formData = await buildEncryptedUpload(file);
 
       const res = await fetch("https://ipfs-data-server.onrender.com/api/upload", {
         method: "POST",
