@@ -48,14 +48,18 @@ function IconSwitch({ active }) {
   );
 }
 
-const TABS = [
-  { id: "vault",     label: "Vault",      Icon: IconVault     },
-  { id: "addFolder", label: "Add Folder", Icon: IconAddFolder },
-  { id: "nominees",  label: "Nominees",   Icon: IconNominees  },
-  { id: "switch",    label: "Switch",     Icon: IconSwitch    },
+// "Add Folder" is nested under "Vault" (it's a vault action, not a top-level
+// section) — rendered as an indented sub-item right below it instead of a
+// flat sibling tab.
+const TRAILING_TABS = [
+  { id: "nominees", label: "Nominees", Icon: IconNominees },
+  { id: "switch",   label: "Switch",   Icon: IconSwitch   },
 ];
 
 export default function Sidebar({ activeTab, onTabChange }) {
+  const vaultActive = activeTab === "vault";
+  const addFolderActive = activeTab === "addFolder";
+
   return (
     <aside
       style={{ width: "220px", minWidth: "220px" }}
@@ -69,7 +73,38 @@ export default function Sidebar({ activeTab, onTabChange }) {
 
       {/* Nav */}
       <nav className="flex flex-col gap-1">
-        {TABS.map(({ id, label, Icon }) => {
+        {/* Vault */}
+        <button
+          onClick={() => onTabChange("vault")}
+          className={`flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all text-left w-full ${
+            vaultActive
+              ? "bg-primary text-white shadow-lg"
+              : "text-gray-400 hover:bg-white/5 hover:text-white"
+          }`}
+        >
+          <IconVault active={vaultActive} />
+          Vault
+          {vaultActive && (
+            <span className="ml-auto w-1.5 h-1.5 rounded-full bg-white opacity-70" />
+          )}
+        </button>
+
+        {/* Add Folder — nested under Vault */}
+        <button
+          onClick={() => onTabChange("addFolder")}
+          className={`ml-6 flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all text-left w-[calc(100%-1.5rem)] border-l border-dark-border ${
+            addFolderActive
+              ? "bg-primary/20 text-primary border-l-primary"
+              : "text-gray-500 hover:bg-white/5 hover:text-white"
+          }`}
+        >
+          <IconAddFolder active={addFolderActive} />
+          Add Folder
+        </button>
+
+        <div className="my-1" />
+
+        {TRAILING_TABS.map(({ id, label, Icon }) => {
           const active = activeTab === id;
           return (
             <button
