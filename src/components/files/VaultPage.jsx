@@ -71,13 +71,10 @@ export default function VaultPage({
   return (
     <div className="px-8 py-10">
 
-      {/* Greeting */}
+      {/* Greeting — avatar only */}
       <div className="flex items-center gap-4 mb-8">
         <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center font-bold text-white text-lg flex-shrink-0">
           {initials}
-        </div>
-        <div>
-          <h1 className="text-2xl font-bold leading-tight">{displayName}</h1>
         </div>
       </div>
 
