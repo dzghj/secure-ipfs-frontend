@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import FileList from "./FileList";
 import { FOLDER_TYPES } from "./FolderGrid";
 import { FolderSvg } from "./FolderCard";
+import { buildEncryptedUpload } from "../../utils/crypto";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -48,9 +49,8 @@ export default function FolderDetail({ category, files, token, onBack, onUploadC
     setUploadError("");
 
     try {
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-      formData.append("category", category);
+      // Encrypt in the browser — plaintext never leaves the device.
+      const formData = await buildEncryptedUpload(selectedFile, { category });
 
       // Simulate progress while waiting (fetch doesn't expose real upload progress)
       const interval = setInterval(() => {
