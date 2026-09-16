@@ -7,7 +7,7 @@ const POLL_TIMEOUT_MS = 90000; // give up waiting on a reply after ~90s
 let nextId = 1;
 const uid = () => nextId++;
 
-export default function SupportChat({ open, onClose }) {
+export default function SupportChat({ onClose }) {
   const token = localStorage.getItem("token");
   const [messages, setMessages] = useState([
     {
@@ -32,7 +32,7 @@ export default function SupportChat({ open, onClose }) {
     if (listRef.current) {
       listRef.current.scrollTop = listRef.current.scrollHeight;
     }
-  }, [messages, open]);
+  }, [messages]);
 
   const pollForReply = async (supportId, assistantMsgId) => {
     const startedAt = Date.now();
@@ -126,8 +126,6 @@ export default function SupportChat({ open, onClose }) {
       handleSend();
     }
   };
-
-  if (!open) return null;
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex w-[360px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-2xl border border-dark-border bg-dark-card shadow-2xl">

@@ -105,7 +105,8 @@ export default function Layout({ onLogout }) {
         </div>
       </footer>
 
-      <SupportChat open={supportOpen} onClose={() => setSupportOpen(false)} />
+      {/* Unmounted on close (not just hidden) so reopening starts a fresh conversation */}
+      {supportOpen && <SupportChat onClose={() => setSupportOpen(false)} />}
     </div>
   );
 }
