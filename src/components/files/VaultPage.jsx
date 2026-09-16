@@ -95,24 +95,23 @@ export default function VaultPage({
       {/* Vault Summary */}
       <div className="bg-dark-card border border-dark-border rounded-2xl p-6 mb-6 hover:border-primary transition">
         <h2 className="text-lg font-bold mb-4">Vault Summary</h2>
-        <div className="grid grid-cols-2 gap-4">
-          {/* Categories + Documents combined */}
-          <div className="bg-gradient-to-br from-primary to-primary-dark rounded-xl p-5 text-white flex items-center gap-6">
-            <div>
-              <div className="text-4xl font-bold mb-1">
-                {String(categories.length || 0).padStart(2, "0")}
-              </div>
-              <div className="text-sm opacity-80">Categories</div>
-              <div className="text-xs opacity-60 mt-0.5">Folders in your vault</div>
+        <div className="grid grid-cols-3 gap-4">
+          {/* Categories */}
+          <div className="bg-gradient-to-br from-primary to-primary-dark rounded-xl p-5 text-white">
+            <div className="text-4xl font-bold mb-1">
+              {String(categories.length || 0).padStart(2, "0")}
             </div>
-            <div className="w-px self-stretch bg-white/30" />
-            <div>
-              <div className="text-4xl font-bold mb-1">
-                {String(files.length).padStart(2, "0")}
-              </div>
-              <div className="text-sm opacity-80">Documents</div>
-              <div className="text-xs opacity-60 mt-0.5">Files securely stored</div>
+            <div className="text-sm opacity-80">Categories</div>
+            <div className="text-xs opacity-60 mt-0.5">Folders in your vault</div>
+          </div>
+
+          {/* Files */}
+          <div className="bg-gradient-to-br from-primary to-primary-dark rounded-xl p-5 text-white">
+            <div className="text-4xl font-bold mb-1">
+              {String(files.length).padStart(2, "0")}
             </div>
+            <div className="text-sm opacity-80">Files</div>
+            <div className="text-xs opacity-60 mt-0.5">Files securely stored</div>
           </div>
 
           {/* Nominees */}
@@ -120,7 +119,7 @@ export default function VaultPage({
             <div className="text-4xl font-bold mb-1">
               {String(nominees.length).padStart(2, "0")}
             </div>
-            <div className="text-sm opacity-80">Nominees</div>
+            <div className="text-sm opacity-80">Legacy Contacts</div>
             <div className="text-xs opacity-60 mt-0.5">People with vault access</div>
           </div>
         </div>
@@ -161,7 +160,7 @@ export default function VaultPage({
       {/* Nominee Access Overview — only show when nominees exist */}
       {nominees.length > 0 && (
         <div className="bg-dark-card border border-dark-border rounded-2xl p-6 mb-6 hover:border-primary transition">
-          <h2 className="text-lg font-bold mb-4">Nominee Access Overview</h2>
+          <h2 className="text-lg font-bold mb-4">Legacy Contact Access Overview</h2>
           <div className="space-y-3">
             {nominees.map((n) => (
               <div
@@ -207,11 +206,11 @@ export default function VaultPage({
         </div>
       )}
 
-      {/* Continuity Switch status */}
+      {/* Continuity Check-In status */}
       <div className="bg-dark-card border border-dark-border rounded-2xl p-6 hover:border-primary transition">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-bold mb-1">Continuity Switch</h2>
+            <h2 className="text-lg font-bold mb-1">Continuity Check-In</h2>
             <p className="text-sm text-emerald-400 font-medium mb-1">Checked-in Successfully!</p>
             <p className="text-xs text-gray-500">{checkinStr}</p>
             <p className="text-xs text-gray-400 mt-1">Your next check-in is in 90 days.</p>
@@ -224,6 +223,10 @@ export default function VaultPage({
             </svg>
           </div>
         </div>
+        <p className="text-xs text-gray-500 leading-relaxed border-t border-dark-border mt-4 pt-3">
+          If you don't check in before your next deadline, your vault unlocks automatically —
+          the legacy contacts you've chosen get access to the documents you've shared with them.
+        </p>
       </div>
     </div>
   );

@@ -21,15 +21,15 @@ export default function SwitchPage({ checkin, setCheckin, onSave }) {
   return (
     <div className="px-8 py-10">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-1">Continuity Switch</h1>
+        <h1 className="text-3xl font-bold mb-1">Continuity Check-In</h1>
         <p className="text-gray-400 text-sm">Configure how often you confirm your activity.</p>
       </div>
 
       {/* What is the continuity switch — onboarding explainer */}
       <div className="bg-dark-card border border-dark-border rounded-2xl p-6 mb-8">
-        <h3 className="font-bold text-white mb-2 flex items-center gap-2"><span>🛡️</span> What is the Continuity Switch?</h3>
+        <h3 className="font-bold text-white mb-2 flex items-center gap-2"><span>🛡️</span> What is the Continuity Check-In?</h3>
         <p className="text-sm text-gray-400 leading-relaxed">
-          The Continuity Switch is your dead man's handle. As long as you log in within your
+          The Continuity Check-In is your dead man's handle. As long as you log in within your
           chosen interval, your vault stays private. If you miss a check-in — due to illness,
           incapacitation, or passing — the switch triggers automatically and notifies your
           nominated people, giving them access to exactly the files you've authorised.
