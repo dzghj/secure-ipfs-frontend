@@ -91,6 +91,7 @@ export default function MyFiles() {
               user={user}
               onUploadComplete={load}
               extraCategories={extraCategories}
+              onAddFolder={() => setActiveTab("addFolder")}
             />
           )}
           {activeTab === "addFolder" && (

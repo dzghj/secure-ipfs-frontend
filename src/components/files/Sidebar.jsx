@@ -12,18 +12,6 @@ function IconVault({ active }) {
   );
 }
 
-function IconAddFolder({ active }) {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-      stroke={active ? "#ffffff" : "#9ca3af"} strokeWidth="1.8"
-      strokeLinecap="round" strokeLinejoin="round">
-      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-      <line x1="12" y1="11" x2="12" y2="17" />
-      <line x1="9" y1="14" x2="15" y2="14" />
-    </svg>
-  );
-}
-
 function IconNominees({ active }) {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -48,9 +36,8 @@ function IconSwitch({ active }) {
   );
 }
 
-// "Add Folder" is nested under "Vault" (it's a vault action, not a top-level
-// section) — rendered as an indented sub-item right below it instead of a
-// flat sibling tab.
+// "Add Folder" is no longer a nav item — it's triggered from a button inside
+// the "My Vault" card on the Vault page itself.
 const TRAILING_TABS = [
   { id: "nominees", label: "Nominees", Icon: IconNominees },
   { id: "switch",   label: "Switch",   Icon: IconSwitch   },
@@ -58,7 +45,6 @@ const TRAILING_TABS = [
 
 export default function Sidebar({ activeTab, onTabChange }) {
   const vaultActive = activeTab === "vault";
-  const addFolderActive = activeTab === "addFolder";
 
   return (
     <aside
@@ -88,21 +74,6 @@ export default function Sidebar({ activeTab, onTabChange }) {
             <span className="ml-auto w-1.5 h-1.5 rounded-full bg-white opacity-70" />
           )}
         </button>
-
-        {/* Add Folder — nested under Vault */}
-        <button
-          onClick={() => onTabChange("addFolder")}
-          className={`ml-6 flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all text-left w-[calc(100%-1.5rem)] border-l border-dark-border ${
-            addFolderActive
-              ? "bg-primary/20 text-primary border-l-primary"
-              : "text-gray-500 hover:bg-white/5 hover:text-white"
-          }`}
-        >
-          <IconAddFolder active={addFolderActive} />
-          Add Folder
-        </button>
-
-        <div className="my-1" />
 
         {TRAILING_TABS.map(({ id, label, Icon }) => {
           const active = activeTab === id;
