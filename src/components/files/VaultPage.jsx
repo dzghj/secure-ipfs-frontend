@@ -11,6 +11,7 @@ export default function VaultPage({
   user,
   onUploadComplete,
   extraCategories = [],
+  onAddFolder,
 }) {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
@@ -127,9 +128,10 @@ export default function VaultPage({
 
       {/* My Vault folder grid */}
       <div className="bg-dark-card border border-dark-border rounded-2xl p-6 mb-6">
-        <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center justify-between mb-1">
           <h2 className="text-lg font-bold">My Vault</h2>
         </div>
+        <p className="text-xs text-gray-500 mb-5">Click a category to view its files.</p>
 
         {files.length === 0 && categories.length === 0 ? (
           <div className="text-center py-10">
@@ -137,18 +139,22 @@ export default function VaultPage({
             <p className="text-gray-400 text-sm">No files yet. Add a folder to get started.</p>
           </div>
         ) : (
-          <>
-            <FolderGrid
-              files={files}
-              categories={categories}
-              onFolderClick={setSelectedCategory}
-              nomineesByCategory={nomineesByCategory}
-            />
+          <FolderGrid
+            files={files}
+            categories={categories}
+            onFolderClick={setSelectedCategory}
+            nomineesByCategory={nomineesByCategory}
+          />
+        )}
 
-            <p className="text-xs text-gray-500 text-center mt-5">
-              Click a category to view its files.
-            </p>
-          </>
+        {onAddFolder && (
+          <button
+            onClick={onAddFolder}
+            className="w-full flex items-center justify-center gap-2 mt-5 py-3 rounded-xl border-2 border-dashed border-primary/40 hover:border-primary bg-primary/5 hover:bg-primary/10 text-primary font-semibold text-sm transition"
+          >
+            <span className="text-lg leading-none">＋</span>
+            Add Folder
+          </button>
         )}
       </div>
 
