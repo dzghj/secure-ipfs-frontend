@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, Outlet, useLocation } from "react-router-dom";
+import SupportChat from "./common/SupportChat";
 
 export default function Layout({ onLogout }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const [supportOpen, setSupportOpen] = useState(false);
 
   const token = localStorage.getItem("token");
   const isLoggedIn = !!token;
@@ -91,12 +93,19 @@ export default function Layout({ onLogout }) {
           <div className="flex items-center justify-center md:justify-start gap-2"><span>🔑</span> Zero Knowledge</div>
           <div className="flex items-center justify-center md:justify-start gap-2"><span>✓</span> PIPEDA Compliant</div>
           <div className="flex items-center justify-center md:justify-start gap-2"><span>🌐</span> Data Privacy</div>
-          <div className="flex items-center justify-center md:justify-start gap-2"><span>📞</span> 24/7 Support</div>
+          <button
+            onClick={() => setSupportOpen(true)}
+            className="flex items-center justify-center md:justify-start gap-2 hover:text-primary transition cursor-pointer"
+          >
+            <span>📞</span> 24/7 Support
+          </button>
         </div>
         <div className="text-center text-gray-500 text-xs border-t border-dark-border pt-6">
           © {new Date().getFullYear()} LegacyChain. All rights reserved.
         </div>
       </footer>
+
+      <SupportChat open={supportOpen} onClose={() => setSupportOpen(false)} />
     </div>
   );
 }
