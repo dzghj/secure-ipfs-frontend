@@ -156,3 +156,27 @@ export const downloadNomineeAccessFile = async (token, fileId) => {
   const blob = await res.blob();
   return blob;
 };
+
+/* ===== 24/7 Support chat ===== */
+export const sendSupportMessageAPI = async (token, message) => {
+  const res = await fetch(`${API_BASE_URL}/api/support/message`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ message }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Failed to send message");
+  return data; // { id, status }
+};
+
+export const getSupportMessageAPI = async (token, id) => {
+  const res = await fetch(`${API_BASE_URL}/api/support/message/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Failed to fetch reply");
+  return data; // { id, status, reply, createdAt, answeredAt }
+};
