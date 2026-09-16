@@ -39,8 +39,8 @@ function IconSwitch({ active }) {
 // "Add Folder" is no longer a nav item — it's triggered from a button inside
 // the "My Vault" card on the Vault page itself.
 const TRAILING_TABS = [
-  { id: "nominees", label: "Nominees", Icon: IconNominees },
-  { id: "switch",   label: "Switch",   Icon: IconSwitch   },
+  { id: "nominees", label: "Legacy Contacts", Icon: IconNominees },
+  { id: "switch",   label: "Check-In", Icon: IconSwitch   },
 ];
 
 export default function Sidebar({ activeTab, onTabChange }) {
