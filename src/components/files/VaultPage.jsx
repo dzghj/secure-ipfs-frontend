@@ -130,7 +130,7 @@ export default function VaultPage({
         <div className="flex items-center justify-between mb-1">
           <h2 className="text-lg font-bold">My Vault</h2>
         </div>
-        <p className="text-xs text-gray-500 mb-5">Click a category to view its files.</p>
+        <p className="text-xs text-white mb-5">Click a category to view its files.</p>
 
         {files.length === 0 && categories.length === 0 ? (
           <div className="text-center py-10">
@@ -223,7 +223,7 @@ export default function VaultPage({
             </svg>
           </div>
         </div>
-        <p className="text-xs text-gray-500 leading-relaxed border-t border-dark-border mt-4 pt-3">
+        <p className="text-xs text-white leading-relaxed border-t border-dark-border mt-4 pt-3">
           If you don't check in before your next deadline, your vault unlocks automatically —
           the legacy contacts you've chosen get access to the documents you've shared with them.
         </p>
