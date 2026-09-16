@@ -91,7 +91,7 @@ export default function VaultPage({
         </div>
       )}
 
-      {/* Vault Summary — stats + Continuity Switch in one card */}
+      {/* Vault Summary */}
       <div className="bg-dark-card border border-dark-border rounded-2xl p-6 mb-6 hover:border-primary transition">
         <h2 className="text-lg font-bold mb-4">Vault Summary</h2>
         <div className="grid grid-cols-2 gap-4">
@@ -102,6 +102,7 @@ export default function VaultPage({
                 {String(categories.length || 0).padStart(2, "0")}
               </div>
               <div className="text-sm opacity-80">Categories</div>
+              <div className="text-xs opacity-60 mt-0.5">Folders in your vault</div>
             </div>
             <div className="w-px self-stretch bg-white/30" />
             <div>
@@ -109,6 +110,7 @@ export default function VaultPage({
                 {String(files.length).padStart(2, "0")}
               </div>
               <div className="text-sm opacity-80">Documents</div>
+              <div className="text-xs opacity-60 mt-0.5">Files securely stored</div>
             </div>
           </div>
 
@@ -118,25 +120,36 @@ export default function VaultPage({
               {String(nominees.length).padStart(2, "0")}
             </div>
             <div className="text-sm opacity-80">Nominees</div>
+            <div className="text-xs opacity-60 mt-0.5">People with vault access</div>
           </div>
+        </div>
+      </div>
+
+      {/* My Vault folder grid */}
+      <div className="bg-dark-card border border-dark-border rounded-2xl p-6 mb-6">
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="text-lg font-bold">My Vault</h2>
         </div>
 
-        {/* Continuity Switch status */}
-        <div className="flex items-center justify-between border-t border-dark-border mt-6 pt-6">
-          <div>
-            <h3 className="text-base font-bold mb-1">Continuity Switch</h3>
-            <p className="text-sm text-emerald-400 font-medium mb-1">Checked-in Successfully!</p>
-            <p className="text-xs text-gray-500">{checkinStr}</p>
-            <p className="text-xs text-gray-400 mt-1">Your next check-in is in 90 days.</p>
+        {files.length === 0 && categories.length === 0 ? (
+          <div className="text-center py-10">
+            <div className="text-5xl mb-3">🗄️</div>
+            <p className="text-gray-400 text-sm">No files yet. Add a folder to get started.</p>
           </div>
-          <div className="w-14 h-14 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-lg flex-shrink-0">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
-              stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-              <polyline points="9 12 11 14 15 10" />
-            </svg>
-          </div>
-        </div>
+        ) : (
+          <>
+            <FolderGrid
+              files={files}
+              categories={categories}
+              onFolderClick={setSelectedCategory}
+              nomineesByCategory={nomineesByCategory}
+            />
+
+            <p className="text-xs text-gray-500 text-center mt-5">
+              Click a category to view its files.
+            </p>
+          </>
+        )}
       </div>
 
       {/* Nominee Access Overview — only show when nominees exist */}
@@ -188,31 +201,23 @@ export default function VaultPage({
         </div>
       )}
 
-      {/* My Vault folder grid */}
-      <div className="bg-dark-card border border-dark-border rounded-2xl p-6">
-        <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-bold">My Vault</h2>
-        </div>
-
-        {files.length === 0 && categories.length === 0 ? (
-          <div className="text-center py-10">
-            <div className="text-5xl mb-3">🗄️</div>
-            <p className="text-gray-400 text-sm">No files yet. Add a folder to get started.</p>
+      {/* Continuity Switch status */}
+      <div className="bg-dark-card border border-dark-border rounded-2xl p-6 hover:border-primary transition">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-bold mb-1">Continuity Switch</h2>
+            <p className="text-sm text-emerald-400 font-medium mb-1">Checked-in Successfully!</p>
+            <p className="text-xs text-gray-500">{checkinStr}</p>
+            <p className="text-xs text-gray-400 mt-1">Your next check-in is in 90 days.</p>
           </div>
-        ) : (
-          <>
-            <FolderGrid
-              files={files}
-              categories={categories}
-              onFolderClick={setSelectedCategory}
-              nomineesByCategory={nomineesByCategory}
-            />
-
-            <p className="text-xs text-gray-500 text-center mt-5">
-              Click a category to view its files.
-            </p>
-          </>
-        )}
+          <div className="w-14 h-14 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-lg flex-shrink-0">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+              stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <polyline points="9 12 11 14 15 10" />
+            </svg>
+          </div>
+        </div>
       </div>
     </div>
   );
