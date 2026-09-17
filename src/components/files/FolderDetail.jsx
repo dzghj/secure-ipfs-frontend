@@ -205,6 +205,55 @@ export default function FolderDetail({ category, files, token, onBack, onUploadC
         <span className="text-lg">＋</span>
         Add Content
       </button>
+
+      {/* ── How to verify a file's Bitcoin timestamp ── */}
+      <details className="mt-4 rounded-2xl border border-dark-border bg-dark-card/50 p-4 text-xs text-gray-400">
+        <summary className="cursor-pointer select-none font-semibold text-gray-300">
+          ₿ How to verify a file's Bitcoin timestamp
+        </summary>
+        <p className="mt-2 text-gray-500">
+          Every uploaded file's hash is anchored with OpenTimestamps. New anchors take a
+          few hours to gain a Bitcoin confirmation — after that, here's how to check one:
+        </p>
+        <ol className="mt-3 space-y-2 list-decimal list-inside">
+          <li>
+            <span className="text-gray-300 font-medium">In the app (fastest):</span> click{" "}
+            <span className="text-amber-400">₿ Verify on Bitcoin</span> on any file.
+          </li>
+          <li>
+            <span className="text-gray-300 font-medium">Independently:</span> download the
+            file (View) and its proof (⇩ Download proof), then run{" "}
+            <code className="text-gray-300">ots verify yourfile.ots</code> with the free{" "}
+            <a
+              href="https://github.com/opentimestamps/opentimestamps-client"
+              target="_blank"
+              rel="noreferrer"
+              className="text-primary hover:underline"
+            >
+              ots CLI
+            </a>
+            .
+          </li>
+          <li>
+            <span className="text-gray-300 font-medium">Zero third-party trust:</span> run
+            the same command pointed at your own Bitcoin node instead of a public explorer
+            (<code className="text-gray-300">ots verify --bitcoin-node ...</code>).
+          </li>
+          <li>
+            <span className="text-gray-300 font-medium">No install:</span> drag the
+            downloaded proof file into{" "}
+            <a
+              href="https://opentimestamps.org"
+              target="_blank"
+              rel="noreferrer"
+              className="text-primary hover:underline"
+            >
+              opentimestamps.org
+            </a>
+            's web verifier.
+          </li>
+        </ol>
+      </details>
     </div>
   );
 }

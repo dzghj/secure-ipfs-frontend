@@ -123,6 +123,33 @@ export default function FileCard({ file, token, nominees = [] }) {
     }
   };
 
+  const handleDownloadProof = async () => {
+    if (!file.id) return;
+    setError("");
+    const authToken = token || localStorage.getItem("token");
+    const proofUrl = `${process.env.REACT_APP_API_BASE_URL}/api/file/${file.id}/proof`;
+
+    try {
+      const res = await fetch(proofUrl, { headers: { Authorization: `Bearer ${authToken}` } });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.message || `Server returned ${res.status}`);
+      }
+      const blob = await res.blob();
+      const objectUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = objectUrl;
+      a.download = `${fileName}.ots`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(objectUrl);
+    } catch (err) {
+      console.error("Proof download failed:", err);
+      setError(`Couldn't download proof: ${err.message}`);
+    }
+  };
+
   return (
     <div className="flex items-center gap-4 bg-dark-card border border-dark-border rounded-xl px-5 py-4 hover:border-primary transition">
       {/* Icon */}
@@ -140,6 +167,31 @@ export default function FileCard({ file, token, nominees = [] }) {
               🔒 Nominee Protected
             </span>
           )}
+
+          {verifyResult && (
+            <span
+              title={
+                verifyResult.error
+                  ? verifyResult.error
+                  : verifyResult.verified
+                  ? `Confirmed in Bitcoin block at ${new Date(verifyResult.bitcoinTime).toLocaleString()}`
+                  : verifyResult.note || "Bitcoin attestation not yet available."
+              }
+              className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium border ${
+                verifyResult.error
+                  ? "bg-red-500/10 border-red-500/30 text-red-400"
+                  : verifyResult.verified
+                  ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
+                  : "bg-amber-500/10 border-amber-500/30 text-amber-400"
+              }`}
+            >
+              {verifyResult.error
+                ? "⚠️ Verify failed"
+                : verifyResult.verified
+                ? "✓ Verified on Bitcoin"
+                : "⏳ Pending Bitcoin confirmation"}
+            </span>
+          )}
         </div>
 
         {createdAt && (
@@ -149,18 +201,14 @@ export default function FileCard({ file, token, nominees = [] }) {
         {verifyResult && (
           <p
             className={`text-xs mt-1 ${
-              verifyResult.error
-                ? "text-red-400"
-                : verifyResult.verified
-                ? "text-emerald-400"
-                : "text-gray-400"
+              verifyResult.error ? "text-red-400" : verifyResult.verified ? "text-emerald-400" : "text-gray-400"
             }`}
           >
             {verifyResult.error
               ? `Couldn't verify: ${verifyResult.error}`
               : verifyResult.verified
-              ? `✓ Confirmed in Bitcoin block at ${new Date(verifyResult.bitcoinTime).toLocaleString()}`
-              : `⏳ ${verifyResult.note || "Bitcoin attestation not yet available."}`}
+              ? `Confirmed in Bitcoin block at ${new Date(verifyResult.bitcoinTime).toLocaleString()}`
+              : verifyResult.note || "Bitcoin attestation not yet available — this can take a few hours after upload."}
           </p>
         )}
       </div>
@@ -187,6 +235,15 @@ export default function FileCard({ file, token, nominees = [] }) {
               </button>
             )}
           </div>
+          {file.otsAnchoredAt && (
+            <button
+              onClick={handleDownloadProof}
+              title="Download the raw .ots proof file to verify independently"
+              className="text-xs text-gray-500 hover:text-gray-300 underline decoration-dotted transition"
+            >
+              ⇩ Download proof
+            </button>
+          )}
           {error && <p className="text-xs text-red-400">{error}</p>}
         </div>
       )}
