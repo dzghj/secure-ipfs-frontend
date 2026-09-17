@@ -225,14 +225,23 @@ export default function FileCard({ file, token, nominees = [] }) {
               {downloading ? "…" : "View"}
             </button>
             {file.otsAnchoredAt && (
-              <button
-                onClick={handleVerify}
-                disabled={verifying}
-                title="Check this file's OpenTimestamps proof against the Bitcoin blockchain"
-                className="text-xs px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 transition font-medium disabled:opacity-50"
-              >
-                {verifying ? "…" : "₿ Verify on Bitcoin"}
-              </button>
+              file.otsUpgradedAt ? (
+                <button
+                  onClick={handleVerify}
+                  disabled={verifying}
+                  title="Check this file's OpenTimestamps proof against the Bitcoin blockchain"
+                  className="text-xs px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 transition font-medium disabled:opacity-50"
+                >
+                  {verifying ? "…" : "₿ Verify on Bitcoin"}
+                </button>
+              ) : (
+                <span
+                  title="This file's proof hasn't reached a Bitcoin confirmation yet — usually a few hours after upload. Nothing to click until then; check back later."
+                  className="text-xs px-3 py-1.5 rounded-lg bg-dark-bg text-gray-500 border border-dark-border font-medium cursor-default"
+                >
+                  ⏳ Pending Bitcoin
+                </span>
+              )
             )}
           </div>
           {file.otsAnchoredAt && (
