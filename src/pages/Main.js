@@ -13,6 +13,11 @@ export default function Main() {
 
   const features = [
     {
+      icon: "🧠",
+      title: "Run by AI Brain",
+      desc: "An autonomous AI agent watches every upload, node, and continuity check around the clock — detecting and healing issues before they ever reach you.",
+    },
+    {
       icon: "⛓️",
       title: "Blockchain Anchored",
       desc: "Every document is hashed and recorded on-chain. Tamper-proof, timestamped, and permanently verifiable.",
@@ -30,17 +35,22 @@ export default function Main() {
     {
       icon: "✨",
       title: "Zero Knowledge",
-      desc: "We never have access to your files or encryption keys. Only you and your nominees can unlock them.",
+      desc: "We never have access to your files or encryption keys. Only you and your legal contacts can unlock them.",
     },
     {
       icon: "👥",
-      title: "Heir & Nominee Access",
+      title: "Legal Contact Access",
       desc: "Designate trusted executors and family members. Access is released automatically via your continuity switch.",
     },
     {
       icon: "☑️",
       title: "PIPEDA Compliant",
-      desc: "Enterprise-grade security and full compliance with Canadian and international privacy regulations.",
+      desc: "Enterprise-grade security and full compliance with global privacy regulations.",
+    },
+    {
+      icon: "💬",
+      title: "24/7 AI Support",
+      desc: "Have a question any time, day or night? Click the AI chat bubble in the bottom corner of your dashboard for instant support.",
     },
   ];
 
@@ -56,7 +66,7 @@ export default function Main() {
     { step: "02", title: "Encrypted & Hashed",      desc: "Your file is AES-256 encrypted. A unique cryptographic hash is generated." },
     { step: "03", title: "Anchored On-Chain",       desc: "The hash is written to the blockchain — creating a permanent, tamper-proof record." },
     { step: "04", title: "Stored on IPFS",          desc: "The encrypted file is distributed across IPFS nodes. No central server to attack." },
-    { step: "05", title: "Nominee Access Released", desc: "When your continuity switch triggers, designated heirs gain access automatically." },
+    { step: "05", title: "Legal Contact Access Released", desc: "When your continuity switch triggers, designated legal contacts gain access automatically." },
   ];
 
   return (
@@ -68,8 +78,13 @@ export default function Main() {
 
           {/* Left */}
           <div>
-            <div className="inline-flex items-center gap-2 bg-primary bg-opacity-10 border border-primary border-opacity-30 rounded-full px-4 py-2 text-sm text-primary font-medium mb-6">
-              <span>⛓️</span> Blockchain-Secured Legal Documents
+            <div className="flex flex-wrap gap-3 mb-6">
+              <div className="inline-flex items-center gap-2 bg-primary bg-opacity-10 border border-primary border-opacity-30 rounded-full px-4 py-2 text-sm text-primary font-medium">
+                <span>⛓️</span> Blockchain-Secured Legal Documents
+              </div>
+              <div className="inline-flex items-center gap-2 bg-primary bg-opacity-10 border border-primary border-opacity-30 rounded-full px-4 py-2 text-sm text-primary font-medium">
+                <span>🧠</span> Run by AI Brain — Monitored 24/7
+              </div>
             </div>
             <h1 className="text-5xl md:text-6xl font-bold leading-tight mb-6">
               Your Will, Your Legacy,<br />
