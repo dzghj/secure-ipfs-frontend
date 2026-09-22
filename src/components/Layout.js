@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, Outlet, useLocation } from "react-router-dom";
 import SupportChat from "./common/SupportChat";
 
@@ -6,6 +6,11 @@ export default function Layout({ onLogout }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [supportOpen, setSupportOpen] = useState(false);
+  const [lang, setLang] = useState(() => localStorage.getItem("lang") || "en");
+
+  useEffect(() => {
+    localStorage.setItem("lang", lang);
+  }, [lang]);
 
   const token = localStorage.getItem("token");
   const isLoggedIn = !!token;
@@ -55,22 +60,44 @@ export default function Layout({ onLogout }) {
           )}
         </nav>
 
-        {/* ✅ Auth-aware button */}
-        {isLoggedIn ? (
-          <button
-            onClick={handleLogout}
-            className="px-5 py-2 text-sm font-medium bg-primary text-dark-bg hover:bg-primary-dark rounded-lg transition font-semibold"
-          >
-            Logout
-          </button>
-        ) : (
-          <button
-            onClick={() => navigate("/login")}
-            className="px-5 py-2 text-sm font-medium bg-primary text-dark-bg hover:bg-primary-dark rounded-lg transition font-semibold"
-          >
-            Get Started
-          </button>
-        )}
+        <div className="flex items-center gap-4">
+          {/* Language selector */}
+          <div className="inline-flex items-center bg-dark-card border border-dark-border rounded-full p-1 text-sm">
+            <button
+              onClick={() => setLang("en")}
+              className={`px-3 py-1 rounded-full font-medium transition ${
+                lang === "en" ? "bg-primary text-dark-bg" : "text-gray-400 hover:text-white"
+              }`}
+            >
+              EN
+            </button>
+            <button
+              onClick={() => setLang("zh")}
+              className={`px-3 py-1 rounded-full font-medium transition ${
+                lang === "zh" ? "bg-primary text-dark-bg" : "text-gray-400 hover:text-white"
+              }`}
+            >
+              中文
+            </button>
+          </div>
+
+          {/* ✅ Auth-aware button */}
+          {isLoggedIn ? (
+            <button
+              onClick={handleLogout}
+              className="px-5 py-2 text-sm font-medium bg-primary text-dark-bg hover:bg-primary-dark rounded-lg transition font-semibold"
+            >
+              Logout
+            </button>
+          ) : (
+            <button
+              onClick={() => navigate("/login")}
+              className="px-5 py-2 text-sm font-medium bg-primary text-dark-bg hover:bg-primary-dark rounded-lg transition font-semibold"
+            >
+              Get Started
+            </button>
+          )}
+        </div>
       </header>
 
       {/* ---------- Main ---------- */}
@@ -83,7 +110,7 @@ export default function Layout({ onLogout }) {
             : "overflow-y-auto"
         }`}
       >
-        <Outlet />
+        <Outlet context={{ lang, setLang }} />
       </main>
 
       {/* ---------- Footer ---------- */}
