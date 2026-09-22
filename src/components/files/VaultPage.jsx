@@ -2,6 +2,30 @@ import React, { useState } from "react";
 import FolderGrid from "./FolderGrid";
 import FolderDetail from "./FolderDetail";
 
+const FALLBACK_T = {
+  planLimitWarning: "You've reached your plan limit.",
+  upgradeButton: "Upgrade Plan",
+  vaultSummary: "Vault Summary",
+  categories: "Categories",
+  categoriesSub: "Folders in your vault",
+  files: "Files",
+  filesSub: "Files securely stored",
+  legacyContacts: "Legacy Contacts",
+  legacyContactsSub: "People with vault access",
+  myVault: "My Vault",
+  clickCategoryHint: "Click a category to view its files.",
+  noFilesYet: "No files yet. Add a folder to get started.",
+  addFolder: "Add Folder",
+  accessOverview: "Legacy Contact Access Overview",
+  fullAccess: "✓ Full Access",
+  partialAccess: "◑ Partial Access",
+  continuityCheckIn: "Continuity Check-In",
+  checkedInSuccessfully: "Checked-in Successfully!",
+  nextCheckIn: "Your next check-in is in 90 days.",
+  footerNote:
+    "If you don't check in before your next deadline, your vault unlocks automatically — the legacy contacts you've chosen get access to the documents you've shared with them.",
+};
+
 export default function VaultPage({
   files,
   nominees = [],
@@ -12,6 +36,8 @@ export default function VaultPage({
   onUploadComplete,
   extraCategories = [],
   onAddFolder,
+  t = FALLBACK_T,
+  folderCardT,
 }) {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
@@ -82,27 +108,27 @@ export default function VaultPage({
       {/* Plan limit warning */}
       {hasReachedLimit && (
         <div className="bg-yellow-600 text-black p-4 rounded-xl mb-6 flex items-center justify-between">
-          <span className="font-medium text-sm">You've reached your plan limit.</span>
+          <span className="font-medium text-sm">{t.planLimitWarning}</span>
           <button
             onClick={onUpgrade}
             className="ml-4 bg-black text-white px-4 py-2 rounded-lg text-sm font-semibold"
           >
-            Upgrade Plan
+            {t.upgradeButton}
           </button>
         </div>
       )}
 
       {/* Vault Summary */}
       <div className="bg-dark-card border border-dark-border rounded-2xl p-6 mb-6 hover:border-primary transition">
-        <h2 className="text-lg font-bold mb-4">Vault Summary</h2>
+        <h2 className="text-lg font-bold mb-4">{t.vaultSummary}</h2>
         <div className="grid grid-cols-3 gap-4">
           {/* Categories */}
           <div className="bg-gradient-to-br from-primary to-primary-dark rounded-xl p-5 text-white">
             <div className="text-4xl font-bold mb-1">
               {String(categories.length || 0).padStart(2, "0")}
             </div>
-            <div className="text-sm opacity-80">Categories</div>
-            <div className="text-xs opacity-60 mt-0.5">Folders in your vault</div>
+            <div className="text-sm opacity-80">{t.categories}</div>
+            <div className="text-xs opacity-60 mt-0.5">{t.categoriesSub}</div>
           </div>
 
           {/* Files */}
@@ -110,8 +136,8 @@ export default function VaultPage({
             <div className="text-4xl font-bold mb-1">
               {String(files.length).padStart(2, "0")}
             </div>
-            <div className="text-sm opacity-80">Files</div>
-            <div className="text-xs opacity-60 mt-0.5">Files securely stored</div>
+            <div className="text-sm opacity-80">{t.files}</div>
+            <div className="text-xs opacity-60 mt-0.5">{t.filesSub}</div>
           </div>
 
           {/* Nominees */}
@@ -119,8 +145,8 @@ export default function VaultPage({
             <div className="text-4xl font-bold mb-1">
               {String(nominees.length).padStart(2, "0")}
             </div>
-            <div className="text-sm opacity-80">Legacy Contacts</div>
-            <div className="text-xs opacity-60 mt-0.5">People with vault access</div>
+            <div className="text-sm opacity-80">{t.legacyContacts}</div>
+            <div className="text-xs opacity-60 mt-0.5">{t.legacyContactsSub}</div>
           </div>
         </div>
       </div>
@@ -128,14 +154,14 @@ export default function VaultPage({
       {/* My Vault folder grid */}
       <div className="bg-dark-card border border-dark-border rounded-2xl p-6 mb-6">
         <div className="flex items-center justify-between mb-1">
-          <h2 className="text-lg font-bold">My Vault</h2>
+          <h2 className="text-lg font-bold">{t.myVault}</h2>
         </div>
-        <p className="text-xs text-white mb-5">Click a category to view its files.</p>
+        <p className="text-xs text-white mb-5">{t.clickCategoryHint}</p>
 
         {files.length === 0 && categories.length === 0 ? (
           <div className="text-center py-10">
             <div className="text-5xl mb-3">🗄️</div>
-            <p className="text-gray-400 text-sm">No files yet. Add a folder to get started.</p>
+            <p className="text-gray-400 text-sm">{t.noFilesYet}</p>
           </div>
         ) : (
           <FolderGrid
@@ -143,6 +169,7 @@ export default function VaultPage({
             categories={categories}
             onFolderClick={setSelectedCategory}
             nomineesByCategory={nomineesByCategory}
+            t={folderCardT}
           />
         )}
 
@@ -152,7 +179,7 @@ export default function VaultPage({
             className="w-full flex items-center justify-center gap-2 mt-5 py-3 rounded-xl border-2 border-dashed border-primary/40 hover:border-primary bg-primary/5 hover:bg-primary/10 text-primary font-semibold text-sm transition"
           >
             <span className="text-lg leading-none">＋</span>
-            Add Folder
+            {t.addFolder}
           </button>
         )}
       </div>
@@ -160,7 +187,7 @@ export default function VaultPage({
       {/* Nominee Access Overview — only show when nominees exist */}
       {nominees.length > 0 && (
         <div className="bg-dark-card border border-dark-border rounded-2xl p-6 mb-6 hover:border-primary transition">
-          <h2 className="text-lg font-bold mb-4">Legacy Contact Access Overview</h2>
+          <h2 className="text-lg font-bold mb-4">{t.accessOverview}</h2>
           <div className="space-y-3">
             {nominees.map((n) => (
               <div
@@ -198,7 +225,7 @@ export default function VaultPage({
                       : "bg-blue-500 bg-opacity-20 text-blue-400 border border-blue-500 border-opacity-30"
                   }`}
                 >
-                  {n.accessLevel === "full" ? "✓ Full Access" : "◑ Partial Access"}
+                  {n.accessLevel === "full" ? t.fullAccess : t.partialAccess}
                 </span>
               </div>
             ))}
@@ -210,10 +237,10 @@ export default function VaultPage({
       <div className="bg-dark-card border border-dark-border rounded-2xl p-6 hover:border-primary transition">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-bold mb-1">Continuity Check-In</h2>
-            <p className="text-sm text-emerald-400 font-medium mb-1">Checked-in Successfully!</p>
+            <h2 className="text-lg font-bold mb-1">{t.continuityCheckIn}</h2>
+            <p className="text-sm text-emerald-400 font-medium mb-1">{t.checkedInSuccessfully}</p>
             <p className="text-xs text-gray-500">{checkinStr}</p>
-            <p className="text-xs text-gray-400 mt-1">Your next check-in is in 90 days.</p>
+            <p className="text-xs text-gray-400 mt-1">{t.nextCheckIn}</p>
           </div>
           <div className="w-14 h-14 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-lg flex-shrink-0">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
@@ -224,8 +251,7 @@ export default function VaultPage({
           </div>
         </div>
         <p className="text-xs text-white leading-relaxed border-t border-dark-border mt-4 pt-3">
-          If you don't check in before your next deadline, your vault unlocks automatically —
-          the legacy contacts you've chosen get access to the documents you've shared with them.
+          {t.footerNote}
         </p>
       </div>
     </div>

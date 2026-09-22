@@ -13,7 +13,9 @@ function FolderSvg({ color, size = 44 }) {
   );
 }
 
-export default function FolderCard({ folder, fileCount, onClick, nominees = [] }) {
+const FALLBACK_T = { file: "file", files: "files", full: "Full", partial: "Partial", nominee: "nominee", nominees: "nominees" };
+
+export default function FolderCard({ folder, fileCount, onClick, nominees = [], t = FALLBACK_T }) {
   // Show up to 3 nominee avatars, then a "+N more" counter
   const shown = nominees.slice(0, 3);
   const extra = nominees.length - shown.length;
@@ -26,7 +28,7 @@ export default function FolderCard({ folder, fileCount, onClick, nominees = [] }
       <FolderSvg color={folder.color} size={40} />
       <span className="text-xs text-gray-300 mt-2 font-medium">{folder.label}</span>
       <span className="text-xs text-gray-500 mt-0.5">
-        {fileCount} file{fileCount !== 1 ? "s" : ""}
+        {fileCount} {fileCount !== 1 ? t.files : t.file}
       </span>
 
       {/* Nominee access indicator */}
@@ -37,7 +39,7 @@ export default function FolderCard({ folder, fileCount, onClick, nominees = [] }
             {shown.map((n) => (
               <div
                 key={n.id}
-                title={`${n.name} (${n.accessLevel === "full" ? "Full" : "Partial"})`}
+                title={`${n.name} (${n.accessLevel === "full" ? t.full : t.partial})`}
                 className="w-5 h-5 rounded-full bg-primary border border-dark-bg flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
               >
                 {n.name[0].toUpperCase()}
@@ -50,7 +52,7 @@ export default function FolderCard({ folder, fileCount, onClick, nominees = [] }
             )}
           </div>
           <span className="text-xs text-gray-500 ml-1">
-            {nominees.length === 1 ? "1 nominee" : `${nominees.length} nominees`}
+            {nominees.length === 1 ? `1 ${t.nominee}` : `${nominees.length} ${t.nominees}`}
           </span>
         </div>
       )}

@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
+import { useOutletContext } from "react-router-dom";
 import { fetchFilesAPI, fetchNomineesAPI, fetchCheckinIntervalAPI, saveCheckinIntervalAPI, fetchFoldersAPI, createFolderAPI } from "../services/api";
+import { myFilesText } from "../i18n/myFilesText";
 
 import Loader        from "../components/common/Loader";
 import UpgradeModal  from "../components/common/UpgradeModal";
@@ -10,6 +12,8 @@ import NomineesPage  from "../components/files/NomineesPage";
 import SwitchPage    from "../components/files/SwitchPage";
 
 export default function MyFiles() {
+  const { lang } = useOutletContext();
+  const t = myFilesText[lang];
   const [files,           setFiles]           = useState([]);
   const [nominees,        setNominees]        = useState([]);
   const [loading,         setLoading]         = useState(true);
@@ -54,9 +58,9 @@ export default function MyFiles() {
         ? parseInt(document.querySelector('input[type="number"]')?.value || "90", 10)
         : parseInt(checkin, 10);
       await saveCheckinIntervalAPI(token, days);
-      alert(`✓ Check-in interval saved: every ${days} days`);
+      alert(t.alerts.checkinSaved(days));
     } catch (err) {
-      alert("Failed to save: " + err.message);
+      alert(t.alerts.saveFailed(err.message));
     }
   };
 
@@ -76,7 +80,7 @@ export default function MyFiles() {
 
   return (
     <div className="flex h-full w-full bg-dark-bg text-white overflow-hidden">
-      <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
+      <Sidebar activeTab={activeTab} onTabChange={setActiveTab} t={t.sidebar} />
 
       <main className="flex-1 min-w-0 overflow-y-auto">
         {/* Center content at 80% width */}
@@ -92,6 +96,8 @@ export default function MyFiles() {
               onUploadComplete={load}
               extraCategories={extraCategories}
               onAddFolder={() => setActiveTab("addFolder")}
+              t={t.vault}
+              folderCardT={t.folderCard}
             />
           )}
           {activeTab === "addFolder" && (

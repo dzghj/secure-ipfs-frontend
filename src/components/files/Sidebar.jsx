@@ -36,15 +36,23 @@ function IconSwitch({ active }) {
   );
 }
 
-// "Add Folder" is no longer a nav item — it's triggered from a button inside
-// the "My Vault" card on the Vault page itself.
-const TRAILING_TABS = [
-  { id: "nominees", label: "Legacy Contacts", Icon: IconNominees },
-  { id: "switch",   label: "Check-In", Icon: IconSwitch   },
-];
+const FALLBACK_T = {
+  brand: "LegacyChain",
+  subtitle: "My Files",
+  vault: "Vault",
+  legacyContacts: "Legacy Contacts",
+  checkIn: "Check-In",
+};
 
-export default function Sidebar({ activeTab, onTabChange }) {
+export default function Sidebar({ activeTab, onTabChange, t = FALLBACK_T }) {
   const vaultActive = activeTab === "vault";
+
+  // "Add Folder" is no longer a nav item — it's triggered from a button inside
+  // the "My Vault" card on the Vault page itself.
+  const trailingTabs = [
+    { id: "nominees", label: t.legacyContacts, Icon: IconNominees },
+    { id: "switch",   label: t.checkIn, Icon: IconSwitch   },
+  ];
 
   return (
     <aside
@@ -53,8 +61,8 @@ export default function Sidebar({ activeTab, onTabChange }) {
     >
       {/* Logo / title */}
       <div className="px-3 mb-8">
-        <div className="text-sm font-bold text-white mb-0.5">LegacyChain</div>
-        <div className="text-xs text-gray-500">My Files</div>
+        <div className="text-sm font-bold text-white mb-0.5">{t.brand}</div>
+        <div className="text-xs text-gray-500">{t.subtitle}</div>
       </div>
 
       {/* Nav */}
@@ -69,13 +77,13 @@ export default function Sidebar({ activeTab, onTabChange }) {
           }`}
         >
           <IconVault active={vaultActive} />
-          Vault
+          {t.vault}
           {vaultActive && (
             <span className="ml-auto w-1.5 h-1.5 rounded-full bg-white opacity-70" />
           )}
         </button>
 
-        {TRAILING_TABS.map(({ id, label, Icon }) => {
+        {trailingTabs.map(({ id, label, Icon }) => {
           const active = activeTab === id;
           return (
             <button
