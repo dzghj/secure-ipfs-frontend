@@ -87,11 +87,11 @@ export default function Main() {
               </div>
             </div>
             <h1 className="text-5xl md:text-6xl font-bold leading-tight mb-6">
-              Your Will, Your Legacy,<br />
+              Your Legacy, Secured,<br />
               <span className="text-primary">On the Chain Forever</span>
             </h1>
             <p className="text-xl text-gray-300 mb-8 leading-relaxed">
-              LegacyChain protects your wills and legal documents with blockchain immutability,
+              LegacyChain protects your legal and estate documents with blockchain immutability,
               AES-256 encryption, and IPFS decentralized storage. Your wishes — preserved exactly
               as you intended.
             </p>
@@ -257,7 +257,7 @@ export default function Main() {
           <div className="text-5xl mb-4">⛓️</div>
           <h2 className="text-4xl font-bold mb-4">Protect Your Legacy Today</h2>
           <p className="text-lg mb-8 opacity-90">
-            Your will deserves more than a filing cabinet. Anchor it on the blockchain — forever.
+            Your legacy deserves more than a filing cabinet. Anchor it on the blockchain — forever.
           </p>
           <button
             onClick={() => navigate("/register")}
