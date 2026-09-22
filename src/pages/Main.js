@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 
 const translations = {
   en: {
@@ -201,11 +201,7 @@ const translations = {
 
 export default function Main() {
   const navigate = useNavigate();
-  const [lang, setLang] = React.useState(() => localStorage.getItem("lang") || "en");
-
-  React.useEffect(() => {
-    localStorage.setItem("lang", lang);
-  }, [lang]);
+  const { lang } = useOutletContext();
 
   const t = translations[lang];
 
@@ -214,29 +210,6 @@ export default function Main() {
 
       {/* ========== HERO ========== */}
       <section className="max-w-7xl mx-auto px-6 py-20 md:py-32">
-
-        {/* Language selector */}
-        <div className="flex justify-end mb-6">
-          <div className="inline-flex items-center bg-dark-card border border-dark-border rounded-full p-1 text-sm">
-            <button
-              onClick={() => setLang("en")}
-              className={`px-4 py-1.5 rounded-full font-medium transition ${
-                lang === "en" ? "bg-primary text-dark-bg" : "text-gray-400 hover:text-white"
-              }`}
-            >
-              EN
-            </button>
-            <button
-              onClick={() => setLang("zh")}
-              className={`px-4 py-1.5 rounded-full font-medium transition ${
-                lang === "zh" ? "bg-primary text-dark-bg" : "text-gray-400 hover:text-white"
-              }`}
-            >
-              中文
-            </button>
-          </div>
-        </div>
-
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
           {/* Left */}
