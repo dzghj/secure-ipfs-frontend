@@ -254,6 +254,75 @@ export default function FolderDetail({ category, files, token, onBack, onUploadC
           </li>
         </ol>
       </details>
+
+      {/* ── What the Bitcoin timestamp proof actually is ── */}
+      <details className="mt-4 rounded-2xl border border-dark-border bg-dark-card/50 p-4 text-xs text-gray-400">
+        <summary className="cursor-pointer select-none font-semibold text-gray-300">
+          🔒 Blockchain Timestamp Proof
+        </summary>
+        <p className="mt-2 text-gray-500">
+          When you upload a file, LegacyChain automatically creates a
+          tamper-evident timestamp for it using the Bitcoin blockchain.
+        </p>
+
+        <p className="mt-3 text-gray-300 font-medium">What this means for you:</p>
+        <ul className="mt-2 space-y-2 list-disc list-inside">
+          <li>
+            The moment you upload a file, we record a{" "}
+            <span className="text-gray-300">cryptographic fingerprint</span>{" "}
+            of it (not the file itself) and submit it to be permanently
+            stamped into the Bitcoin blockchain.
+          </li>
+          <li>
+            That fingerprint is a one-way digital summary of the file's exact
+            content — change even one bit of the file and the fingerprint
+            comes out completely different. It can't be reversed back into
+            the file, and it carries no metadata (no filename, no uploader,
+            no date) — just a check on content, nothing else.
+          </li>
+          <li>
+            This proves the file existed at that exact time, and that it
+            hasn't been altered since — even LegacyChain couldn't secretly
+            change it later without the proof breaking.
+          </li>
+          <li>
+            It's the same idea as a notary stamping a document with today's
+            date — except instead of trusting one notary, it's backed by the
+            entire Bitcoin network, which nobody controls or can rewrite.
+          </li>
+        </ul>
+
+        <p className="mt-3 text-gray-300 font-medium">Why it takes a little time:</p>
+        <ul className="mt-2 space-y-2 list-disc list-inside">
+          <li>
+            The proof isn't instant. It first gets a "pending" timestamp
+            (usually within minutes), and then gets permanently locked into
+            an actual Bitcoin block within a few hours.
+          </li>
+          <li>
+            Until that happens, your file shows{" "}
+            <span className="text-gray-300">"Pending Bitcoin"</span> in the
+            app. Once it's locked in, you'll see a{" "}
+            <span className="text-amber-400">"Verify on Bitcoin"</span>{" "}
+            button.
+          </li>
+        </ul>
+
+        <p className="mt-3 text-gray-300 font-medium">What you can do with it:</p>
+        <ul className="mt-2 space-y-2 list-disc list-inside">
+          <li>
+            Click <span className="text-amber-400">"Verify on Bitcoin"</span>{" "}
+            any time to confirm the file hasn't been tampered with since
+            upload.
+          </li>
+          <li>
+            Download the proof file if you ever need to show someone outside
+            LegacyChain (a court, an auditor, another service) independent
+            evidence of when this file existed — it doesn't depend on
+            trusting LegacyChain's word.
+          </li>
+        </ul>
+      </details>
     </div>
   );
 }
