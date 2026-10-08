@@ -2,6 +2,11 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+const CHANNEL_LABEL = {
+  sms: { icon: "📱", text: "Text me a code" },
+  email: { icon: "📧", text: "Email me a code" },
+};
+
 export default function Login({ setToken, setUser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -9,21 +14,34 @@ export default function Login({ setToken, setUser }) {
   const [loading, setLoading] = useState(false);
   const loginCalledRef = useRef(false); // prevent double call in StrictMode
 
-  // ── Step 2: OTP challenge ──────────────────────────────────────────────
-  const [otp, setOtp] = useState(null); // { pendingToken, channel, maskedDestination, expiresInSeconds } | null
+  // "credentials" -> "channel" (only if >1 option) -> "otp"
+  const [stage, setStage] = useState("credentials");
+  const [pendingToken, setPendingToken] = useState(null);
+  const [availableChannels, setAvailableChannels] = useState([]);
+  const [otp, setOtp] = useState(null); // { channel, maskedDestination, expiresInSeconds } | null
   const [code, setCode] = useState("");
   const [secondsLeft, setSecondsLeft] = useState(0);
-  const [resending, setResending] = useState(false);
 
   const navigate = useNavigate();
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   // Countdown shown next to the code input so users know when it expires.
   useEffect(() => {
-    if (!otp || secondsLeft <= 0) return;
+    if (stage !== "otp" || secondsLeft <= 0) return;
     const t = setTimeout(() => setSecondsLeft((s) => s - 1), 1000);
     return () => clearTimeout(t);
-  }, [otp, secondsLeft]);
+  }, [stage, secondsLeft]);
+
+  const sendOtp = async (channel, token) => {
+    const res = await axios.post(`${API_BASE_URL}/api/auth/login/send-otp`, {
+      pendingToken: token || pendingToken,
+      channel,
+    });
+    setOtp(res.data);
+    setSecondsLeft(res.data.expiresInSeconds || 120);
+    setCode("");
+    setStage("otp");
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -35,18 +53,38 @@ export default function Login({ setToken, setUser }) {
     try {
       const res = await axios.post(`${API_BASE_URL}/api/auth/login`, { email, password });
 
-      if (res.data.otpRequired) {
-        setOtp(res.data);
-        setSecondsLeft(res.data.expiresInSeconds || 120);
-      } else {
-        // Shouldn't happen against this backend, but don't strand the user if it does.
+      if (!res.data.passwordValid) {
         setError("Unexpected response from server.");
+        return;
+      }
+
+      const channels = res.data.availableChannels || [];
+      setPendingToken(res.data.pendingToken);
+      setAvailableChannels(channels);
+
+      if (channels.length <= 1) {
+        // Only one way to receive a code — skip the redundant choice screen.
+        await sendOtp(channels[0] || "email", res.data.pendingToken);
+      } else {
+        setStage("channel");
       }
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);
       loginCalledRef.current = false;
+    }
+  };
+
+  const handleChooseChannel = async (channel) => {
+    setError("");
+    setLoading(true);
+    try {
+      await sendOtp(channel);
+    } catch (err) {
+      setError(err.response?.data?.message || `Couldn't send a code via ${channel}`);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -58,7 +96,7 @@ export default function Login({ setToken, setUser }) {
 
     try {
       const res = await axios.post(`${API_BASE_URL}/api/auth/login/verify-otp`, {
-        pendingToken: otp.pendingToken,
+        pendingToken,
         code,
       });
 
@@ -76,33 +114,54 @@ export default function Login({ setToken, setUser }) {
     }
   };
 
-  const handleResend = async () => {
-    if (resending) return;
-    setError("");
-    setResending(true);
+  const handleResend = () => handleChooseChannel(otp.channel);
 
-    try {
-      const res = await axios.post(`${API_BASE_URL}/api/auth/login/resend-otp`, {
-        pendingToken: otp.pendingToken,
-      });
-      setOtp(res.data);
-      setSecondsLeft(res.data.expiresInSeconds || 120);
-      setCode("");
-    } catch (err) {
-      setError(err.response?.data?.message || "Couldn't resend code — please log in again");
-      setOtp(null);
-    } finally {
-      setResending(false);
-    }
-  };
-
-  const handleBack = () => {
+  const handleBackToCredentials = () => {
+    setStage("credentials");
     setOtp(null);
     setCode("");
     setError("");
   };
 
-  if (otp) {
+  const handleBackToChannel = () => {
+    setStage("channel");
+    setOtp(null);
+    setCode("");
+    setError("");
+  };
+
+  if (stage === "channel") {
+    return (
+      <div className="w-full max-w-md bg-dark-card border border-dark-border rounded-xl p-8 shadow-lg space-y-5">
+        <div className="text-center mb-6">
+          <h2 className="text-3xl font-bold text-white">Verify It's You</h2>
+          <p className="text-gray-400 mt-2">How would you like to receive your code?</p>
+        </div>
+
+        <div className="space-y-3">
+          {availableChannels.map((ch) => (
+            <button
+              key={ch}
+              type="button"
+              onClick={() => handleChooseChannel(ch)}
+              disabled={loading}
+              className="w-full py-3 rounded-lg font-semibold transition text-lg bg-dark-bg border border-dark-border hover:border-primary text-white disabled:opacity-50"
+            >
+              {CHANNEL_LABEL[ch]?.icon || "🔑"} {CHANNEL_LABEL[ch]?.text || ch}
+            </button>
+          ))}
+        </div>
+
+        {error && <p className="text-red-400 text-sm text-center bg-red-500 bg-opacity-10 border border-red-500 rounded-lg p-3">{error}</p>}
+
+        <button type="button" onClick={handleBackToCredentials} className="text-sm text-gray-400 hover:text-primary transition font-medium">
+          ← Back
+        </button>
+      </div>
+    );
+  }
+
+  if (stage === "otp") {
     return (
       <form
         onSubmit={handleVerifyOtp}
@@ -149,16 +208,15 @@ export default function Login({ setToken, setUser }) {
         </button>
 
         <div className="flex items-center justify-between text-sm text-gray-400">
-          <button type="button" onClick={handleBack} className="hover:text-primary transition font-medium">
-            ← Back
-          </button>
           <button
             type="button"
-            onClick={handleResend}
-            disabled={resending}
-            className="hover:text-primary transition font-medium disabled:opacity-50"
+            onClick={availableChannels.length > 1 ? handleBackToChannel : handleBackToCredentials}
+            className="hover:text-primary transition font-medium"
           >
-            {resending ? "Sending..." : "Resend code"}
+            ← Back
+          </button>
+          <button type="button" onClick={handleResend} disabled={loading} className="hover:text-primary transition font-medium disabled:opacity-50">
+            Resend code
           </button>
         </div>
       </form>
