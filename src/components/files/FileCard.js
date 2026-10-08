@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { verifyFileProofAPI } from "../../services/api";
+import { verifyFileProofAPI, deleteFileAPI } from "../../services/api";
 
 const FILE_TYPE_ICONS = {
   pdf:   "📄",
@@ -27,11 +27,12 @@ function formatDate(dateStr) {
   return d.toLocaleDateString("en-AU", { day: "2-digit", month: "short", year: "numeric" });
 }
 
-export default function FileCard({ file, token, nominees = [] }) {
+export default function FileCard({ file, token, nominees = [], onDeleted }) {
   const [downloading, setDownloading] = useState(false);
   const [error, setError] = useState("");
   const [verifying, setVerifying] = useState(false);
   const [verifyResult, setVerifyResult] = useState(null); // { verified, pending, bitcoinTime, note } | { error }
+  const [deleting, setDeleting] = useState(false);
 
   if (!file) return null;
 
@@ -120,6 +121,24 @@ export default function FileCard({ file, token, nominees = [] }) {
       setVerifyResult({ error: err.message });
     } finally {
       setVerifying(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!file.id) return;
+    if (!window.confirm(`Delete "${fileName}"? This can't be undone.`)) return;
+
+    setDeleting(true);
+    setError("");
+    const authToken = token || localStorage.getItem("token");
+
+    try {
+      await deleteFileAPI(authToken, file.id);
+      onDeleted?.(file.id);
+    } catch (err) {
+      console.error("Delete failed:", err);
+      setError(`Couldn't delete: ${err.message}`);
+      setDeleting(false);
     }
   };
 
@@ -243,6 +262,14 @@ export default function FileCard({ file, token, nominees = [] }) {
                 </span>
               )
             )}
+            <button
+              onClick={handleDelete}
+              disabled={deleting}
+              title="Delete this file permanently"
+              className="text-xs px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 transition font-medium disabled:opacity-50"
+            >
+              {deleting ? "…" : "🗑 Delete"}
+            </button>
           </div>
           {file.otsAnchoredAt && (
             <button

@@ -117,7 +117,10 @@ export default function FolderDetail({ category, files, token, onBack, onUploadC
         </div>
       ) : (
         <div className="mb-6">
-          <FileList files={categoryFiles} token={token} nominees={nominees} />
+          {/* onUploadComplete is really "refetch everything" (see MyFiles.jsx's
+              load()) — reused here so a delete refreshes the list the same way
+              a successful upload already does. */}
+          <FileList files={categoryFiles} token={token} nominees={nominees} onDeleted={onUploadComplete} />
         </div>
       )}
 
