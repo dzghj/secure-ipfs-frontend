@@ -190,3 +190,14 @@ export const verifyFileProofAPI = async (token, fileId) => {
   if (!res.ok) throw new Error(data.message || "Failed to verify proof");
   return data; // { verified, pending, bitcoinTime, note, ... }
 };
+
+/* ===== Delete file ===== */
+export const deleteFileAPI = async (token, fileId) => {
+  const res = await fetch(`${API_BASE_URL}/api/file/${fileId}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Failed to delete file");
+  return data; // { success: true }
+};

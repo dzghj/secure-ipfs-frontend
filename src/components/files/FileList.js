@@ -1,6 +1,6 @@
 import FileCard from "./FileCard";
 
-export default function FileList({ files, token, nominees = [] }) {
+export default function FileList({ files, token, nominees = [], onDeleted }) {
   if (!files || files.length === 0) {
     return (
       <div className="text-center py-10">
@@ -13,7 +13,7 @@ export default function FileList({ files, token, nominees = [] }) {
   return (
     <div className="flex flex-col gap-3">
       {files.map((f) => (
-        <FileCard key={f.id} file={f} token={token} nominees={nominees} />
+        <FileCard key={f.id} file={f} token={token} nominees={nominees} onDeleted={onDeleted} />
       ))}
     </div>
   );
