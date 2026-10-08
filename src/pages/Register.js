@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Register() {
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -26,10 +27,11 @@ export default function Register() {
     setLoading(true);
 
     try {
-      const res = await axios.post(`${API_BASE_URL}/api/auth/register`, { email });
+      const res = await axios.post(`${API_BASE_URL}/api/auth/register`, { email, phone });
 
       setMessage(res.data.message || "Check your email to continue.");
       setEmail("");
+      setPhone("");
       setEmailSent(true);
 
     } catch (err) {
@@ -50,17 +52,34 @@ export default function Register() {
       </div>
 
       {!emailSent && (
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">Email Address</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-2 bg-dark-bg border border-dark-border rounded-lg focus:outline-none focus:border-primary text-white placeholder-gray-500"
-            placeholder="your@email.com"
-            required
-          />
-        </div>
+        <>
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Email Address</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-4 py-2 bg-dark-bg border border-dark-border rounded-lg focus:outline-none focus:border-primary text-white placeholder-gray-500"
+              placeholder="your@email.com"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Phone Number</label>
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="w-full px-4 py-2 bg-dark-bg border border-dark-border rounded-lg focus:outline-none focus:border-primary text-white placeholder-gray-500"
+              placeholder="+14155551234"
+              required
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Include your country code (e.g. +1 for US/Canada). Used to send a login verification code.
+            </p>
+          </div>
+        </>
       )}
 
       {error && <p className="text-red-400 text-sm text-center bg-red-500 bg-opacity-10 border border-red-500 rounded-lg p-3">{error}</p>}
