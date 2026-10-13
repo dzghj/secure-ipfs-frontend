@@ -62,13 +62,13 @@ function NomineeForm({ onSave, onBack, allCategories, initial }) {
         <button
           onClick={onBack}
           className="w-9 h-9 flex items-center justify-center rounded-xl border border-dark-border text-primary hover:bg-white/5 transition text-xl font-bold"
-          aria-label="Back to nominees"
+          aria-label="Back to legacy contacts"
         >
           ‹
         </button>
         <div>
           <h1 className="text-3xl font-bold">
-            {initial ? "Edit Nominee" : "Add New Nominee"}
+            {initial ? "Edit Legacy Contact" : "Add New Legacy Contact"}
           </h1>
           <p className="text-gray-400 text-sm">Grant vault access to a trusted person.</p>
         </div>
@@ -155,7 +155,7 @@ function NomineeForm({ onSave, onBack, allCategories, initial }) {
 
         <div className="flex items-start gap-3 bg-primary bg-opacity-10 border border-primary border-opacity-30 rounded-xl p-4 mb-6 text-sm text-gray-300">
           <span className="text-xl flex-shrink-0">🔒</span>
-          Nominees can only access data according to the permissions you assign. You can update or
+          Legacy Contacts can only access data according to the permissions you assign. You can update or
           revoke access at any time.
         </div>
 
@@ -164,7 +164,7 @@ function NomineeForm({ onSave, onBack, allCategories, initial }) {
           disabled={saving}
           className="w-full bg-primary text-white py-4 rounded-xl font-semibold text-lg hover:bg-primary-dark transition disabled:opacity-60"
         >
-          {saving ? "Saving…" : "Save Nominee"}
+          {saving ? "Saving…" : "Save Legacy Contact"}
         </button>
       </div>
     </div>
@@ -207,12 +207,12 @@ export default function NomineesPage({ allCategories = [], nominees = [], onNomi
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Remove this nominee?")) return;
+    if (!window.confirm("Remove this Legacy Contact?")) return;
     try {
       await deleteNomineeAPI(token, id);
       onNomineesChange?.(nominees.filter((n) => n.id !== id));
     } catch (e) {
-      alert("Failed to remove nominee.");
+      alert("Failed to remove Legacy Contact.");
     }
   };
 
@@ -247,31 +247,31 @@ export default function NomineesPage({ allCategories = [], nominees = [], onNomi
     <div className="px-8 py-10">
       <div className="flex items-start justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold mb-1">Nominees</h1>
+          <h1 className="text-3xl font-bold mb-1">Legacy Contacts</h1>
           <p className="text-gray-400 text-sm">Trusted people who can access your vault.</p>
         </div>
         <button
           onClick={() => { setEditing(null); setShowForm(true); }}
           className="px-5 py-2.5 bg-primary text-white rounded-full text-sm font-semibold hover:bg-primary-dark transition flex items-center gap-2"
         >
-          <span>👥</span> Add Nominee +
+          <span>👥</span> Add Legacy Contact +
         </button>
       </div>
 
       {/* What are nominees — onboarding explainer */}
       <div className="bg-dark-card border border-dark-border rounded-2xl p-6 mb-6">
-        <h3 className="font-bold text-white mb-2 flex items-center gap-2"><span>👥</span> What is a Nominee?</h3>
+        <h3 className="font-bold text-white mb-2 flex items-center gap-2"><span>👥</span> What is a Legacy Contact?</h3>
         <p className="text-sm text-gray-400 leading-relaxed">
-          A nominee is someone you trust to access your vault if you are no longer able to.
-          When your continuity switch triggers — because you've missed a check-in — your nominees
-          receive a secure, time-limited link to the files you've chosen to share with them.
+          A Legacy Contact is someone you trust to access your vault if you are no longer able to.
+          When your continuity switch triggers — because you've missed a check-in — your Legacy
+          Contacts receive a secure, time-limited link to the files you've chosen to share with them.
           They could be a spouse, a solicitor, an adult child, or any trusted person.
         </p>
       </div>
 
-      {/* Nominee list card */}
+      {/* Legacy Contact list card */}
       <div className="bg-dark-card border border-dark-border rounded-2xl p-6 mb-6 hover:border-primary transition">
-        <h3 className="text-xl font-semibold text-primary mb-2">Nominee Access</h3>
+        <h3 className="text-xl font-semibold text-primary mb-2">Legacy Contact Access</h3>
         <p className="text-gray-400 text-sm leading-relaxed mb-5">
           Add trusted individuals who can access your vault data if you miss a check-in.
         </p>
@@ -284,7 +284,7 @@ export default function NomineesPage({ allCategories = [], nominees = [], onNomi
               👤
             </div>
             <div>
-              <p className="text-sm text-gray-300 font-medium">No nominees added yet</p>
+              <p className="text-sm text-gray-300 font-medium">No Legacy Contacts added yet</p>
               <p className="text-xs text-gray-500 mt-0.5">
                 Add trusted individuals to protect your vault.
               </p>
@@ -353,13 +353,13 @@ export default function NomineesPage({ allCategories = [], nominees = [], onNomi
       {/* How it works */}
       <div className="bg-dark-card border border-dark-border rounded-xl p-5">
         <h4 className="font-semibold mb-3 flex items-center gap-2">
-          <span>🛡️</span> How Nominee Access Works
+          <span>🛡️</span> How Legacy Contact Access Works
         </h4>
         <div className="space-y-3">
           {[
-            "Nominees are notified only when you miss a check-in deadline.",
-            "You control exactly which folders each nominee can access.",
-            "You can update or remove nominees at any time.",
+            "Legacy Contacts are notified only when you miss a check-in deadline.",
+            "You control exactly which folders each Legacy Contact can access.",
+            "You can update or remove Legacy Contacts at any time.",
             "We'll resend an unopened access invitation up to two times so nothing important gets missed.",
           ].map((text, i) => (
             <div key={i} className="flex gap-3 items-start text-sm text-gray-400">
@@ -391,7 +391,7 @@ function NomineeTestPanel({ nominees, token }) {
   const reset = (id) => { setSelectedId(id); setResult(null); setStatus(null); };
 
   const handleSendLink = async () => {
-    if (!selectedId) return alert("Select a nominee first.");
+    if (!selectedId) return alert("Select a Legacy Contact first.");
     setSending(true);
     setResult(null);
     setStatus(null);
@@ -412,7 +412,7 @@ function NomineeTestPanel({ nominees, token }) {
   };
 
   const handleCheckStatus = async () => {
-    if (!selectedId) return alert("Select a nominee first.");
+    if (!selectedId) return alert("Select a Legacy Contact first.");
     setChecking(true);
     setStatus(null);
     try {
@@ -438,21 +438,21 @@ function NomineeTestPanel({ nominees, token }) {
         <span className="ml-auto text-xs text-yellow-700 font-mono uppercase">Remove before production</span>
       </div>
       <p className="text-xs text-yellow-700 mb-5">
-        Trigger a nominee access email, copy the link, then check if it's been opened.
+        Trigger a Legacy Contact access email, copy the link, then check if it's been opened.
       </p>
 
-      {/* Nominee selector */}
+      {/* Legacy Contact selector */}
       <div className="mb-4">
-        <label className="text-xs text-gray-400 mb-2 block font-medium">Select Nominee</label>
+        <label className="text-xs text-gray-400 mb-2 block font-medium">Select Legacy Contact</label>
         {nominees.length === 0 ? (
-          <p className="text-xs text-gray-500">No nominees yet — add one above first.</p>
+          <p className="text-xs text-gray-500">No Legacy Contacts yet — add one above first.</p>
         ) : (
           <select
             value={selectedId}
             onChange={(e) => reset(e.target.value)}
             className="w-full bg-dark-bg border border-dark-border rounded-xl px-4 py-2.5 text-white text-sm outline-none focus:border-yellow-500 transition"
           >
-            <option value="">— pick a nominee —</option>
+            <option value="">— pick a Legacy Contact —</option>
             {nominees.map((n) => (
               <option key={n.id} value={n.id}>
                 {n.name} ({n.email})
