@@ -27,23 +27,13 @@ const translations = {
       },
       {
         icon: "🌐",
-        title: "Decentralized Storage",
-        desc: "Stored on IPFS — no single point of failure. Your documents persist across distributed networks.",
-      },
-      {
-        icon: "✨",
-        title: "Zero Knowledge",
-        desc: "We never have access to your files or encryption keys. Only you and your legal contacts can unlock them.",
+        title: "IPFS Storage",
+        desc: "Stored on IPFS, content-addressed so any change to a file produces a completely different address.",
       },
       {
         icon: "👥",
         title: "Legal Contact Access",
         desc: "Designate trusted executors and family members. Access is released automatically via your continuity switch.",
-      },
-      {
-        icon: "☑️",
-        title: "PIPEDA Compliant",
-        desc: "Enterprise-grade security and full compliance with global privacy regulations.",
       },
       {
         icon: "💬",
@@ -54,8 +44,6 @@ const translations = {
     securityPoints: [
       { title: "Immutable Blockchain Record", desc: "Document hashes stored on-chain — cannot be altered or deleted" },
       { title: "AES-256 Encryption", desc: "Industry standard encryption applied before upload" },
-      { title: "Zero Knowledge Architecture", desc: "We cannot access your data even if legally requested" },
-      { title: "PIPEDA & CCPA Compliant", desc: "Full compliance with international privacy laws" },
     ],
     chainSteps: [
       { step: "01", title: "Upload Your Document", desc: "Drag and drop your will, title deed, or legal file into your vault." },
@@ -90,9 +78,9 @@ const translations = {
       heading: "Enterprise-Grade Security",
       cardHeading: "Immutable by Design",
       cardParagraph:
-        "Once your document hash is written to the blockchain, no one — not even us — can alter, delete, or dispute its existence.",
+        "Once your document's hash is anchored to the blockchain, that proof of its existence and timing can't be altered or disputed by anyone — including us. Deleting the document itself from your vault is a separate action, and it's permanent.",
       verifiedBadge: "✓ Blockchain Verified",
-      verifiedSub: "Immutable · Timestamped · Trustless",
+      verifiedSub: "Timestamped · Independently Verifiable",
     },
     cta: {
       heading: "Protect Your Legacy Today",
@@ -125,23 +113,13 @@ const translations = {
       },
       {
         icon: "🌐",
-        title: "去中心化存储",
-        desc: "存储于IPFS——没有单点故障,您的文件分布保存在去中心化网络中。",
-      },
-      {
-        icon: "✨",
-        title: "零知识架构",
-        desc: "我们永远无法访问您的文件或加密密钥,只有您和您的法定联系人才能解锁它们。",
+        title: "IPFS存储",
+        desc: "存储于IPFS——基于内容寻址,文件的任何改动都会产生完全不同的地址。",
       },
       {
         icon: "👥",
         title: "法定联系人权限",
         desc: "指定值得信赖的执行人与家庭成员。当您的生命状态开关触发时,访问权限会自动释放。",
-      },
-      {
-        icon: "☑️",
-        title: "符合PIPEDA规定",
-        desc: "企业级安全保障,完全符合全球隐私法规。",
       },
       {
         icon: "💬",
@@ -152,8 +130,6 @@ const translations = {
     securityPoints: [
       { title: "不可篡改的区块链记录", desc: "文件哈希上链存储——无法被更改或删除" },
       { title: "AES-256加密", desc: "上传前即应用行业标准加密" },
-      { title: "零知识架构", desc: "即使被依法要求,我们也无法访问您的数据" },
-      { title: "符合PIPEDA与CCPA规定", desc: "完全符合国际隐私法律" },
     ],
     chainSteps: [
       { step: "01", title: "上传您的文件", desc: "将遗嘱、产权证或其他法律文件拖放至您的保险库。" },
@@ -187,9 +163,9 @@ const translations = {
     security: {
       heading: "企业级安全保障",
       cardHeading: "从设计上不可篡改",
-      cardParagraph: "一旦文件哈希写入区块链,任何人——包括我们自己——都无法更改、删除或质疑其存在。",
+      cardParagraph: "一旦文件哈希锚定至区块链,这份关于其存在与时间的证明就无法被任何人——包括我们自己——更改或质疑。从您的保险库中删除文件本身是另一项操作,且不可撤销。",
       verifiedBadge: "✓ 区块链已验证",
-      verifiedSub: "不可篡改 · 已加时间戳 · 无需信任",
+      verifiedSub: "已加时间戳 · 可独立验证",
     },
     cta: {
       heading: "立即守护您的传承",

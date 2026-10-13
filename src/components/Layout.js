@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, Outlet, useLocation } from "react-router-dom";
+import { useNavigate, Outlet, useLocation, Link } from "react-router-dom";
 import SupportChat from "./common/SupportChat";
 
 export default function Layout({ onLogout }) {
@@ -115,10 +115,8 @@ export default function Layout({ onLogout }) {
 
       {/* ---------- Footer ---------- */}
       <footer className="py-8 border-t border-dark-border bg-dark-bg">
-        <div className="max-w-6xl mx-auto px-8 grid grid-cols-2 md:grid-cols-5 gap-4 text-center md:text-left text-sm text-gray-400 mb-6">
+        <div className="max-w-6xl mx-auto px-8 grid grid-cols-2 md:grid-cols-3 gap-4 text-center md:text-left text-sm text-gray-400 mb-6">
           <div className="flex items-center justify-center md:justify-start gap-2"><span>🔐</span> AES-256 Encryption</div>
-          <div className="flex items-center justify-center md:justify-start gap-2"><span>🔑</span> Zero Knowledge</div>
-          <div className="flex items-center justify-center md:justify-start gap-2"><span>✓</span> PIPEDA Compliant</div>
           <div className="flex items-center justify-center md:justify-start gap-2"><span>🌐</span> Data Privacy</div>
           <button
             onClick={() => setSupportOpen(true)}
@@ -127,8 +125,13 @@ export default function Layout({ onLogout }) {
             <span>📞</span> 24/7 Support
           </button>
         </div>
+        <div className="max-w-6xl mx-auto px-8 flex items-center justify-center gap-4 text-xs text-gray-500 mb-4">
+          <Link to="/terms" className="hover:text-primary transition">Terms of Service</Link>
+          <span>·</span>
+          <Link to="/privacy" className="hover:text-primary transition">Privacy Policy</Link>
+        </div>
         <div className="text-center text-gray-500 text-xs border-t border-dark-border pt-6">
-          © {new Date().getFullYear()} LegacyChain. All rights reserved.
+          LegacyChain is a product of SealKeep Technology Inc. © {new Date().getFullYear()} All rights reserved.
         </div>
       </footer>
 

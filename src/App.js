@@ -18,6 +18,8 @@ import ResetPassword from "./pages/ResetPassword";
 import Main from "./pages/Main";
 import SetPassword from "./pages/setPassword";
 import NomineeAccess from "./pages/NomineeAccess";
+import Terms from "./pages/Terms";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
   function App() {
     const [token, setToken] = React.useState(localStorage.getItem("token"));
@@ -71,6 +73,8 @@ import NomineeAccess from "./pages/NomineeAccess";
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/set-password/:token" element={<SetPassword />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
 
           {/* ---------- PROTECTED ---------- */}
           <Route
