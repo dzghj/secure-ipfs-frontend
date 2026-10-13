@@ -126,7 +126,7 @@ export default function FileCard({ file, token, nominees = [], onDeleted }) {
 
   const handleDelete = async () => {
     if (!file.id) return;
-    if (!window.confirm(`Delete "${fileName}"? This can't be undone.`)) return;
+    if (!window.confirm(`Permanently delete "${fileName}"?\n\nThis cannot be undone — there is no trash or recovery. The file and its encryption key will be erased for good.`)) return;
 
     setDeleting(true);
     setError("");
