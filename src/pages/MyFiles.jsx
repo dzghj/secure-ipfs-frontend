@@ -17,6 +17,13 @@ export default function MyFiles() {
   const [files,           setFiles]           = useState([]);
   const [nominees,        setNominees]        = useState([]);
   const [loading,         setLoading]         = useState(true);
+  // Tracks only the very first load — load() also runs after every
+  // upload/delete (via onUploadComplete/onDeleted) to refresh data, and we
+  // don't want those background refreshes to unmount the whole page behind
+  // <Loader/>. Unmounting VaultPage resets its internal `selectedCategory`
+  // state, which is what was kicking the user back to the vault grid
+  // instead of staying on the folder they were in.
+  const [hasLoadedOnce,   setHasLoadedOnce]   = useState(false);
   const [showUpgrade,     setShowUpgrade]     = useState(false);
   const [activeTab,       setActiveTab]       = useState("vault");
   const [checkin,         setCheckin]         = useState("90");
@@ -47,6 +54,7 @@ export default function MyFiles() {
       console.error(e);
     } finally {
       setLoading(false);
+      setHasLoadedOnce(true);
     }
   }, [token]);
 
@@ -76,7 +84,7 @@ export default function MyFiles() {
     setActiveTab("vault");
   };
 
-  if (loading) return <Loader />;
+  if (loading && !hasLoadedOnce) return <Loader />;
 
   return (
     <div className="flex h-full w-full bg-dark-bg text-white overflow-hidden">

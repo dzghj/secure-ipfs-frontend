@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate, Outlet, useLocation, Link } from "react-router-dom";
 import SupportChat from "./common/SupportChat";
+
+// Language toggle (EN/中文) is hidden for now — English is the only
+// language shown. The zh translations still exist in Main.js/MyFiles.jsx
+// and can be re-enabled later by restoring the toggle UI below and letting
+// `lang` vary again.
+const lang = "en";
 
 export default function Layout({ onLogout }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [supportOpen, setSupportOpen] = useState(false);
-  const [lang, setLang] = useState(() => localStorage.getItem("lang") || "en");
-
-  useEffect(() => {
-    localStorage.setItem("lang", lang);
-  }, [lang]);
 
   const token = localStorage.getItem("token");
   const isLoggedIn = !!token;
@@ -61,25 +62,6 @@ export default function Layout({ onLogout }) {
         </nav>
 
         <div className="flex items-center gap-4">
-          {/* Language selector */}
-          <div className="inline-flex items-center bg-dark-card border border-dark-border rounded-full p-1 text-sm">
-            <button
-              onClick={() => setLang("en")}
-              className={`px-3 py-1 rounded-full font-medium transition ${
-                lang === "en" ? "bg-primary text-dark-bg" : "text-gray-400 hover:text-white"
-              }`}
-            >
-              EN
-            </button>
-            <button
-              onClick={() => setLang("zh")}
-              className={`px-3 py-1 rounded-full font-medium transition ${
-                lang === "zh" ? "bg-primary text-dark-bg" : "text-gray-400 hover:text-white"
-              }`}
-            >
-              中文
-            </button>
-          </div>
 
           {/* ✅ Auth-aware button */}
           {isLoggedIn ? (
@@ -110,7 +92,7 @@ export default function Layout({ onLogout }) {
             : "overflow-y-auto"
         }`}
       >
-        <Outlet context={{ lang, setLang }} />
+        <Outlet context={{ lang }} />
       </main>
 
       {/* ---------- Footer ---------- */}
