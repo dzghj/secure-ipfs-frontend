@@ -264,7 +264,7 @@ export default function FolderDetail({ category, files, token, onBack, onUploadC
           🔒 Blockchain Timestamp Proof
         </summary>
         <p className="mt-2 text-gray-500">
-          When you upload a file, LegacyChain automatically creates a
+          When you upload a file, ShadowVault automatically creates a
           tamper-evident timestamp for it using the Bitcoin blockchain.
         </p>
 
@@ -285,7 +285,7 @@ export default function FolderDetail({ category, files, token, onBack, onUploadC
           </li>
           <li>
             This proves the file existed at that exact time, and that it
-            hasn't been altered since — even LegacyChain couldn't secretly
+            hasn't been altered since — even ShadowVault couldn't secretly
             change it later without the proof breaking.
           </li>
           <li>
@@ -320,9 +320,9 @@ export default function FolderDetail({ category, files, token, onBack, onUploadC
           </li>
           <li>
             Download the proof file if you ever need to show someone outside
-            LegacyChain (a court, an auditor, another service) independent
+            ShadowVault (a court, an auditor, another service) independent
             evidence of when this file existed — it doesn't depend on
-            trusting LegacyChain's word.
+            trusting ShadowVault's word.
           </li>
         </ul>
       </details>

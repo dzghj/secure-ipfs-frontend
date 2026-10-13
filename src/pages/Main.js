@@ -58,7 +58,7 @@ const translations = {
       titleLine1: "Your Legacy, Secured,",
       titleLine2: "On the Chain Forever",
       paragraph:
-        "LegacyChain protects your legal and estate documents with blockchain immutability, AES-256 encryption, and IPFS decentralized storage. Your wishes — preserved exactly as you intended.",
+        "ShadowVault protects your legal and estate documents with blockchain immutability, AES-256 encryption, and IPFS decentralized storage. Your wishes — preserved exactly as you intended.",
       ctaPrimary: "Secure My Legacy",
       ctaSecondary: "See How It Works",
       stat1Label: "AES Encryption",
@@ -70,10 +70,10 @@ const translations = {
       mockupFooter: "Blockchain Anchored • AES-256 • IPFS Distributed",
     },
     how: {
-      heading: "How LegacyChain Works",
+      heading: "How ShadowVault Works",
       sub: "From upload to on-chain proof — in seconds.",
     },
-    featuresHeading: "Why Choose LegacyChain?",
+    featuresHeading: "Why Choose ShadowVault?",
     security: {
       heading: "Enterprise-Grade Security",
       cardHeading: "Immutable by Design",
@@ -144,7 +144,7 @@ const translations = {
       titleLine1: "守护您的传承,",
       titleLine2: "永远上链留存",
       paragraph:
-        "LegacyChain 通过区块链不可篡改性、AES-256加密和IPFS去中心化存储,保护您的法律与遗产文件。您的心愿——原样永存。",
+        "ShadowVault 通过区块链不可篡改性、AES-256加密和IPFS去中心化存储,保护您的法律与遗产文件。您的心愿——原样永存。",
       ctaPrimary: "立即守护我的传承",
       ctaSecondary: "了解运作方式",
       stat1Label: "AES加密",
@@ -156,10 +156,10 @@ const translations = {
       mockupFooter: "区块链锚定 • AES-256 • IPFS分布式存储",
     },
     how: {
-      heading: "LegacyChain 如何运作",
+      heading: "ShadowVault 如何运作",
       sub: "从上传到链上存证——仅需几秒。",
     },
-    featuresHeading: "为什么选择 LegacyChain?",
+    featuresHeading: "为什么选择 ShadowVault?",
     security: {
       heading: "企业级安全保障",
       cardHeading: "从设计上不可篡改",

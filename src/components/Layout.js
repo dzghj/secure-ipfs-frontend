@@ -47,7 +47,7 @@ export default function Layout({ onLogout }) {
           <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
             <span className="text-dark-bg font-bold">⛓️</span>
           </div>
-          <span>LegacyChain</span>
+          <span>ShadowVault</span>
         </div>
 
         <nav className="hidden md:flex items-center gap-8">
@@ -131,7 +131,7 @@ export default function Layout({ onLogout }) {
           <Link to="/privacy" className="hover:text-primary transition">Privacy Policy</Link>
         </div>
         <div className="text-center text-gray-500 text-xs border-t border-dark-border pt-6">
-          LegacyChain is a product of SealKeep Technology Inc. © {new Date().getFullYear()} All rights reserved.
+          ShadowVault is a product of SealKeep Technology Inc. © {new Date().getFullYear()} All rights reserved.
         </div>
       </footer>
 
