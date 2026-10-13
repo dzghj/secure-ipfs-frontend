@@ -37,7 +37,7 @@ function IconSwitch({ active }) {
 }
 
 const FALLBACK_T = {
-  brand: "LegacyChain",
+  brand: "ShadowVault",
   subtitle: "My Files",
   vault: "Vault",
   legacyContacts: "Legacy Contacts",

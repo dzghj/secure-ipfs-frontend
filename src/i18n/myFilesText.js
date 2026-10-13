@@ -1,7 +1,7 @@
 export const myFilesText = {
   en: {
     sidebar: {
-      brand: "LegacyChain",
+      brand: "ShadowVault",
       subtitle: "My Files",
       vault: "Vault",
       legacyContacts: "Legacy Contacts",
@@ -45,7 +45,7 @@ export const myFilesText = {
   },
   zh: {
     sidebar: {
-      brand: "LegacyChain",
+      brand: "ShadowVault",
       subtitle: "我的文件",
       vault: "保险库",
       legacyContacts: "法定联系人",

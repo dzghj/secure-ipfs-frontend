@@ -20,7 +20,7 @@ export default function PrivacyPolicy() {
 
       <Section title="1. Who we are">
         <p>
-          LegacyChain is a product of SealKeep Technology Inc. ("SealKeep", "we", "us"). This
+          ShadowVault is a product of SealKeep Technology Inc. ("SealKeep", "we", "us"). This
           policy explains what we collect, how we use it, and who can access it.
         </p>
       </Section>
@@ -120,7 +120,7 @@ export default function PrivacyPolicy() {
 
       <div className="mt-12 text-center">
         <Link to="/" className="text-primary hover:text-primary-dark transition text-sm">
-          ← Back to LegacyChain
+          ← Back to ShadowVault
         </Link>
       </div>
     </div>

@@ -20,15 +20,15 @@ export default function Terms() {
 
       <Section title="1. Who we are">
         <p>
-          LegacyChain is a product of SealKeep Technology Inc. ("SealKeep", "we", "us"). These
-          Terms govern your use of LegacyChain (the "Service"). By creating an account you agree
+          ShadowVault is a product of SealKeep Technology Inc. ("SealKeep", "we", "us"). These
+          Terms govern your use of ShadowVault (the "Service"). By creating an account you agree
           to these Terms.
         </p>
       </Section>
 
       <Section title="2. What the Service does">
         <p>
-          LegacyChain lets you upload documents, which are encrypted and stored, and lets you
+          ShadowVault lets you upload documents, which are encrypted and stored, and lets you
           designate "Legacy Contacts" who can be granted access to some or all of your documents
           if you stop checking in for a period of time you choose (the "Continuity Check-In").
         </p>
@@ -109,7 +109,7 @@ export default function Terms() {
 
       <div className="mt-12 text-center">
         <Link to="/" className="text-primary hover:text-primary-dark transition text-sm">
-          ← Back to LegacyChain
+          ← Back to ShadowVault
         </Link>
       </div>
     </div>
