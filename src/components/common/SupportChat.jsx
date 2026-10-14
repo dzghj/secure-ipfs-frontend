@@ -170,23 +170,30 @@ export default function SupportChat({ onClose }) {
       </div>
 
       {/* Input */}
-      <div className="flex items-end gap-2 border-t border-dark-border p-3">
-        <textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder={token ? "Describe your issue…" : "Log in to contact support"}
-          disabled={!token}
-          rows={1}
-          className="flex-1 resize-none rounded-xl border border-dark-border bg-dark-bg px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-primary disabled:opacity-50"
-        />
-        <button
-          onClick={handleSend}
-          disabled={!token || sending || !input.trim()}
-          className="flex-shrink-0 rounded-xl bg-primary px-3.5 py-2 text-sm font-semibold text-white transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-40"
-        >
-          Send
-        </button>
+      <div className="border-t border-dark-border">
+        {!token && (
+          <div className="bg-amber-500/10 px-4 py-2 text-xs text-amber-400">
+            Please log in to use the AI support feature.
+          </div>
+        )}
+        <div className="flex items-end gap-2 p-3">
+          <textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder={token ? "Describe your issue…" : "Log in to contact support"}
+            disabled={!token}
+            rows={1}
+            className="flex-1 resize-none rounded-xl border border-dark-border bg-dark-bg px-3 py-2 text-sm text-white placeholder-gray-500 outline-none focus:border-primary disabled:opacity-50"
+          />
+          <button
+            onClick={handleSend}
+            disabled={!token || sending || !input.trim()}
+            className="flex-shrink-0 rounded-xl bg-primary px-3.5 py-2 text-sm font-semibold text-white transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            Send
+          </button>
+        </div>
       </div>
     </div>
   );

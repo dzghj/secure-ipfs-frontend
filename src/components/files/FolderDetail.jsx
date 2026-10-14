@@ -210,10 +210,10 @@ export default function FolderDetail({ category, files, token, onBack, onUploadC
       </button>
 
       {/* ── How to verify a file's Bitcoin timestamp ── */}
-      <details className="mt-4 rounded-2xl border border-dark-border bg-dark-card/50 p-4 text-xs text-gray-400">
-        <summary className="cursor-pointer select-none font-semibold text-gray-300">
+      <div className="mt-4 rounded-2xl border border-dark-border bg-dark-card/50 p-6 text-sm text-gray-400">
+        <h3 className="font-semibold text-gray-200 text-lg">
           ₿ How to verify a file's Bitcoin timestamp
-        </summary>
+        </h3>
         <p className="mt-2 text-gray-500">
           Every uploaded file's hash is anchored with OpenTimestamps. New anchors take a
           few hours to gain a Bitcoin confirmation — after that, here's how to check one:
@@ -256,13 +256,13 @@ export default function FolderDetail({ category, files, token, onBack, onUploadC
             's web verifier.
           </li>
         </ol>
-      </details>
+      </div>
 
       {/* ── What the Bitcoin timestamp proof actually is ── */}
-      <details className="mt-4 rounded-2xl border border-dark-border bg-dark-card/50 p-4 text-xs text-gray-400">
-        <summary className="cursor-pointer select-none font-semibold text-gray-300">
+      <div className="mt-4 rounded-2xl border border-dark-border bg-dark-card/50 p-6 text-sm text-gray-400">
+        <h3 className="font-semibold text-gray-200 text-lg">
           🔒 Blockchain Timestamp Proof
-        </summary>
+        </h3>
         <p className="mt-2 text-gray-500">
           When you upload a file, ShadowVault automatically creates a
           tamper-evident timestamp for it using the Bitcoin blockchain.
@@ -325,7 +325,7 @@ export default function FolderDetail({ category, files, token, onBack, onUploadC
             trusting ShadowVault's word.
           </li>
         </ul>
-      </details>
+      </div>
     </div>
   );
 }
