@@ -6,7 +6,15 @@ import { buildEncryptedUpload } from "../../utils/crypto";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
-export default function FolderDetail({ category, files, token, onBack, onUploadComplete, nominees = [] }) {
+export default function FolderDetail({
+  category,
+  files,
+  token,
+  plan = { name: "Normal", maxFilesPerFolder: 5, unlimited: false },
+  onBack,
+  onUploadComplete,
+  nominees = [],
+}) {
   const ft =
     FOLDER_TYPES.find(
       (f) => f.label.toLowerCase() === category.toLowerCase()
@@ -15,6 +23,8 @@ export default function FolderDetail({ category, files, token, onBack, onUploadC
   const categoryFiles = files.filter(
     (f) => (f.category || "Personal") === category
   );
+
+  const atFolderLimit = !plan.unlimited && categoryFiles.length >= plan.maxFilesPerFolder;
 
   // ── Upload state ─────────────────────────────────────────────────────────
   const [showUpload,  setShowUpload]  = useState(false);
@@ -103,8 +113,11 @@ export default function FolderDetail({ category, files, token, onBack, onUploadC
         <FolderSvg color={ft.color} size={36} />
         <div>
           <h1 className="text-2xl font-bold leading-tight">{category}</h1>
-          <p className="text-sm text-gray-400">
-            {categoryFiles.length} file{categoryFiles.length !== 1 ? "s" : ""}
+          <p className={`text-sm ${atFolderLimit ? "text-amber-400" : "text-gray-400"}`}>
+            {plan.unlimited
+              ? `${categoryFiles.length} file${categoryFiles.length !== 1 ? "s" : ""}`
+              : `${categoryFiles.length} / ${plan.maxFilesPerFolder} files`}
+            {atFolderLimit && " — folder limit reached"}
           </p>
         </div>
       </div>
@@ -200,14 +213,22 @@ export default function FolderDetail({ category, files, token, onBack, onUploadC
         </div>
       )}
 
-      {/* ── Add Content bar ── */}
-      <button
-        onClick={() => { setShowUpload((v) => !v); if (showUpload) resetUpload(); }}
-        className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl border-2 border-dashed border-primary/40 hover:border-primary bg-primary/5 hover:bg-primary/10 text-primary font-semibold text-sm transition mt-auto"
-      >
-        <span className="text-lg">＋</span>
-        Add Content
-      </button>
+      {/* ── Add Content bar — hidden once the folder hits its plan limit, so
+             a user can't select a file only to have the upload rejected. ── */}
+      {atFolderLimit && !showUpload ? (
+        <div className="w-full py-4 rounded-2xl border-2 border-dashed border-amber-500/30 bg-amber-500/5 text-amber-400 text-sm text-center">
+          You've reached your {plan.name} plan's limit of {plan.maxFilesPerFolder} files in this folder.
+          Delete a file, or upgrade your plan to add more.
+        </div>
+      ) : (
+        <button
+          onClick={() => { setShowUpload((v) => !v); if (showUpload) resetUpload(); }}
+          className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl border-2 border-dashed border-primary/40 hover:border-primary bg-primary/5 hover:bg-primary/10 text-primary font-semibold text-sm transition mt-auto"
+        >
+          <span className="text-lg">＋</span>
+          Add Content
+        </button>
+      )}
 
       {/* ── How to verify a file's Bitcoin timestamp ── */}
       <div className="mt-4 rounded-2xl border border-dark-border bg-dark-card/50 p-6 text-sm text-gray-400">

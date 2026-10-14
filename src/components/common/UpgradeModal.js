@@ -19,7 +19,9 @@ export default function UpgradeModal({ token, onClose }) {
         {plans.map(p => (
           <div key={p.id} className="border border-dark-border p-3 mb-2 rounded bg-dark-bg">
             <div className="font-semibold">{p.name}</div>
-            <div className="text-sm text-gray-400">{p.maxFiles} files</div>
+            <div className="text-sm text-gray-400">
+              {p.maxFiles >= 999999 ? "Unlimited files per folder" : `${p.maxFiles} files per folder`}
+            </div>
             <div className="text-primary font-bold">${p.price}</div>
           </div>
         ))}
