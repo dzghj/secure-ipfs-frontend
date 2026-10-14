@@ -65,7 +65,7 @@ const translations = {
       badge2: "Run by AI Brain — Monitored 24/7",
       titleLine1: "Your Legacy, Secured,",
       titleLine2: "On the Chain Forever",
-      ctaPrimary: "Start",
+      ctaPrimary: "Start your vault",
       ctaSecondary: "Login",
       paragraph:
         "ShadowVault protects your legal and estate documents with blockchain immutability, AES-256 encryption, and IPFS decentralized storage. Your wishes — preserved exactly as you intended.",
@@ -138,7 +138,7 @@ const translations = {
       badge2: "AI大脑驱动 — 24/7全天候监控",
       titleLine1: "守护您的传承,",
       titleLine2: "永远上链留存",
-      ctaPrimary: "开始",
+      ctaPrimary: "开启您的保险库",
       ctaSecondary: "登录",
       paragraph:
         "ShadowVault 通过区块链不可篡改性、AES-256加密和IPFS去中心化存储,保护您的法律与遗产文件。您的心愿——原样永存。",
