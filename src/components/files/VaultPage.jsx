@@ -3,7 +3,6 @@ import FolderGrid from "./FolderGrid";
 import FolderDetail from "./FolderDetail";
 
 const FALLBACK_T = {
-  planLimitWarning: "You've reached your plan limit.",
   upgradeButton: "Upgrade Plan",
   vaultSummary: "Vault Summary",
   categories: "Categories",
@@ -30,7 +29,7 @@ export default function VaultPage({
   files,
   nominees = [],
   token,
-  hasReachedLimit,
+  plan = { name: "Normal", maxFilesPerFolder: 5, unlimited: false },
   onUpgrade,
   user,
   onUploadComplete,
@@ -87,6 +86,7 @@ export default function VaultPage({
         category={selectedCategory}
         files={files}
         token={token}
+        plan={plan}
         onBack={() => setSelectedCategory(null)}
         onUploadComplete={onUploadComplete}
         nominees={nominees}
@@ -98,25 +98,27 @@ export default function VaultPage({
   return (
     <div className="px-8 py-10">
 
-      {/* Greeting — avatar only */}
-      <div className="flex items-center gap-4 mb-8">
-        <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center font-bold text-white text-lg flex-shrink-0">
-          {initials}
+      {/* Greeting — avatar + current plan tier */}
+      <div className="flex items-center justify-between gap-4 mb-8">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center font-bold text-white text-lg flex-shrink-0">
+            {initials}
+          </div>
+          <div className="inline-flex items-center gap-2 text-xs font-medium text-gray-400 bg-dark-card border border-dark-border rounded-full px-3 py-1.5">
+            <span className="text-primary">{plan.name} Plan</span>
+            <span className="text-gray-600">·</span>
+            {plan.unlimited ? "Unlimited files per folder" : `${plan.maxFilesPerFolder} files per folder`}
+          </div>
         </div>
-      </div>
-
-      {/* Plan limit warning */}
-      {hasReachedLimit && (
-        <div className="bg-yellow-600 text-black p-4 rounded-xl mb-6 flex items-center justify-between">
-          <span className="font-medium text-sm">{t.planLimitWarning}</span>
+        {!plan.unlimited && (
           <button
             onClick={onUpgrade}
-            className="ml-4 bg-black text-white px-4 py-2 rounded-lg text-sm font-semibold"
+            className="text-xs font-semibold text-primary hover:text-primary-dark transition"
           >
             {t.upgradeButton}
           </button>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Vault Summary */}
       <div className="bg-dark-card border border-dark-border rounded-2xl p-6 mb-6 hover:border-primary transition">

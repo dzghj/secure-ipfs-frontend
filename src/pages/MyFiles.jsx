@@ -28,10 +28,12 @@ export default function MyFiles() {
   const [activeTab,       setActiveTab]       = useState("vault");
   const [checkin,         setCheckin]         = useState("90");
   const [extraCategories, setExtraCategories] = useState([]);
+  // Per-folder tier limit (Normal/Middle/Super), from /api/myfiles — replaces
+  // the old account-wide file-count check, which didn't match how limits
+  // actually work (5/10/unlimited files per folder, not per account).
+  const [plan,            setPlan]            = useState({ name: "Normal", maxFilesPerFolder: 5, unlimited: false });
   const token           = localStorage.getItem("token");
   const user            = JSON.parse(localStorage.getItem("user") || "{}");
-  const maxFiles        = user?.maxFileNumber ?? 3;
-  const hasReachedLimit = files.length >= maxFiles;
 
   // Merge categories from files + any manually created ones
   const fileCategories = [...new Set(files.map((f) => f.category || "Personal"))];
@@ -47,6 +49,7 @@ export default function MyFiles() {
         fetchFoldersAPI(token).catch(() => []),
       ]);
       setFiles(fileData.files || []);
+      if (fileData.plan) setPlan(fileData.plan);
       setNominees(nomineeData || []);
       setCheckin(String(checkinData.checkinInterval || 90));
       setExtraCategories((folderData || []).map((f) => f.name));
@@ -98,7 +101,7 @@ export default function MyFiles() {
               files={files}
               nominees={nominees}
               token={token}
-              hasReachedLimit={hasReachedLimit}
+              plan={plan}
               onUpgrade={() => setShowUpgrade(true)}
               user={user}
               onUploadComplete={load}
