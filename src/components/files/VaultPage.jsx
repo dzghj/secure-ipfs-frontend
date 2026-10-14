@@ -29,7 +29,7 @@ export default function VaultPage({
   files,
   nominees = [],
   token,
-  plan = { name: "Normal", maxFilesPerFolder: 5, unlimited: false },
+  plan = { name: "Basic", maxFilesPerFolder: 5, unlimited: false },
   onUpgrade,
   user,
   onUploadComplete,

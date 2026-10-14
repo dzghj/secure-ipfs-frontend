@@ -28,10 +28,10 @@ export default function MyFiles() {
   const [activeTab,       setActiveTab]       = useState("vault");
   const [checkin,         setCheckin]         = useState("90");
   const [extraCategories, setExtraCategories] = useState([]);
-  // Per-folder tier limit (Normal/Middle/Super), from /api/myfiles — replaces
+  // Per-folder tier limit (Basic/Plus/Premium), from /api/myfiles — replaces
   // the old account-wide file-count check, which didn't match how limits
   // actually work (5/10/unlimited files per folder, not per account).
-  const [plan,            setPlan]            = useState({ name: "Normal", maxFilesPerFolder: 5, unlimited: false });
+  const [plan,            setPlan]            = useState({ name: "Basic", maxFilesPerFolder: 5, unlimited: false });
   const token           = localStorage.getItem("token");
   const user            = JSON.parse(localStorage.getItem("user") || "{}");
 

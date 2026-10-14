@@ -10,7 +10,7 @@ export default function FolderDetail({
   category,
   files,
   token,
-  plan = { name: "Normal", maxFilesPerFolder: 5, unlimited: false },
+  plan = { name: "Basic", maxFilesPerFolder: 5, unlimited: false },
   onBack,
   onUploadComplete,
   nominees = [],
