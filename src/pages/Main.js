@@ -1,5 +1,17 @@
 import React from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
+import { motion, useReducedMotion } from "framer-motion";
+import {
+  LockClosedIcon,
+  CheckBadgeIcon,
+  DocumentTextIcon,
+  HomeIcon,
+  HeartIcon,
+  IdentificationIcon,
+} from "@heroicons/react/24/outline";
+
+// Matches translations.documents' order (Will, Property, Health, ID).
+const DOCUMENT_ICONS = [DocumentTextIcon, HomeIcon, HeartIcon, IdentificationIcon];
 
 const translations = {
   en: {
@@ -13,7 +25,7 @@ const translations = {
       {
         icon: "🧠",
         title: "Run by AI Brain",
-        desc: "An autonomous AI agent watches every upload, node, and continuity check around the clock — detecting and healing issues before they ever reach you.",
+        desc: "An autonomous AI agent watches every upload, node, and continuity check around the clock, detecting and healing issues before they ever reach you — and it's available right in your dashboard any time you have a question, day or night.",
       },
       {
         icon: "⛓️",
@@ -36,14 +48,10 @@ const translations = {
         desc: "Designate trusted executors and family members. Access is released automatically via your continuity switch.",
       },
       {
-        icon: "💬",
-        title: "24/7 AI Support",
-        desc: "Have a question any time, day or night? Click the AI chat bubble in the bottom corner of your dashboard for instant support.",
+        icon: "🛡️",
+        title: "Immutable by Design",
+        desc: "Once your document's hash is anchored to the blockchain, that proof of its existence and timing can't be altered or disputed by anyone — including us.",
       },
-    ],
-    securityPoints: [
-      { title: "Immutable Blockchain Record", desc: "Document hashes stored on-chain — cannot be altered or deleted" },
-      { title: "AES-256 Encryption", desc: "Industry standard encryption applied before upload" },
     ],
     chainSteps: [
       { step: "01", title: "Upload Your Document", desc: "Drag and drop your will, title deed, or legal file into your vault." },
@@ -57,35 +65,26 @@ const translations = {
       badge2: "Run by AI Brain — Monitored 24/7",
       titleLine1: "Your Legacy, Secured,",
       titleLine2: "On the Chain Forever",
+      ctaPrimary: "Start",
+      ctaSecondary: "Login",
       paragraph:
         "ShadowVault protects your legal and estate documents with blockchain immutability, AES-256 encryption, and IPFS decentralized storage. Your wishes — preserved exactly as you intended.",
-      ctaPrimary: "Secure My Legacy",
-      ctaSecondary: "See How It Works",
       stat1Label: "AES Encryption",
       stat2Label: "Data Sold",
       stat3Label: "Decentralized",
       stat4Label: "Access Anywhere",
       mockupTitle: "My Chain Vault",
       mockupSubtitle: "4 documents · blockchain verified",
-      mockupFooter: "Blockchain Anchored • AES-256 • IPFS Distributed",
+      mockupFooter: "AES-256 • IPFS Distributed",
     },
     how: {
       heading: "How ShadowVault Works",
       sub: "From upload to on-chain proof — in seconds.",
     },
     featuresHeading: "Why Choose ShadowVault?",
-    security: {
-      heading: "Enterprise-Grade Security",
-      cardHeading: "Immutable by Design",
-      cardParagraph:
-        "Once your document's hash is anchored to the blockchain, that proof of its existence and timing can't be altered or disputed by anyone — including us. Deleting the document itself from your vault is a separate action, and it's permanent.",
-      verifiedBadge: "✓ Blockchain Verified",
-      verifiedSub: "Timestamped · Independently Verifiable",
-    },
     cta: {
       heading: "Protect Your Legacy Today",
-      paragraph: "Your legacy deserves more than a filing cabinet. Anchor it on the blockchain — forever.",
-      button: "Create Your Chain Vault",
+      button: "Start your vault",
     },
   },
   zh: {
@@ -99,7 +98,7 @@ const translations = {
       {
         icon: "🧠",
         title: "由AI大脑驱动",
-        desc: "自主AI代理全天候监控每一次上传、每个节点与生命状态检查——在问题影响到您之前就主动发现并修复。",
+        desc: "自主AI代理全天候监控每一次上传、每个节点与生命状态检查,在问题影响到您之前就主动发现并修复——同一个AI也随时在您的控制台中,为您解答任何疑问,全天候在线。",
       },
       {
         icon: "⛓️",
@@ -122,14 +121,10 @@ const translations = {
         desc: "指定值得信赖的执行人与家庭成员。当您的生命状态开关触发时,访问权限会自动释放。",
       },
       {
-        icon: "💬",
-        title: "24/7 AI客服支持",
-        desc: "随时有疑问?点击控制台右下角的AI聊天气泡,即刻获得支持,全天候在线。",
+        icon: "🛡️",
+        title: "从设计上不可篡改",
+        desc: "一旦文件哈希锚定至区块链,这份关于其存在与时间的证明就无法被任何人——包括我们自己——更改或质疑。",
       },
-    ],
-    securityPoints: [
-      { title: "不可篡改的区块链记录", desc: "文件哈希上链存储——无法被更改或删除" },
-      { title: "AES-256加密", desc: "上传前即应用行业标准加密" },
     ],
     chainSteps: [
       { step: "01", title: "上传您的文件", desc: "将遗嘱、产权证或其他法律文件拖放至您的保险库。" },
@@ -143,37 +138,71 @@ const translations = {
       badge2: "AI大脑驱动 — 24/7全天候监控",
       titleLine1: "守护您的传承,",
       titleLine2: "永远上链留存",
+      ctaPrimary: "开始",
+      ctaSecondary: "登录",
       paragraph:
         "ShadowVault 通过区块链不可篡改性、AES-256加密和IPFS去中心化存储,保护您的法律与遗产文件。您的心愿——原样永存。",
-      ctaPrimary: "立即守护我的传承",
-      ctaSecondary: "了解运作方式",
       stat1Label: "AES加密",
       stat2Label: "数据出售",
       stat3Label: "去中心化",
       stat4Label: "随时访问",
       mockupTitle: "我的链上保险库",
       mockupSubtitle: "4份文件 · 区块链已验证",
-      mockupFooter: "区块链锚定 • AES-256 • IPFS分布式存储",
+      mockupFooter: "AES-256 • IPFS分布式存储",
     },
     how: {
       heading: "ShadowVault 如何运作",
       sub: "从上传到链上存证——仅需几秒。",
     },
     featuresHeading: "为什么选择 ShadowVault?",
-    security: {
-      heading: "企业级安全保障",
-      cardHeading: "从设计上不可篡改",
-      cardParagraph: "一旦文件哈希锚定至区块链,这份关于其存在与时间的证明就无法被任何人——包括我们自己——更改或质疑。从您的保险库中删除文件本身是另一项操作,且不可撤销。",
-      verifiedBadge: "✓ 区块链已验证",
-      verifiedSub: "已加时间戳 · 可独立验证",
-    },
     cta: {
       heading: "立即守护您的传承",
-      paragraph: "您的传承不该只锁在文件柜里。将它永久锚定上链。",
-      button: "创建我的链上保险库",
+      button: "开启您的保险库",
     },
   },
 };
+
+// The hero mockup's document list — reveals in sequence once on load (the
+// page's one deliberate motion moment), rather than animating on every
+// scroll or hover. Respects reduced-motion.
+function DocumentRows({ documents }) {
+  const reduceMotion = useReducedMotion();
+
+  const container = {
+    hidden: {},
+    show: { transition: { staggerChildren: reduceMotion ? 0 : 0.08, delayChildren: reduceMotion ? 0 : 0.15 } },
+  };
+  const row = reduceMotion
+    ? { hidden: { opacity: 1 }, show: { opacity: 1 } }
+    : { hidden: { opacity: 0, y: 8 }, show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } } };
+
+  return (
+    <motion.div variants={container} initial="hidden" animate="show" className="space-y-2">
+      {documents.map((doc, idx) => {
+        const Icon = DOCUMENT_ICONS[idx] || DocumentTextIcon;
+        return (
+          <motion.div
+            key={idx}
+            variants={row}
+            className="bg-dark-bg bg-opacity-40 border border-dark-border rounded-lg p-3 hover:border-primary transition flex items-center gap-3"
+          >
+            <div className="w-9 h-9 rounded-md bg-primary bg-opacity-10 flex items-center justify-center flex-shrink-0">
+              <Icon className="w-4 h-4 text-primary" strokeWidth={1.75} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="font-semibold text-sm truncate">{doc.title}</div>
+              <div className="text-xs text-gray-400 truncate">{doc.type}</div>
+            </div>
+            <div className="flex items-center gap-1 text-[11px] text-primary flex-shrink-0">
+              <CheckBadgeIcon className="w-3.5 h-3.5" strokeWidth={2} />
+              Verified
+            </div>
+          </motion.div>
+        );
+      })}
+    </motion.div>
+  );
+}
 
 export default function Main() {
   const navigate = useNavigate();
@@ -209,15 +238,15 @@ export default function Main() {
             <div className="flex flex-col sm:flex-row gap-4 mb-12">
               <button
                 onClick={() => navigate("/register")}
-                className="px-8 py-4 bg-primary text-dark-bg hover:bg-primary-dark rounded-lg font-semibold transition text-lg flex items-center justify-center gap-2"
+                className="px-9 py-4 bg-primary text-dark-bg rounded-xl font-semibold text-lg shadow-lg shadow-primary/20 transition-all duration-200 hover:bg-primary-dark hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 active:translate-y-0 active:shadow-md"
               >
-                <span>⛓️</span> {t.hero.ctaPrimary}
+                {t.hero.ctaPrimary}
               </button>
               <button
                 onClick={() => navigate("/login")}
-                className="px-8 py-4 border-2 border-primary text-primary hover:bg-primary hover:text-dark-bg rounded-lg font-semibold transition text-lg flex items-center justify-center gap-2"
+                className="px-9 py-4 border-2 border-primary/50 text-primary rounded-xl font-semibold text-lg transition-all duration-200 hover:border-primary hover:bg-primary/10 hover:-translate-y-0.5 active:translate-y-0"
               >
-                <span>▶</span> {t.hero.ctaSecondary}
+                {t.hero.ctaSecondary}
               </button>
             </div>
 
@@ -243,40 +272,26 @@ export default function Main() {
 
           {/* Right - Mockup */}
           <div className="relative">
-            <div className="bg-gradient-to-br from-dark-card to-dark-bg border border-dark-border rounded-2xl p-8 backdrop-blur-sm">
-              <div className="flex items-center justify-between mb-8 pb-4 border-b border-dark-border">
+            <div className="bg-gradient-to-br from-dark-card to-dark-bg border border-dark-border rounded-2xl p-6 shadow-2xl shadow-black/20">
+              <div className="flex items-center gap-3 mb-6 pb-4 border-b border-dark-border">
+                <div className="w-9 h-9 rounded-lg bg-primary bg-opacity-15 border border-primary border-opacity-30 flex items-center justify-center flex-shrink-0">
+                  <LockClosedIcon className="w-4 h-4 text-primary" strokeWidth={2} />
+                </div>
                 <div>
-                  <div className="font-semibold">{t.hero.mockupTitle}</div>
-                  <div className="text-sm text-gray-400">{t.hero.mockupSubtitle}</div>
-                </div>
-                <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-dark-bg font-bold text-sm">
-                  JM
+                  <div className="font-semibold text-sm">{t.hero.mockupTitle}</div>
+                  <div className="text-xs text-gray-400">{t.hero.mockupSubtitle}</div>
                 </div>
               </div>
 
-              <div className="space-y-3">
-                {t.documents.map((doc, idx) => (
-                  <div
-                    key={idx}
-                    className="bg-dark-card bg-opacity-60 border border-dark-border rounded-lg p-4 hover:border-primary transition cursor-pointer flex items-start gap-3"
-                  >
-                    <div className="text-2xl">{doc.emoji}</div>
-                    <div className="flex-1">
-                      <div className="font-semibold text-sm">{doc.title}</div>
-                      <div className="text-xs text-gray-400">{doc.type}</div>
-                    </div>
-                    <div className="text-primary text-xs font-mono">⛓️</div>
-                  </div>
-                ))}
-              </div>
+              <DocumentRows documents={t.documents} />
 
-              <div className="mt-6 p-4 bg-gradient-to-r from-primary to-primary-dark rounded-lg text-dark-bg text-center font-semibold text-sm">
-                ⛓️ {t.hero.mockupFooter}
+              <div className="mt-5 pt-4 border-t border-dark-border flex items-center justify-between text-xs text-gray-400">
+                <span>{t.hero.mockupFooter}</span>
+                <span className="inline-flex items-center gap-1.5 text-primary font-medium">
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+                  Active
+                </span>
               </div>
-            </div>
-
-            <div className="absolute -bottom-4 -right-4 bg-primary text-dark-bg w-16 h-16 rounded-full flex items-center justify-center text-2xl shadow-lg">
-              ⛓️
             </div>
           </div>
         </div>
@@ -311,7 +326,7 @@ export default function Main() {
       <section id="features" className="py-20">
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">{t.featuresHeading}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div id="security" className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {t.features.map((feature, idx) => (
               <div
                 key={idx}
@@ -326,48 +341,10 @@ export default function Main() {
         </div>
       </section>
 
-      {/* ========== SECURITY ========== */}
-      <section id="security" className="py-20 bg-dark-card bg-opacity-30 border-y border-dark-border">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-4xl font-bold mb-6">{t.security.heading}</h2>
-              <div className="space-y-6">
-                {t.securityPoints.map((item, idx) => (
-                  <div key={idx} className="flex gap-4">
-                    <div className="text-primary text-2xl flex-shrink-0">✓</div>
-                    <div>
-                      <h4 className="font-semibold mb-1">{item.title}</h4>
-                      <p className="text-gray-400 text-sm">{item.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="bg-gradient-to-br from-dark-card to-dark-bg border border-dark-border rounded-2xl p-8 text-center">
-              <div className="text-6xl mb-4">⛓️</div>
-              <h3 className="text-2xl font-bold mb-4">{t.security.cardHeading}</h3>
-              <p className="text-gray-400 mb-6">
-                {t.security.cardParagraph}
-              </p>
-              <div className="bg-primary bg-opacity-20 border border-primary rounded-lg p-4">
-                <div className="text-primary font-semibold">{t.security.verifiedBadge}</div>
-                <div className="text-sm text-gray-400 mt-1">{t.security.verifiedSub}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* ========== CTA ========== */}
       <section className="py-20 bg-gradient-to-r from-primary to-primary-dark rounded-2xl mx-6 mb-10 text-dark-bg">
         <div className="max-w-4xl mx-auto text-center px-6">
-          <div className="text-5xl mb-4">⛓️</div>
-          <h2 className="text-4xl font-bold mb-4">{t.cta.heading}</h2>
-          <p className="text-lg mb-8 opacity-90">
-            {t.cta.paragraph}
-          </p>
+          <h2 className="text-4xl font-bold mb-8">{t.cta.heading}</h2>
           <button
             onClick={() => navigate("/register")}
             className="px-8 py-4 bg-dark-bg text-primary hover:bg-gray-900 rounded-lg font-semibold transition text-lg"
