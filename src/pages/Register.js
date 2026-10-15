@@ -9,6 +9,12 @@ export default function Register() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
+  // Shown when /register 409s because this email already exists but hasn't
+  // verified yet — the backend's own error message tells the user to
+  // "resend verification", but there was previously no button that
+  // actually did it.
+  const [canResend, setCanResend] = useState(false);
+  const [resending, setResending] = useState(false);
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const navigate = useNavigate();
 
@@ -24,6 +30,7 @@ export default function Register() {
     e.preventDefault();
     setError("");
     setMessage("");
+    setCanResend(false);
     setLoading(true);
 
     try {
@@ -36,8 +43,27 @@ export default function Register() {
 
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
+      // Matches auth.js's /register 409 — this email exists but never
+      // verified, so a fresh link can actually be sent for it.
+      if (err.response?.status === 409) setCanResend(true);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleResendVerification = async () => {
+    if (!email) return;
+    setResending(true);
+    setError("");
+
+    try {
+      await axios.post(`${API_BASE_URL}/api/auth/resend-verification`, { email });
+      setMessage("Verification email resent. Check your inbox!");
+      setCanResend(false);
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to resend verification email");
+    } finally {
+      setResending(false);
     }
   };
 
@@ -84,6 +110,17 @@ export default function Register() {
 
       {error && <p className="text-red-400 text-sm text-center bg-red-500 bg-opacity-10 border border-red-500 rounded-lg p-3">{error}</p>}
       {message && <p className="text-primary text-sm text-center bg-primary bg-opacity-10 border border-primary rounded-lg p-3">{message}</p>}
+
+      {canResend && (
+        <button
+          type="button"
+          onClick={handleResendVerification}
+          disabled={resending}
+          className="w-full py-3 rounded-lg font-semibold transition text-lg border-2 border-primary text-primary hover:bg-primary hover:text-dark-bg disabled:opacity-50"
+        >
+          {resending ? "Resending…" : "Resend Verification Email"}
+        </button>
+      )}
 
       {!emailSent ? (
         <button
