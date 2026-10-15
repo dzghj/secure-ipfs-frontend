@@ -48,6 +48,14 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
             }
           />
 
+          {/* Always the public landing page, even in an already-logged-in
+              browser — unlike "/", which sends a logged-in session straight
+              to /myfiles. Needed for links meant to show the marketing page
+              regardless of session state (e.g. NomineeAccess's "Learn About
+              ShadowVault", clicked by whoever has the share link, not
+              necessarily whoever's logged in on that device). */}
+          <Route path="/welcome" element={<Main />} />
+
           <Route
             path="/login"
             element={
