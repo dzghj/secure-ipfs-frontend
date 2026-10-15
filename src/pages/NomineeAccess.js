@@ -162,7 +162,7 @@ export default function NomineeAccess() {
         {files.length > 0 && (
           <div className="mt-8 flex flex-col sm:flex-row gap-3">
             <a
-              href="https://shadowvault.ca"
+              href="https://shadowvault.ca/welcome"
               className="flex-1 py-3 border border-dark-border text-gray-400 font-semibold rounded-xl hover:border-primary hover:text-white transition flex items-center justify-center gap-2"
             >
               ⛓️ Learn About ShadowVault
