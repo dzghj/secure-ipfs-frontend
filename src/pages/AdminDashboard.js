@@ -1,29 +1,41 @@
 import React, { useEffect, useState } from "react";
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 function AdminDashboard() {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    fetch("https://ipfs-data-server.onrender.com/api/admin/files", {
+    fetch(`${API_BASE_URL}/api/admin/files`, {
       headers: { Authorization: `Bearer ${token}` },
     })
-      .then((res) => res.json())
+      .then(async (res) => {
+        if (res.status === 403) throw new Error("You don't have admin access.");
+        if (!res.ok) throw new Error("Failed to load admin data.");
+        return res.json();
+      })
       .then((result) => {
-        console.log(result); // Debug log to check the fetched data structure
         if (Array.isArray(result)) {
           setData(result);
         } else {
-          console.error("Expected an array but got:", result);
+          setError("Unexpected response from server.");
         }
       })
-      .catch((err) => console.error("Error fetching data:", err));
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
   }, [token]);
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <h2 className="text-2xl font-bold mb-4 bg-gray-700">🛠 Admin Dashboard</h2>
-      {data.length === 0 ? (
+      {loading ? (
+        <p>Loading…</p>
+      ) : error ? (
+        <p className="text-red-600">{error}</p>
+      ) : data.length === 0 ? (
         <p>No uploaded files found.</p>
       ) : (
         data.map((user, idx) => (
@@ -38,13 +50,12 @@ function AdminDashboard() {
                 </tr>
               </thead>
               <tbody>
-                {/* Ensure you correctly access fileName and cid */}
                 {user.files && user.files.length > 0 ? (
                   user.files.map((f, i) => (
                     <tr key={i} className="bg-gray-700">
                       <td className="p-2 border">{f.fileName}</td>
                       <td className="p-2 border text-xs text-blue-600">{f.cid}</td>
-                      <td className="p-2 border">{"N/A"}</td> {/* You can replace "N/A" with actual date if available */}
+                      <td className="p-2 border">{f.uploadedAt ? new Date(f.uploadedAt).toLocaleDateString() : "N/A"}</td>
                     </tr>
                   ))
                 ) : (
