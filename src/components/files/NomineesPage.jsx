@@ -27,7 +27,7 @@ const EMPTY_FORM = {
 };
 
 /* ── Add / Edit nominee form ──────────────────────────────── */
-function NomineeForm({ onSave, onBack, allCategories, initial }) {
+function NomineeForm({ onSave, onBack, allCategories, initial, error }) {
   const [form, setForm] = useState(initial || EMPTY_FORM);
   const [saving, setSaving] = useState(false);
 
@@ -75,6 +75,12 @@ function NomineeForm({ onSave, onBack, allCategories, initial }) {
       </div>
 
       <div className="max-w-2xl">
+        {error && (
+          <div className="mb-5 text-sm text-red-400 bg-red-900 bg-opacity-20 border border-red-800 rounded-xl p-3">
+            {error}
+          </div>
+        )}
+
         {FORM_FIELDS.map((f) => (
           <div key={f.key} className="mb-5">
             <label className="text-sm text-gray-400 mb-2 block font-medium">{f.label}</label>
@@ -176,6 +182,7 @@ export default function NomineesPage({ allCategories = [], nominees = [], onNomi
   const [loading,  setLoading]  = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editing,  setEditing]  = useState(null);
+  const [formError, setFormError] = useState("");
 
   const token = localStorage.getItem("token");
 
@@ -195,15 +202,24 @@ export default function NomineesPage({ allCategories = [], nominees = [], onNomi
   useEffect(() => { load(); }, [load]);
 
   const handleSave = async (form) => {
-    if (editing) {
-      const updated = await updateNomineeAPI(token, editing.id, form);
-      onNomineesChange?.(nominees.map((n) => (n.id === updated.id ? updated : n)));
-    } else {
-      const created = await createNomineeAPI(token, form);
-      onNomineesChange?.([...nominees, created]);
+    setFormError("");
+    try {
+      if (editing) {
+        const updated = await updateNomineeAPI(token, editing.id, form);
+        onNomineesChange?.(nominees.map((n) => (n.id === updated.id ? updated : n)));
+      } else {
+        const created = await createNomineeAPI(token, form);
+        onNomineesChange?.([...nominees, created]);
+      }
+      setShowForm(false);
+      setEditing(null);
+    } catch (err) {
+      // Resolves rather than rethrows — NomineeForm's handleSave has no
+      // catch of its own, so a rejection here would otherwise become an
+      // unhandled rejection with no feedback: the save button would just
+      // stop spinning with nothing to show for it.
+      setFormError(err.message || "Failed to save Legacy Contact. Please try again.");
     }
-    setShowForm(false);
-    setEditing(null);
   };
 
   const handleDelete = async (id) => {
@@ -218,6 +234,7 @@ export default function NomineesPage({ allCategories = [], nominees = [], onNomi
 
   const openEdit = (nominee) => {
     setEditing(nominee);
+    setFormError("");
     setShowForm(true);
   };
 
@@ -225,8 +242,9 @@ export default function NomineesPage({ allCategories = [], nominees = [], onNomi
     return (
       <NomineeForm
         onSave={handleSave}
-        onBack={() => { setShowForm(false); setEditing(null); }}
+        onBack={() => { setShowForm(false); setEditing(null); setFormError(""); }}
         allCategories={allCategories}
+        error={formError}
         initial={
           editing
             ? {
@@ -251,7 +269,7 @@ export default function NomineesPage({ allCategories = [], nominees = [], onNomi
           <p className="text-gray-400 text-sm">Trusted people who can access your vault.</p>
         </div>
         <button
-          onClick={() => { setEditing(null); setShowForm(true); }}
+          onClick={() => { setEditing(null); setFormError(""); setShowForm(true); }}
           className="px-5 py-2.5 bg-primary text-white rounded-full text-sm font-semibold hover:bg-primary-dark transition flex items-center gap-2"
         >
           <span>👥</span> Add Legacy Contact +
