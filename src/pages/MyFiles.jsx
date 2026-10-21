@@ -135,7 +135,7 @@ export default function MyFiles() {
       </main>
 
       {showUpgrade && (
-        <UpgradeModal token={token} onClose={() => setShowUpgrade(false)} />
+        <UpgradeModal token={token} onClose={() => setShowUpgrade(false)} onUpgraded={load} />
       )}
     </div>
   );
