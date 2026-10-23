@@ -29,7 +29,7 @@ export default function VaultPage({
   files,
   nominees = [],
   token,
-  plan = { name: "Basic", maxFilesPerFolder: 5, unlimited: false },
+  plan = { name: "Basic", maxFilesPerFolder: 5, unlimited: false, noPlanSelected: false },
   onUpgrade,
   user,
   onUploadComplete,
@@ -104,10 +104,20 @@ export default function VaultPage({
           <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center font-bold text-white text-lg flex-shrink-0">
             {initials}
           </div>
-          <div className="inline-flex items-center gap-2 text-xs font-medium text-gray-400 bg-dark-card border border-dark-border rounded-full px-3 py-1.5">
-            <span className="text-primary">{plan.name} Plan</span>
-            <span className="text-gray-600">·</span>
-            {plan.unlimited ? "Unlimited files per folder" : `${plan.maxFilesPerFolder} files per folder`}
+          <div className={`inline-flex items-center gap-2 text-xs font-medium rounded-full px-3 py-1.5 border ${
+            plan.noPlanSelected
+              ? "text-amber-400 bg-amber-500/10 border-amber-500/30"
+              : "text-gray-400 bg-dark-card border-dark-border"
+          }`}>
+            {plan.noPlanSelected ? (
+              "No plan selected — uploads locked"
+            ) : (
+              <>
+                <span className="text-primary">{plan.name} Plan</span>
+                <span className="text-gray-600">·</span>
+                {plan.unlimited ? "Unlimited files per folder" : `${plan.maxFilesPerFolder} files per folder`}
+              </>
+            )}
           </div>
         </div>
         {!plan.unlimited && (
@@ -115,7 +125,7 @@ export default function VaultPage({
             onClick={onUpgrade}
             className="text-xs font-semibold text-primary hover:text-primary-dark transition"
           >
-            {t.upgradeButton}
+            {plan.noPlanSelected ? "Choose a Plan" : t.upgradeButton}
           </button>
         )}
       </div>

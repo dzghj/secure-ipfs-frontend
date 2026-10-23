@@ -69,7 +69,7 @@ function PaypalButtons({ plan, token, onSuccess, onError }) {
   return <div ref={containerRef} className="mt-2" />;
 }
 
-export default function UpgradeModal({ token, onClose, onUpgraded }) {
+export default function UpgradeModal({ token, onClose, onUpgraded, mandatory = false }) {
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -120,7 +120,12 @@ export default function UpgradeModal({ token, onClose, onUpgraded }) {
   return (
     <div className="fixed inset-0 bg-black/70 flex justify-center items-center">
       <div className="bg-dark-card p-6 rounded-xl w-96 border border-dark-border shadow-xl">
-        <h3 className="mb-4 text-xl font-semibold">Upgrade Plan</h3>
+        <h3 className="mb-4 text-xl font-semibold">{mandatory ? "Choose a Plan to Get Started" : "Upgrade Plan"}</h3>
+        {mandatory && (
+          <p className="text-sm text-gray-400 mb-4">
+            Select and pay for a plan to activate your vault — uploads are locked until you do.
+          </p>
+        )}
 
         {loading && <div className="text-sm text-gray-400 mb-3">Loading plans…</div>}
         {error && <div className="text-sm text-red-400 mb-3">{error}</div>}
@@ -154,9 +159,11 @@ export default function UpgradeModal({ token, onClose, onUpgraded }) {
           </div>
         ))}
 
-        <button onClick={onClose} disabled={subscribingId !== null} className="mt-4 w-full bg-dark-bg hover:bg-dark-border border border-dark-border px-3 py-2 rounded font-medium transition disabled:opacity-50">
-          Close
-        </button>
+        {!mandatory && (
+          <button onClick={onClose} disabled={subscribingId !== null} className="mt-4 w-full bg-dark-bg hover:bg-dark-border border border-dark-border px-3 py-2 rounded font-medium transition disabled:opacity-50">
+            Close
+          </button>
+        )}
       </div>
     </div>
   );

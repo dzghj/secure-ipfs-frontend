@@ -31,7 +31,7 @@ export default function MyFiles() {
   // Per-folder tier limit (Basic/Plus/Premium), from /api/myfiles — replaces
   // the old account-wide file-count check, which didn't match how limits
   // actually work (5/10/unlimited files per folder, not per account).
-  const [plan,            setPlan]            = useState({ name: "Basic", maxFilesPerFolder: 5, unlimited: false });
+  const [plan,            setPlan]            = useState({ name: "Basic", maxFilesPerFolder: 5, unlimited: false, noPlanSelected: false });
   const token           = localStorage.getItem("token");
   const user            = JSON.parse(localStorage.getItem("user") || "{}");
 
@@ -62,6 +62,15 @@ export default function MyFiles() {
   }, [token]);
 
   useEffect(() => { load(); }, [load]);
+
+  // No free tier any more — a user with no plan selected yet (new signup,
+  // or an old account whose plan row got removed) can't upload until they
+  // pay, so surface the gate immediately rather than letting them discover
+  // it only when an upload fails. Re-checked on every load() (including
+  // after a successful upgrade), not just once on mount.
+  useEffect(() => {
+    if (plan.noPlanSelected) setShowUpgrade(true);
+  }, [plan.noPlanSelected]);
 
   const handleSave = async () => {
     try {
@@ -135,7 +144,12 @@ export default function MyFiles() {
       </main>
 
       {showUpgrade && (
-        <UpgradeModal token={token} onClose={() => setShowUpgrade(false)} onUpgraded={load} />
+        <UpgradeModal
+          token={token}
+          onClose={() => setShowUpgrade(false)}
+          onUpgraded={load}
+          mandatory={plan.noPlanSelected}
+        />
       )}
     </div>
   );
